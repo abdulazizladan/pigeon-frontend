@@ -1,0 +1,47 @@
+.profile-card {
+  max-width: 600px;
+  margin: 20px auto;
+
+  .mat-mdc-card-header {
+    padding: 16px 16px 0;
+  }
+
+  img[matCardAvatar] {
+    object-fit: cover;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+  }
+
+  .mat-mdc-card-content {
+    padding-top: 16px;
+  }
+
+  .mat-divider {
+    margin: 16px 0;
+  }
+
+  .role-badge, .status-badge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    margin-right: 8px;
+  }
+
+  .role-badge.admin {
+    background-color: #ff4081;
+    color: white;
+  }
+
+  .status-badge.active {
+    background-color: #69f0ae;
+    color: black;
+  }
+
+  .error-message {
+    display: block;
+    padding: 16px;
+    margin: 16px;
+    text-align: center;
+  }
+}

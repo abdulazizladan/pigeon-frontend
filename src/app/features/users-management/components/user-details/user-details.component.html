@@ -1,0 +1,134 @@
+
+<h1>User Details</h1>
+<div fxLayout="column" fxLayoutGap="25px" style="width: 100%; box-shadow: 1px 1px 5px #cfcfcf; padding: 15px; border-radius: 10px;">
+
+  @if(userStore.loading()) {
+    <mat-progress-bar mode="query"></mat-progress-bar>
+  }
+
+  @if(userStore.error()) {
+    <mat-error>Unable to fetch user details. Please check your connection and try again.</mat-error>
+  }
+  <div style="padding: 15px;">
+    <div style="padding: 15px;">
+      <div style="width: 100px; aspect-ratio: 1; background-color: gray;">
+
+      </div>
+    </div>
+    <mat-list dense>
+      <mat-list-item>
+        <mat-icon matListItemIcon>verified_user</mat-icon>
+        <span>Account Status:
+          @if(userStore.selectedUser()?.status === 'active') {
+            <span style="padding: 3px 3px; background-color: green; color: white; border-radius: 15px">Active</span>
+          } @else if(userStore.selectedUser()?.status === 'inactive') {
+            <span style="padding: 3px 2px; background-color: red; color: white; border-radius: 15px;">Inactive</span>
+          } @else if(userStore.selectedUser()?.status === 'suspended') {
+            <span style="padding: 3px 2px; background-color: orange; color: white; border-radius: 15px;">Suspended</span>
+          }
+        </span>
+      </mat-list-item>
+      <mat-list-item>
+        <mat-icon matListItemIcon>access_time</mat-icon>
+        <span>Account Created: {{userStore.selectedUser()?.createdAt | date: 'medium'}}</span>
+      </mat-list-item>
+      <!--<mat-list-item>
+        <mat-icon matListItemIcon>person</mat-icon>
+        <span>User ID: {{userStore.selectedUser()?.id}}</span>
+      </mat-list-item>-->
+      <mat-list-item>
+        <mat-icon matListItemIcon>person</mat-icon>
+        <span>Name: {{userStore.selectedUser()?.info?.firstName}} {{userStore.selectedUser()?.info?.lastName}}</span>
+      </mat-list-item>
+      <mat-list-item>
+        <mat-icon matListItemIcon>account_circle</mat-icon>
+        <span>Role: {{userStore.selectedUser()?.role}}</span>
+      </mat-list-item>
+      <mat-list-item>
+        <mat-icon matListItemIcon>email</mat-icon>
+        <span>Email: {{userStore.selectedUser()?.email}}</span>
+      </mat-list-item>
+      <mat-list-item>
+        <mat-icon matListItemIcon>phone</mat-icon>
+        <span>Phone: +234{{userStore.selectedUser()?.contact?.phone}}</span>
+      </mat-list-item>
+      @if(userStore.selectedUser()?.role === 'manager') {
+        <mat-list-item>
+          <mat-icon matListItemIcon>assignment</mat-icon>
+          <span>Reports: {{userStore.selectedUser()?.reports?.length}}</span>
+        </mat-list-item>
+      }
+      <mat-list-item>
+        <mat-icon matListItemIcon>support_agent</mat-icon>
+        <span>Support Tickets: {{userStore.selectedUser()?.tickets?.length}}</span>
+      </mat-list-item>
+    </mat-list>
+    @if(userStore.selectedUser()?.status === 'active') {
+      <div fxLayout="row">
+        @if(userStore.selectedUser()?.id !== null) {
+          <span fxFlex="1 1 auto"></span><button mat-flat-button color="primary" (click)="openSuspendUserDialog(userStore.selectedUser()?.id)">Suspend user account</button>
+
+        }
+
+      </div>
+    }
+
+    <hr>
+  <h2>Support Tickets</h2>
+  @if(userStore.selectedUser()?.tickets?.length) {
+    @for(ticket of userStore.selectedUser()?.tickets; track ticket) {
+      <div class="ticket-card" style="padding: 15px; margin: 10px; border-radius: 10px; box-shadow: 1px 1px 5px #cfcfcf;">
+        <h3>{{ticket.title}}</h3>
+        <p>{{ticket.description}}</p>
+        <p>Status: {{ticket.status}}</p>
+        <p>Date Created: {{ticket.dateCreated | date:'short'}}</p>
+        <button mat-flat-button color="primary" routerLink="../../issues/tickets/{{ticket.id}}" >View ticket Details</button>
+      </div>
+
+    }
+  }@else {
+   <h3>No support tickets found</h3>
+  }
+
+</div>
+
+<!--
+{
+  "success": true,
+  "data": {
+    "id": 1,
+    "email": "abdulazizladan@gmail.com",
+    "role": "admin",
+    "status": "active",
+    "createdAt": 1741031277837,
+    "info": {
+      "id": 1,
+      "firstName": "Abdulaziz",
+      "lastName": "Ladan",
+      "image": "img/oo1.jpg"
+    },
+    "contact": {
+      "id": 1,
+      "phone": "8099764693"
+    },
+    "reports": [],
+    "tickets": [
+      {
+        "id": 0,
+        "title": "Unable to login",
+        "description": "User was unable to login to his profilr",
+        "dateCreated": "2025-02-24T19:34:34.000Z",
+        "status": "active"
+      },
+      {
+        "id": 1,
+        "title": "account access",
+        "description": "I suspect somebody is using my account",
+        "dateCreated": "2025-03-05T09:04:20.000Z",
+        "status": "resolved"
+      }
+    ]
+  },
+  "message": "User found"
+}
+-->

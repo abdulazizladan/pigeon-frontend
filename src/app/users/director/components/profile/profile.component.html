@@ -1,0 +1,76 @@
+<h1>Admin Profile</h1>
+
+@if(adminStore.loading()) {
+  <mat-progress-bar mode="query"></mat-progress-bar>
+}
+@if(adminStore.error()){
+  <span class="error-message">{{adminStore.error()}}</span>
+}
+
+<!--<mat-card class="profile-card">
+  <mat-card-header>
+    <img matCardAvatar [src]="adminStore.profile()?.info?.image || 'assets/default-avatar.png'" alt="Profile image">
+    <mat-card-title>
+      {{adminStore.profile()?.info?.firstName | titlecase}} {{adminStore.profile()?.info?.lastName | titlecase}}
+    </mat-card-title>
+    <mat-card-subtitle>
+      <span class="role-badge" [class]="adminStore.profile()?.role?.toLowerCase()">
+        {{adminStore.profile()?.role}}
+      </span>
+      <span class="status-badge" [class]="adminStore.profile()?.status?.toLowerCase()">
+        {{adminStore.profile()?.status}}
+      </span>
+    </mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <mat-divider></mat-divider>
+
+    <mat-list>
+      <h3 matSubheader>Basic Information</h3>
+      <mat-list-item>
+        <mat-icon matListItemIcon>person</mat-icon>
+        <div matListItemTitle>ID</div>
+        <div matListItemLine>{{adminStore.profile()?.id}}</div>
+      </mat-list-item>
+
+      <mat-list-item>
+        <mat-icon matListItemIcon>email</mat-icon>
+        <div matListItemTitle>Email</div>
+        <div matListItemLine>{{adminStore.profile()?.email}}</div>
+      </mat-list-item>
+
+      <mat-list-item>
+        <mat-icon matListItemIcon>cake</mat-icon>
+        <div matListItemTitle>Age</div>
+        <div matListItemLine>{{adminStore.profile()?.info?.age}} years</div>
+      </mat-list-item>
+    </mat-list>
+
+    <mat-divider></mat-divider>
+
+    <mat-list>
+      <h3 matSubheader>Contact Information</h3>
+      <mat-list-item>
+        <mat-icon matListItemIcon>phone</mat-icon>
+        <div matListItemTitle>Phone</div>
+        <div matListItemLine>{{adminStore.profile()?.contact?.phone || 'Not provided'}}</div>
+      </mat-list-item>
+    </mat-list>
+
+    <mat-divider></mat-divider>
+
+    <mat-list>
+      <h3 matSubheader>Account Details</h3>
+      <mat-list-item>
+        <mat-icon matListItemIcon>security</mat-icon>
+        <div matListItemTitle>Password</div>
+        <div matListItemLine>{{adminStore.profile()?.password ? '******' : 'Not set'}}</div>
+      </mat-list-item>
+    </mat-list>
+  </mat-card-content>
+
+  <mat-card-actions align="end">
+    <button mat-button color="primary">EDIT PROFILE</button>
+  </mat-card-actions>
+</mat-card>-->

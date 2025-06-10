@@ -1,0 +1,21 @@
+<h1 mat-dialog-title>{{ data.title ? 'Edit' : 'Create' }}</h1>
+<div mat-dialog-content>
+  <form [formGroup]="dialogForm" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Title</mat-label>
+      <input matInput placeholder="Enter title" formControlName="title" required>
+      <mat-error *ngIf="dialogForm.controls['title'].hasError('required')">
+        Title is required
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Description</mat-label>
+      <textarea matInput placeholder="Enter description" formControlName="description"></textarea>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button mat-primary [disabled]="dialogForm.invalid" (click)="onSubmit()">{{ data.title ? 'Save' : 'Create' }}</button>
+</div>

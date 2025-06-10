@@ -1,1 +1,98 @@
-/* You can add global styles to this file, and also import other style files */
+
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+@use '@angular/material' as mat;
+
+html {
+  color-scheme: light;
+  @include mat.theme((
+    color: (
+      theme-type: light,
+      primary: mat.$azure-palette,
+      tertiary: mat.$blue-palette,
+    ),
+    typography: (
+      plain-family: Roboto,
+      brand-family: Open Sans,
+      bold-weight: 500,
+      medium-weight: 300,
+      regular-weight: 100,
+    ),
+    density: -2
+  ));
+
+  .example-orange-primary-container {
+    @include mat.theme-overrides((
+      primary-container: #336fd7
+    ));
+  }
+}/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-size: 12px;
+}
+
+:host {
+  background: var(--mat-sys-primary-container);
+  color: var(--mat-sys-on-primary-container);
+  border: 1px solid var(--mat-sys-outline-variant);
+  font: var(--mat-sys-body-small);
+}
+/**
+:root {
+  @include mat.button-overrides((
+    filled-container-color: rgb(42, 42, 188),
+    filled-label-text-color: red,
+  ));
+
+}**/
+
+.mat-mdc-button-base {
+  border-radius: 5px !important; // Adjust the radius value as needed
+}
+
+.mat-mdc-button {
+  border-radius: 5px !important; // Adjust the radius value as needed
+}
+
+.mat-mdc-text-field-wrapper {
+  border-radius: 5px !important; // Adjust the radius value as needed
+}
+
+.mdc-text-field--outlined .mdc-notched-outline {
+  border-radius: 5px !important; // Adjust the radius value as needed
+}
+:root {
+  @include mat.dialog-overrides((
+    container-color: white,
+    container-shape: rectangle
+  ));
+
+}
+
+:root {
+  @include mat.sidenav-overrides((
+    container-background-color: white,
+    container-shape: rectangle,
+    container-elevation-shadow: 5px 5px 5px 5px
+  ));
+}
+
+:root {
+  @include mat.card-overrides((
+    elevated-container-color: white,
+    elevated-container-shape: rectangle,
+  ));
+}
+
+:root {
+  @Include mat.button-overrides((
+    filled-container-color: white,
+    filled-label-text-color: black,
+    filled-text-tracking: 0.5px,
+    filled-text-transform: uppercase,
+  ));
+}

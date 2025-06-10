@@ -1,0 +1,16 @@
+.card {
+  box-shadow: 1px 1px 5px #cccccc;
+  padding: 15px;
+  background-color: #ffffff;
+  div {
+    .title {
+      font-size: small;
+      font-weight: thin;
+      color: #666666;
+    }
+    .mainText {
+      font-size: larger;
+      font-weight: bold;
+    }
+  }
+}

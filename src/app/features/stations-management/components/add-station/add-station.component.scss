@@ -1,0 +1,16 @@
+.station-form-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+}
+.form-row {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+mat-form-field {
+  flex: 1;
+}
+button[mat-raised-button] {
+  margin-left: 8px;
+}

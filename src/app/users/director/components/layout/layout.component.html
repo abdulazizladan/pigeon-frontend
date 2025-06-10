@@ -1,0 +1,61 @@
+<div fxLayout="column" id="body">
+  <mat-toolbar color="tertiary">
+    <button mat-icon-button (click)="drawer.toggle()">
+      <mat-icon>menu</mat-icon>
+    </button>
+    PigeonApp
+    <span fxFlex="1 1 auto"></span>
+    <span style="font-size: small;">{{authStore.userEmail()}}</span>
+    <button mat-icon-button [matMenuTriggerFor]="menu">
+      <mat-icon>
+        more_vert
+      </mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item routerLink="profile">
+        <mat-icon>person</mat-icon>
+        Profile
+      </button>
+      <!--<button mat-menu-item routerLink="settings">
+        <mat-icon>settings</mat-icon>
+        Settings
+      </button>-->
+      <button mat-menu-item (click)="logout()">
+        <mat-icon>exit_to_app</mat-icon>
+        Logout
+      </button>
+    </mat-menu>
+  </mat-toolbar>
+
+  <mat-drawer-container class="example-container" fxFlex="1 1 auto">
+    <mat-drawer mode="over" opened #drawer fxLayout="column" class="nav-menu">
+      <div style="padding: 10px" fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="center center">
+        <div id="profile"> </div>
+        <div fxLayout="row" fxLayoutAlign="center">
+          <span style="font-size: smaller;">{{authStore.userRole()}}</span>
+        </div>
+      </div>
+      <button mat-button routerLink="./" class="nav-menu-item" routerLinkActive="active">
+        <mat-icon>dashboard</mat-icon>
+        Dashboard
+      </button>
+      <button mat-button routerLink="stations" class="nav-menu-item" routerLinkActive="active">
+        <mat-icon>business</mat-icon>
+        Stations
+      </button>
+      <button mat-button routerLink="managers" class="nav-menu-item" routerLinkActive="active">
+        <mat-icon>people</mat-icon>
+        Managers
+      </button>
+      <button mat-button routerLink="issues" class="nav-menu-item" routerLinkActive="active">
+        <mat-icon>bug_report</mat-icon>
+        Issues
+      </button>
+    </mat-drawer>
+    <mat-drawer-content id="main" fxLayout="row" fxLayoutAlign="center">
+      <div fxFlex.xs="100%" fxFlex.gt-xs="800px">
+      <router-outlet></router-outlet>
+      </div>
+    </mat-drawer-content>
+  </mat-drawer-container>
+</div>

@@ -1,0 +1,77 @@
+<h1>Station Details</h1>
+    <div class="station-details-container" fxLayout="column" fxLayoutGap="16px">
+      @if(stationStore.loading()) {
+        <mat-progress-bar mode="query"></mat-progress-bar>
+      }@else {
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>{{ stationStore.selectedStation()?.name }}</mat-card-title>
+          <mat-card-subtitle>Station ID: {{ stationStore.selectedStation()?.id }}</mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-divider></mat-divider>
+
+        <mat-card-content>
+          <div fxLayout="row" fxLayoutGap="24px">
+            <div fxFlex="50">
+              <h3>Basic Information</h3>
+              <mat-list dense>
+                <mat-list-item>
+                  <mat-icon matListItemIcon>location_on</mat-icon>
+                  <div matListItemTitle>Location</div>
+                  <div matListItemLine>{{ stationStore.selectedStation()?.address }}, {{ stationStore.selectedStation()?.lga}}, {{ stationStore.selectedStation()?.state}}</div>
+                </mat-list-item>
+                <!--<mat-list-item>
+                  <mat-icon matListItemIcon>network_check</mat-icon>
+                  <div matListItemTitle>Status</div>
+                  <div matListItemLine>
+                    <span [class]="'status-' + station.status.toLowerCase()">
+                      {{ station.status }}
+                    </span>
+                  </div>
+                </mat-list-item>
+                <mat-list-item>
+                  <mat-icon matListItemIcon>calendar_today</mat-icon>
+                  <div matListItemTitle>Last Updated</div>
+                  <div matListItemLine>{{ station.lastUpdated | date:'medium' }}</div>
+                </mat-list-item>-->
+              </mat-list>
+            </div>
+
+            <!--<div fxFlex="50">
+              <h3>Technical Details</h3>
+              <mat-list dense>
+                <mat-list-item>
+                  <mat-icon matListItemIcon>speed</mat-icon>
+                  <div matListItemTitle>Capacity</div>
+                  <div matListItemLine>{{ station.capacity }} MW</div>
+                </mat-list-item>
+                <mat-list-item>
+                  <mat-icon matListItemIcon>settings</mat-icon>
+                  <div matListItemTitle>Equipment Count</div>
+                  <div matListItemLine>{{ station.equipmentCount }}</div>
+                </mat-list-item>
+                <mat-list-item>
+                  <mat-icon matListItemIcon>warning</mat-icon>
+                  <div matListItemTitle>Alerts</div>
+                  <div matListItemLine>{{ station.activeAlerts || 0 }} active</div>
+                </mat-list-item>
+              </mat-list>
+            </div>-->
+          </div>
+
+          <mat-divider class="section-divider"></mat-divider>
+
+        </mat-card-content>
+
+        <mat-card-actions align="end">
+          <button mat-button color="primary">EDIT</button>
+          <button mat-button>MORE INFO</button>
+        </mat-card-actions>
+      </mat-card>
+    }
+      <!--<div *ngIf="!selectedStation()" class="no-station-selected" fxLayout="column" fxLayoutAlign="center center">
+        <mat-icon>info</mat-icon>
+        <p>No station selected</p>
+      </div>
+    </div>-->

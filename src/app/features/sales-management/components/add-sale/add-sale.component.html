@@ -1,0 +1,32 @@
+<h1 matDialogTitle>Title</h1>
+
+<mat-dialog-content fxLayout="column" fxLayoutGap="15px">
+
+  <mat-form-field appearance="outline">
+    <mat-label>Attendant</mat-label>
+    <mat-select>
+      <mat-option value="id">Dummy 1</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Pump number</mat-label>
+    <input matInput>
+  </mat-form-field>
+
+
+  <mat-form-field appearance="outline">
+    <mat-label>Opening reading</mat-label>
+    <input matInput>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Closing reading</mat-label>
+    <input matInput>
+  </mat-form-field>
+
+  <mat-dialog-actions align="end">
+      <button mat-button matDialogClose>Close dialog</button>
+      <button mat-flat-button color="primary">Assign</button>
+  </mat-dialog-actions>
+</mat-dialog-content>

@@ -1,0 +1,46 @@
+.users-list-container {
+  padding: 20px;
+  box-shadow:1px 1px 15px #cfcfcf;
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.search-field {
+  width: 100%;
+  margin-bottom: 20px;
+}
+.error-message {
+  margin: 16px 0;
+  padding: 16px;
+  border-radius: 4px;
+}
+table {
+  width: 100%;
+  background-color: white;
+}
+.mat-mdc-row .mat-mdc-cell {
+  border-bottom: 1px solid transparent;
+  border-top: 1px solid transparent;
+}
+.mat-mdc-row:hover .mat-mdc-cell {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+.mat-mdc-no-data-row {
+  text-align: center;
+  padding: 16px;
+}
+.status-active {
+  background-color: red;
+  padding: 4px 8px;
+  border-radius: 4px;
+  color:white;
+}
+.status-resolved {
+  background-color: green;
+  padding: 4px 8px;
+  border-radius: 4px;
+  color:white;
+}
