@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { BrowserModule, provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 
+import { BaseChartDirective } from 'ng2-charts';
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 //import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
@@ -19,7 +21,8 @@ import { RouterModule } from '@angular/router';
     HttpClientModule,
     RouterModule,
     AuthModule,
-    AppRoutingModule
+    AppRoutingModule, 
+    BaseChartDirective
   ],
   providers: [
     provideClientHydration(withEventReplay()),

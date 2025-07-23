@@ -34,6 +34,11 @@ const routes: Routes = [
       {
         path: 'issues',
         loadChildren: () => import('../../features/tickets-management/tickets-management.module').then(module => module.TicketsManagementModule)
+      },
+      {
+        path: "**",
+        redirectTo: "dashboard",
+        pathMatch: "full"
       }
     ]
   }
