@@ -1,53 +1,93 @@
-<h1>Stations list</h1>
-<div class="users-list-container">
-<div fxLayout="row" fxLayoutAlign="space-between center" class="header">
-  <span fxFlex="1 1 auto"></span>
-  <button mat-flat-button color="primary" (click)="openAddStationDialog()">
-    <mat-icon>add</mat-icon>
-    Add Station
-  </button>
+<div class="stations-list-container">
+  <h1>Stations Management</h1>
+  
+  <div class="header">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Search Stations (Name, Address, Location)</mat-label>
+      <input matInput (keyup)="applyFilter($event)" placeholder="E.g., Central, Kano" #input>
+      <mat-icon matPrefix>search</mat-icon>
+    </mat-form-field>
+    
+    <button mat-flat-button color="primary" (click)="openAddStationDialog()">
+      <mat-icon>add</mat-icon>
+      Add Station
+    </button>
+  </div>
 
-</div>
+  @if(stationStore.loading() && stationStore.stations().length === 0) {
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  }
 
-@if(stationsStore.loading()) {
-  <mat-progress-bar mode="query"></mat-progress-bar>
-}
+  @if(stationStore.error()) {
+    <mat-error class="error-message">{{ stationStore.error() }}</mat-error>
+  }
+  
+  <div class="mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource" matSort>
 
-@if(stationsStore.error()) {
-  <mat-error class="error-message">{{ stationsStore.error() }}</mat-error>
-}
-<div class="stations-list">
-  <table mat-table [dataSource]="stationsStore.stations()" class="mat-elevation-z8">
+      <!-- Station Name Column -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Station Name </th>
+        <td mat-cell *matCellDef="let station" [routerLink]="[station.id]" class="clickable-row"> 
+          {{ station.name }} 
+        </td>
+      </ng-container>
 
-    <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef> Name </th>
-      <td mat-cell *matCellDef="let station" routerLink="{{station.id}}"> {{ station.name }} </td>
-    </ng-container>
+      <!-- Location Column -->
+      <ng-container matColumnDef="location">
+        <th mat-header-cell *matHeaderCellDef> Location </th>
+        <td mat-cell *matCellDef="let station"> 
+          {{ station.address }}, {{station.lga}}, {{station.state}} 
+        </td>
+      </ng-container>
 
-    <ng-container matColumnDef="location">
-      <th mat-header-cell *matHeaderCellDef> Location </th>
-      <td mat-cell *matCellDef="let station"> {{ station.address }}, {{station.lga}}, {{station.state}} </td>
-    </ng-container>
+      <!-- Pump Count Column (New) -->
+      <ng-container matColumnDef="pumps">
+        <th mat-header-cell *matHeaderCellDef> Pumps (A/T) </th>
+        <td mat-cell *matCellDef="let station">
+          {{ station.pumps ? (station.pumps ) : 0 }} / {{ station.pumps?.length || 0 }}
+        </td>
+      </ng-container>
+      <!-- Fuel Status Column (New) -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Fuel Level </th>
+        <td mat-cell *matCellDef="let station"> 
+            <span 
+                [class]="'fuel-level-chip fuel-level-' + (station.fuelLevelPercentage < 20 ? 'low' : station.fuelLevelPercentage < 50 ? 'medium' : 'high')"
+            >
+                {{ station.fuelLevelPercentage }}% 
+            </span>
+        </td>
+      </ng-container>
 
-    <ng-container matColumnDef="actions">
-      <th mat-header-cell *matHeaderCellDef> Actions </th>
-      <td mat-cell *matCellDef="let station">
-        <button mat-icon-button>
-          <mat-icon>edit</mat-icon>
-        </button>
-        <button mat-icon-button>
-          <mat-icon>remove</mat-icon>
-        </button>
-      </td>
-    </ng-container>
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Actions </th>
+        <td mat-cell *matCellDef="let station">
+          <button mat-icon-button color="primary" [routerLink]="[station.id]" title="View Details">
+            <mat-icon>visibility</mat-icon>
+          </button>
+          <button mat-icon-button color="accent" title="Edit Station">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </td>
+      </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
-    <tr class="mat-row" *matNoDataRow>
-      <td class="mat-cell" colspan="3">
-        No stations available
-      </td>
-    </tr>
-  </table>
-</div>
+      <!-- Row shown when there is no matching data after filtering. -->
+      <tr class="mat-mdc-row mat-mdc-no-data-row" *matNoDataRow>
+        <td class="mat-mdc-cell" [attr.colspan]="displayedColumns.length">
+          No stations matching the filter "{{ input.value }}"
+        </td>
+      </tr>
+    </table>
+    <!-- Paginator at the bottom -->
+    <mat-paginator
+      [length]="dataSource.filteredData.length || 0"
+      [pageSize]="10"
+      [pageSizeOptions]="[5, 10, 20]"
+      [showFirstLastButtons]="true"
+      aria-label="Select page">
+    </mat-paginator>

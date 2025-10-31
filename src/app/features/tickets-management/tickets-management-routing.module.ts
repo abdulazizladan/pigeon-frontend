@@ -16,6 +16,11 @@ const routes: Routes = [
   {
     path: "tickets/:id",
     component: TicketDetailsComponent
+  },
+  {
+    path: '**',
+    redirectTo: '',
+    pathMatch: 'full'
   }
 ];
 

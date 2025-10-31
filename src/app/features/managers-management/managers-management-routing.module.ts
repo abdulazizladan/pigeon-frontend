@@ -11,6 +11,11 @@ const routes: Routes = [
   {
     path: ':id',
     component: ManagerDetailsComponent
+  },
+  {
+    path: '**',
+    redirectTo: '',
+    pathMatch: 'full'
   }
 ];
 

@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
-import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatCardModule } from '@angular/material/card';
@@ -16,12 +15,14 @@ import { LoginComponent } from './components/login/login.component';
 
 
 @NgModule({
+    providers: [
+      provideHttpClient()
+    ],
   declarations: [
     LoginComponent
   ],
   imports: [
     CommonModule,
-    HttpClientModule,
     AuthRoutingModule,
     ReactiveFormsModule,
     FlexLayoutModule,
@@ -30,9 +31,6 @@ import { LoginComponent } from './components/login/login.component';
     MatButtonModule,
     MatIconModule,
     MatProgressBarModule
-  ],
-  providers: [
-    provideCharts(withDefaultRegisterables())
   ]
 })
 export class AuthModule { }

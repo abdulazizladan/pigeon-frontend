@@ -1,13 +1,18 @@
 import { inject } from "@angular/core";
 import { patchState, signalStore, withMethods, withState } from "@ngrx/signals";
 import { SalesService } from "../services/sales.service";
+import { Sale } from "../models/sale.model";
 
 class SalesState {
+  "sales": Sale[];
+  "selectedSale": Sale | null;
   "loading": boolean;
   "error": string | null;
 }
 
 export const initialState: SalesState = {
+  sales: [],
+  selectedSale: null,
   loading: false,
   error: null
 }

@@ -1,7 +1,185 @@
-.card{
-    padding: 25px;
-    background-color: white;
-    box-shadow:1px 1px 15px #cfcfcf;
-    border-radius: 10px;
+:host {
+  --color-indigo: #4f46e5;
+  --color-green: #10b981;
+  --color-red: #ef4444;
+  --color-gray-text: #6b7280;
+  --color-bg-light: #f9fafb;
+}
+
+/* Global Container */
+.dashboard-container {
+  padding: 2rem;
+  min-height: 100vh;
+  background-color: var(--color-bg-light);
+  font-family: 'Inter', sans-serif;
+}
+
+/* Typography */
+.main-title {
+  font-size: 1.5rem; /* 2xl */
+  font-weight: 700; /* bold */
+  color: #1f2937; /* gray-800 */
+  margin-bottom: 1.5rem;
+}
+
+/* Main Card Styling */
+.summary-section {
+  max-width: 64rem; /* max-w-4xl */
+  margin: 0 auto 0 0; /* Align left */
+}
+
+.main-card {
+  padding: 1.5rem;
+  background-color: white;
+  border-radius: 0.75rem; /* rounded-xl */
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg */
+  border-top: 4px solid var(--color-indigo);
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.main-card:hover {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.card-title {
+  font-size: 0.875rem; /* text-sm */
+  font-weight: 500;
+  color: var(--color-gray-text);
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Grid Layout */
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr; /* Default: 1 column */
+  gap: 1.5rem;
+}
+
+/* Responsive Grid for tablets/desktops */
+@media (min-width: 640px) {
+  .grid-container {
+    grid-template-columns: repeat(3, 1fr); /* sm:grid-cols-3 */
   }
-  
+}
+
+/* Individual Stat Card */
+.stat-card {
+  text-align: center;
+  padding: 1rem;
+  border: 1px solid #e5e7eb; /* border-gray-200 */
+  border-radius: 0.5rem; /* rounded-lg */
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+}
+
+/* Background Colors */
+.card-total-bg { background-color: #eef2ff; } /* indigo-50 */
+.card-active-bg { background-color: #f0fdf4; } /* green-50 */
+.card-inactive-bg { background-color: #fef2f2; } /* red-50 */
+
+/* Stat Typography */
+.stat-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+.stat-value {
+  font-size: 2.25rem; /* 4xl */
+  font-weight: 800; /* extrabold */
+  margin-top: 0.25rem;
+}
+
+/* Specific Text Colors */
+.color-indigo { color: #4338ca; } /* indigo-700/600 */
+.color-green { color: #15803d; } /* green-700/600 */
+.color-red { color: #b91c1c; } /* red-700/600 */
+
+.last-updated-text {
+  margin-top: 1rem;
+  font-size: 0.875rem;
+  color: var(--color-gray-text);
+}
+
+/* --- Skeleton Loader / Progress Bar Equivalent --- */
+.loading-state {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.loading-bar {
+  height: 1rem;
+  background-color: #e5e7eb; /* gray-200 */
+  border-radius: 0.25rem;
+  animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.w-30 { width: 30%; }
+.w-60 { width: 60%; }
+.w-100 { width: 100%; }
+.h-40 { height: 2.5rem; } /* Simulating a larger block */
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: .5;
+  }
+}
+
+@media (min-width: 640px) {
+  .filter-controls {
+    width: auto;
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+  }
+}
+
+.filter-button {
+  padding: 0.4rem 0.8rem;
+  border-radius: 9999px; /* pill shape */
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid #d1d5db; /* gray-300 */
+  background-color: white;
+  color: var(--color-gray-text);
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.filter-button:hover:not(:disabled) {
+  background-color: #f3f4f6;
+  border-color: #9ca3af;
+}
+
+.filter-button.active {
+  background-color: var(--color-indigo);
+  color: white;
+  border-color: var(--color-indigo);
+}
+
+.filter-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.chart-wrapper {
+  position: relative;
+  width: 100%;
+  /* Adjust height dynamically if needed, but Chart.js handles canvas height well */
+}
+
+.sales-loading-state {
+    height: 15rem; /* Ensure loader takes up chart space */
+}
+
+.no-data-message {
+  text-align: center;
+  padding: 2rem;
+  color: var(--color-gray-text);
+  font-style: italic;
+}

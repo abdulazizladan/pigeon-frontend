@@ -19,8 +19,8 @@ export class UserService {
    */
   async getUsers(): Promise<User[]> {
     return firstValueFrom(
-      this.http.get<User[]>(`${this.baseUrl}/user`).pipe(
-        map(response => response)
+      this.http.get<{success: Boolean, error: string | null, data: User[]}>(`${this.baseUrl}/user`).pipe(
+        map(response => response.data)
       )
     );
   }
@@ -32,7 +32,9 @@ export class UserService {
    */
   async createUser(user: Omit<User, 'id'>): Promise<User> {
     return firstValueFrom(
-      this.http.post<User>(`${this.baseUrl}/user`, user)
+      this.http.post<{data: User, success: boolean, message: string}>(`${this.baseUrl}/user`, user).pipe(
+        map(response => response.data)
+      )
     );
   }
 
@@ -55,7 +57,7 @@ export class UserService {
     );
   }
 
-  async suspendUser(id: number): Promise<UserDetail> {
+  async suspendUser(id: string): Promise<UserDetail> {
     return firstValueFrom(
       this.http.patch<{success: boolean, data: UserDetail, message: string}>(`${this.baseUrl}/user/suspend/${id}, {status: 'inactive}`, {}).pipe(
         map(response => response.data)
@@ -63,9 +65,9 @@ export class UserService {
     );
   }
 
-  async unsuspendUser(email: string): Promise<UserDetail> {
+  async unsuspendUser(id: string): Promise<UserDetail> {
     return firstValueFrom(
-      this.http.patch<{success: boolean, data: UserDetail, message: string}>(`${this.baseUrl}/user/unsuspend/${email}`, {status: 'active'}).pipe(
+      this.http.patch<{success: boolean, data: UserDetail, message: string}>(`${this.baseUrl}/user/unsuspend/${id}`, {status: 'active'}).pipe(
         map(response => response.data)
       )
     );

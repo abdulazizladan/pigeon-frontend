@@ -1,72 +1,98 @@
-.users-list-container {
+.user-management-container {
   padding: 20px;
-  box-shadow:1px 1px 15px #cfcfcf;
-}
-.header {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  align-items: flex-start; /* Align to the top */
+  min-height: calc(100vh - 64px); /* Adjust for potential header/toolbar height */
+  box-sizing: border-box;
+}
+
+.user-card {
+  width: 100%;
+  max-width: 1200px; /* Max width for the card */
+  margin: 20px 0;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.mat-card-header {
+  padding-bottom: 16px;
+}
+
+.table-controls {
+  display: flex;
+  flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+  gap: 16px; /* Space between items */
+  margin-bottom: 20px;
   align-items: center;
-  margin-bottom: 20px;
+  justify-content: space-between; /* Distribute items */
 }
-.search-field {
+
+.search-input {
+  flex-grow: 1; /* Allow search input to take available space */
+  max-width: 400px; /* Limit search input width */
+}
+
+.table-responsive {
+  overflow-x: auto; /* Enable horizontal scrolling on small screens */
+}
+
+.full-width-table {
   width: 100%;
-  margin-bottom: 20px;
+  min-width: 600px; /* Ensure table doesn't get too narrow */
 }
-.error-message {
-  margin: 16px 0;
-  padding: 16px;
-  border-radius: 4px;
-}
-table {
-  width: 100%;
-  background-color: white;
-}
-.mat-mdc-row .mat-mdc-cell {
-  border-bottom: 1px solid transparent;
-  border-top: 1px solid transparent;
-}
-.mat-mdc-row:hover .mat-mdc-cell {
-  background-color: rgba(0, 0, 0, 0.04);
-}
-.mat-mdc-no-data-row {
+
+.mat-column-actions {
+  width: 80px; /* Fixed width for actions column */
   text-align: center;
-  padding: 16px;
-}
-.admin{
-  padding: 3px 8px;
-  background-color: #1d1d1d;
-  color: white;
-  border-radius: 50px;
 }
 
-.director{
-  padding: 3px 8px;
-  background-color: #2c8309;
-  color: white;
-  border-radius: 50px;
+.mat-column-role {
+  width: 120px; /* Adjust width for role chips */
 }
 
-.manager{
-  padding: 3px 5px;
-  background-color: #c0781a;
-  color: white;
-  border-radius: 50px;
+.mat-column-status {
+  width: 100px; /* Adjust width for status */
 }
-.active{
-  padding: 3px 5px;
-  background-color: #0f7c0f;
+
+/* Status text styling */
+.status-active {
+  background-color: #4CAF50; /* Green for active */
   color: white;
-  border-radius: 50px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: 500;
 }
-.inactive{
-  padding: 3px 5px;
-  background-color: #c70000;
+
+.status-inactive {
+  background-color: #F44336; /* Red for inactive */
   color: white;
-  border-radius: 50px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: 500;
 }
-.suspended{
-  padding: 3px 5px;
-  background-color: #e67906;
-  color: white;
-  border-radius: 50px;
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .table-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-input {
+    max-width: 100%; /* Full width on small screens */
+  }
+
+  .user-management-container {
+    padding: 10px;
+  }
+}
+
+.clickable-row {
+  cursor: pointer; /* Changes mouse cursor to a pointer */
+}
+
+.clickable-row:hover {
+  /* Example: Light background change on hover */
+  background-color: #f5f5f5;
 }

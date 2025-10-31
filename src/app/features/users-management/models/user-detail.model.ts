@@ -1,23 +1,23 @@
 
 export class UserDetail {
-    "id": number;
+    "id": string;
     "email": string;
     "role": string;
     "status": string;
     "createdAt": number;
     "info": {
-      "id": number,
+      "id": string,
       "firstName": string,
       "lastName": string,
       "image": string,
     };
     "contact": {
-      "id": number,
+      "id": string,
       "phone": string,
     };
     "reports": any[];
     "tickets": Array<{
-      "id": number,
+      "id": string,
       "title": string,
       "description": string,
       "dateCreated": string,

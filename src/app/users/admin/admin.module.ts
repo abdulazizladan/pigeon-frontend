@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
 
@@ -25,6 +25,9 @@ import { ProfileComponent } from './components/profile/profile.component';
 
 
 @NgModule({
+  providers: [
+    provideHttpClient()
+  ],
   declarations: [
     DashboardComponent,
     LayoutComponent,
@@ -33,7 +36,6 @@ import { ProfileComponent } from './components/profile/profile.component';
   ],
   imports: [
     CommonModule,
-    HttpClientModule,
     FlexLayoutModule,
     MatToolbarModule,
     MatCardModule,

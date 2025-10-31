@@ -2,7 +2,7 @@ import { Contact } from "./contact.model";
 import { Info } from "./info.model";
 
 export class User {
-  "id": number;
+  "id": string;
   "email": string;
   "password": string | null;
   "role": string;

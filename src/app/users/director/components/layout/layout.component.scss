@@ -1,27 +1,114 @@
-#body{
+/* Container for the entire application */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Full viewport height */
+  overflow: hidden; /* Prevent body scroll if content overflows the drawer-container */
+}
+
+/* Toolbar Styling */
+.app-toolbar {
+  z-index: 1000; /* Ensure the toolbar is above the drawer overlay */
+}
+
+.toolbar-spacer {
+  flex: 1 1 auto; /* Pushes content to the sides */
+}
+
+.app-title {
+  font-weight: 500;
+  margin-left: 8px; /* Space from menu icon */
+}
+
+.user-email {
+  font-size: small;
+  margin-right: 8px;
+  /* Hide the full email on very small screens, keep the icon menu */
+  @media (max-width: 480px) {
+    display: none;
+  }
+}
+
+/* Sidenav Container */
+.app-drawer-container {
+  flex: 1; /* Allow the drawer container to take all remaining height */
+}
+
+.app-sidenav {
+  width: 250px; /* Fixed width for the side navigation */
+  padding: 0; /* Remove padding from the container itself */
+  display: flex;
+  flex-direction: column;
+  box-shadow: none; /* Rely on mat-drawer for elevation */
+}
+
+/* Profile Section within the Sidenav */
+.profile-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 0; /* Vertical padding */
+  gap: 8px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.profile-avatar {
+  width: 80px;
+  height: 80px;
+  background-color: var(--mat-primary-contrast-color, #e0e0e0);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-avatar mat-icon {
+  font-size: 56px; /* Larger icon for avatar */
+  height: 56px;
+  width: 56px;
+  color: #757575;
+}
+
+.user-role span {
+  font-size: 0.85em;
+  color: #757575;
+}
+
+/* Navigation List */
+.nav-menu-list {
+  flex-grow: 1; /* Pushes content to the bottom if needed */
+  padding-top: 8px;
+}
+
+/* Active link styling */
+.nav-menu-list .mat-list-item.active {
+  background-color: var(--mat-primary-container-color, rgba(0, 0, 0, 0.04));
+  color: var(--mat-primary-text-color, #3f51b5);
+  /* Use !important here if Angular Material defaults are overriding */
+  /* color: var(--mat-primary-text-color, #3f51b5) !important; */
+}
+
+/* Main Content Area */
+.app-drawer-content {
+  padding: 24px; /* Default desktop padding */
+  overflow: auto; /* Allows content to scroll independently */
+  background-color: #f7f9fc; /* A subtle background color for the main area */
+}
+
+.main-content-wrapper {
+  max-width: 1200px; /* Increase max width for a modern, spacious feel */
   width: 100%;
-  height: 100%;
-}
-.example-container {
-  width: auto;
-}
-#profile{
-  width: 80%;
-  background-color: gray;
-  aspect-ratio: 1/1;
+  margin: 0 auto; /* Center the content wrapper */
 }
 
-.nav-menu{
-  width: 240px;
-}
-.nav-menu-item {
-  width: 240px;
-  margin-top: 5px;
+/* Hide/Show utility for responsiveness */
+.hidden-on-large {
+  display: none !important;
 }
 
-#main{
-  padding: 25px;
-}
-.active{
-  background-color: rgb(240, 240, 240);
+/* Responsive adjustments for smaller screens (Handset/Tablet Portrait) */
+@media (max-width: 599px) {
+  .app-drawer-content {
+    padding: 16px; /* Reduced padding on small screens */
+  }
 }

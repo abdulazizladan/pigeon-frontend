@@ -2,7 +2,7 @@
     <div class="station-details-container" fxLayout="column" fxLayoutGap="16px">
       @if(stationStore.loading()) {
         <mat-progress-bar mode="query"></mat-progress-bar>
-      }@else {
+      } @else {
       <mat-card>
         <mat-card-header>
           <mat-card-title>{{ stationStore.selectedStation()?.name }}</mat-card-title>
@@ -21,46 +21,91 @@
                   <div matListItemTitle>Location</div>
                   <div matListItemLine>{{ stationStore.selectedStation()?.address }}, {{ stationStore.selectedStation()?.lga}}, {{ stationStore.selectedStation()?.state}}</div>
                 </mat-list-item>
-                <!--<mat-list-item>
+                <mat-list-item>
                   <mat-icon matListItemIcon>network_check</mat-icon>
                   <div matListItemTitle>Status</div>
                   <div matListItemLine>
-                    <span [class]="'status-' + station.status.toLowerCase()">
-                      {{ station.status }}
-                    </span>
+                    <!--<span [class]="'status-' + (stationStore.selectedStation()?.currentStatus?.toLowerCase() || 'unknown')">
+                      {{ stationStore.selectedStation()?.currentStatus || 'Unknown' }}
+                    </span>-->
                   </div>
                 </mat-list-item>
                 <mat-list-item>
                   <mat-icon matListItemIcon>calendar_today</mat-icon>
                   <div matListItemTitle>Last Updated</div>
-                  <div matListItemLine>{{ station.lastUpdated | date:'medium' }}</div>
-                </mat-list-item>-->
+                  <!--<div matListItemLine>{{ stationStore.selectedStation()?.lastUpdated | date:'medium' }}</div>-->
+                </mat-list-item>
               </mat-list>
             </div>
 
-            <!--<div fxFlex="50">
-              <h3>Technical Details</h3>
+            <div fxFlex="50">
+              <h3>Operational Details</h3>
               <mat-list dense>
                 <mat-list-item>
-                  <mat-icon matListItemIcon>speed</mat-icon>
-                  <div matListItemTitle>Capacity</div>
-                  <div matListItemLine>{{ station.capacity }} MW</div>
+                  <mat-icon matListItemIcon>local_gas_station</mat-icon>
+                  <div matListItemTitle>Fuel Level</div>
+                  <div matListItemLine>{{ stationStore.fuelLevel() }}%</div>
                 </mat-list-item>
                 <mat-list-item>
-                  <mat-icon matListItemIcon>settings</mat-icon>
-                  <div matListItemTitle>Equipment Count</div>
-                  <div matListItemLine>{{ station.equipmentCount }}</div>
+                  <mat-icon matListItemIcon>speed</mat-icon>
+                  <div matListItemTitle>Active Pumps</div>
+                  <div matListItemLine>{{ stationStore.activePumpCount() }} / {{ stationStore.totalPumpCount() }}</div>
                 </mat-list-item>
                 <mat-list-item>
                   <mat-icon matListItemIcon>warning</mat-icon>
-                  <div matListItemTitle>Alerts</div>
-                  <div matListItemLine>{{ station.activeAlerts || 0 }} active</div>
+                  <div matListItemTitle>Active Alerts</div>
+                  <!--<div matListItemLine>{{ stationStore.selectedStation()?.activeAlerts || 0 }}</div>-->
                 </mat-list-item>
               </mat-list>
-            </div>-->
+            </div>
           </div>
 
           <mat-divider class="section-divider"></mat-divider>
+
+          <div class="sales-graph-section" fxLayout="column" fxLayoutGap="16px">
+            <h3>Daily Sales Performance (Last 5 Days)</h3>
+            
+            <div class="chart-container" style="height: 300px; border: 1px solid #eee; margin-bottom: 16px;">
+              <svg [attr.viewBox]="'0 0 ' + chartWidth + ' ' + chartHeight" style="width: 100%; height: 100%; display: block;">
+                <!-- Plot background -->
+                <rect [attr.x]="chartMargin.left" [attr.y]="chartMargin.top" [attr.width]="innerWidth" [attr.height]="innerHeight" fill="#fafafa" stroke="#e0e0e0"></rect>
+
+                <!-- Axes -->
+                <line [attr.x1]="chartMargin.left" [attr.y1]="chartMargin.top + innerHeight" [attr.x2]="chartMargin.left + innerWidth" [attr.y2]="chartMargin.top + innerHeight" stroke="#9e9e9e" stroke-width="1"></line>
+                <line [attr.x1]="chartMargin.left" [attr.y1]="chartMargin.top" [attr.x2]="chartMargin.left" [attr.y2]="chartMargin.top + innerHeight" stroke="#9e9e9e" stroke-width="1"></line>
+
+                <!-- Lines -->
+                <polyline [attr.points]="petrolPoints" fill="none" stroke="#3f51b5" stroke-width="2.5"></polyline>
+                <polyline [attr.points]="dieselPoints" fill="none" stroke="#ff9800" stroke-width="2.5"></polyline>
+
+                <!-- Data points -->
+                @for (point of salesData; let i = $index; track point.date) {
+                  <circle [attr.cx]="indexToX(i)" [attr.cy]="valueToY(point.petrolSales)" r="3" fill="#3f51b5"></circle>
+                  <circle [attr.cx]="indexToX(i)" [attr.cy]="valueToY(point.dieselSales)" r="3" fill="#ff9800"></circle>
+                }
+
+                <!-- Simple legend -->
+                <g>
+                  <rect [attr.x]="chartWidth - chartMargin.right - 130" [attr.y]="chartMargin.top + 8" width="120" height="40" rx="4" ry="4" fill="#ffffff" stroke="#e0e0e0"></rect>
+                  <line [attr.x1]="chartWidth - chartMargin.right - 118" [attr.y1]="chartMargin.top + 24" [attr.x2]="chartWidth - chartMargin.right - 98" [attr.y2]="chartMargin.top + 24" stroke="#3f51b5" stroke-width="2.5"></line>
+                  <text [attr.x]="chartWidth - chartMargin.right - 92" [attr.y]="chartMargin.top + 28" font-size="12" fill="#424242">Petrol</text>
+                  <line [attr.x1]="chartWidth - chartMargin.right - 118" [attr.y1]="chartMargin.top + 40" [attr.x2]="chartWidth - chartMargin.right - 98" [attr.y2]="chartMargin.top + 40" stroke="#ff9800" stroke-width="2.5"></line>
+                  <text [attr.x]="chartWidth - chartMargin.right - 92" [attr.y]="chartMargin.top + 44" font-size="12" fill="#424242">Diesel</text>
+                </g>
+              </svg>
+            </div>
+
+            <mat-list dense>
+              <h4 mat-subheader>Sales Data Summary (Naira)</h4>
+              @for(sale of salesData; track sale.date) {
+                <mat-list-item>
+                  <mat-icon matListItemIcon>trending_up</mat-icon>
+                  <div matListItemTitle>{{ sale.date | date:'shortDate' }}</div>
+                  <div matListItemLine>Petrol: ₦{{ sale.petrolSales | number }} | Diesel: ₦{{ sale.dieselSales | number }}</div>
+                </mat-list-item>
+              }
+            </mat-list>
+          </div>
 
         </mat-card-content>
 
@@ -70,8 +115,4 @@
         </mat-card-actions>
       </mat-card>
     }
-      <!--<div *ngIf="!selectedStation()" class="no-station-selected" fxLayout="column" fxLayoutAlign="center center">
-        <mat-icon>info</mat-icon>
-        <p>No station selected</p>
-      </div>
-    </div>-->
+    </div>

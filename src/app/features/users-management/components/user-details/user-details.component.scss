@@ -1,0 +1,24 @@
+:host {
+    display: block;
+  }
+  .user-details-list .mat-list-item {
+    height: auto; /* Allow items to adjust height */
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+  .user-details-list .mat-list-item-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .user-details-list .mat-list-item-content > span {
+    flex-grow: 1;
+  }
+  /* General Material component color adjustments (similar to the previous file) */
+  .mat-mdc-progress-bar {
+    --mdc-linear-progress-track-color: #e5e7eb; /* gray-200 */
+    --mdc-linear-progress-active-indicator-color: #4f46e5; /* indigo-600 */
+  }
+  .mat-mdc-button.mat-warn {
+    --mdc-button-persistent-ripple-color: #fca5a5; /* red-300 */
+  }

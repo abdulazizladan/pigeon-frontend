@@ -2,31 +2,70 @@
 // Custom Theming for Angular Material
 // For more information: https://material.angular.io/guide/theming
 @use '@angular/material' as mat;
-
 html {
-  color-scheme: light;
   @include mat.theme((
     color: (
-      theme-type: light,
       primary: mat.$azure-palette,
-      tertiary: mat.$blue-palette,
+      tertiary: mat.$green-palette,
     ),
-    typography: (
-      plain-family: Roboto,
-      brand-family: Open Sans,
-      bold-weight: 500,
-      medium-weight: 300,
-      regular-weight: 100,
-    ),
-    density: -2
+    typography: Helvetica,
+    density: -2,
   ));
+}
 
-  .example-orange-primary-container {
-    @include mat.theme-overrides((
-      primary-container: #336fd7
-    ));
-  }
-}/* You can add global styles to this file, and also import other style files */
+body {
+  // Default the application to a light color theme. This can be changed to
+  // `dark` to enable the dark color theme, or to `light dark` to defer to the
+  // user's system settings.
+  color-scheme: light;
+
+  // Set a default background, font and text colors for the application using
+  // Angular Material's system-level CSS variables. Learn more about these
+  // variables at https://material.angular.dev/guide/system-variables
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-medium);
+
+  // Reset the user agent margin.
+  margin: 0;
+}
+
+:root {
+  @include mat.card-overrides((
+    elevated-container-color: #ffffff,
+    elevated-container-elevation: red,
+    subtitle-text-size: 10px,
+    filled-container-shape: 5px,
+    elevated-container-shape: 5px,
+    outlined-container-shape: 5px,
+  ));
+}
+
+:root {
+  @include mat.button-overrides(
+    (
+      filled-container-shape:3px,
+      outlined-container-shape: 3px,
+      text-container-shape: 3px,
+      protected-container-shape: 3px,
+      tonal-container-shape: 3px
+    )
+  )
+}
+
+:root {
+  @include mat.expansion-overrides((
+    header-collapsed-state-height: 1,
+    header-expanded-state-height: 1
+  ));
+}
+
+:root {
+  @include mat.toolbar-overrides((
+    container-text-color: rgb(27, 71, 45),
+    container-background-color: white,
+  ));
+}
 
 html, body { height: 100%; }
 body {
@@ -51,7 +90,7 @@ body {
 }**/
 
 .mat-mdc-button-base {
-  border-radius: 5px !important; // Adjust the radius value as needed
+  border-radius: 0px !important; // Adjust the radius value as needed
 }
 
 .mat-mdc-button {
@@ -77,7 +116,7 @@ body {
   @include mat.sidenav-overrides((
     container-background-color: white,
     container-shape: rectangle,
-    container-elevation-shadow: 5px 5px 5px 5px
+    //container-elevation-shadow: 5px 5px 5px 5px
   ));
 }
 

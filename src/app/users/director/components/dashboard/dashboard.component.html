@@ -1,115 +1,84 @@
-<div fxFlex fxLayout="column" fxLayoutGap="15px">
+<main class="dashboard-container">
+      <h1 class="main-title">Station Status Overview</h1>
+      
+      <!-- Summary Card Implementation -->
+      <section class="summary-section">
+        <div class="main-card">
+          <div class="card-title">Network Station Summary</div>
 
-  <h1>Director Dashboard</h1>
+          @if (directorStore.loading()) {
+            <!-- Loading State (CSS Skeleton Loader) -->
+            <div class="loading-state">
+              <div class="loading-bar w-30"></div>
+              <div class="loading-bar w-100 h-40"></div>
+              <div class="loading-bar w-60"></div>
+            </div>
+          } @else {
+            <!-- Data Display Grid -->
+            <div class="grid-container">
+              
+              <!-- Total Stations -->
+              <div class="stat-card card-total-bg">
+                <div class="stat-label color-indigo">Total Stations</div>
+                <div class="stat-value color-indigo">
+                  {{ directorStore.stationStats()?.total ?? 0 }}
+                </div>
+              </div>
 
-  <!--Cards row 1-->
-  <div style="width: 100%" fxLayout.xs="column" fxLayout.gt-xs="row" fxLayoutGap="10px">
-
-    <div fxFlex="50%" fxLayout="column" fxLayoutGap="10px" class="card">
-      <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start center">
-        <mat-icon>business</mat-icon>
-        <span>Stations</span>
-      </div>
-      <h1>0</h1>
-      <div fxLayout="row" fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start center">
-        <div fxLayout="row" fxLayout="5px" fxLayoutAlign="start center">
-          <mat-icon>account_circle</mat-icon>
-          <span>Active - 0</span>
+              <!-- Active Stations -->
+              <div class="stat-card card-active-bg">
+                <div class="stat-label color-green">Active (Operational)</div>
+                <div class="stat-value color-green">
+                  {{ directorStore.stationStats()?.active ?? 0 }}
+                </div>
+              </div>
+              <div class="stat-card card-inactive-bg">
+                <div class="stat-label color-red">Inactive (Needs Service)</div>
+                <div class="stat-value color-red">
+                  {{ directorStore.stationStats()?.inactive ?? 0 }}
+                </div>
+              </div>
+            </div>
+            <!--<p class="last-updated-text">Last updated: {{ formatDate(now) }}</p>-->
+          }
         </div>
-        <div fxLayout="row" fxLayout="5px" fxLayoutAlign="start center">
-          <mat-icon>supervisor_account</mat-icon>
-          <span>Suspended - 0</span>
+      </section>
+
+      <div class="separator"></div>
+
+      <!-- SALES GRAPH SECTION -->
+      <section class="sales-section">
+        <div class="main-card sales-card">
+          <div class="card-header">
+            <div class="card-title">Fuel Sales Performance</div>
+            <div class="filter-controls">
+              @for (period of ['daily', 'weekly', 'monthly']; track period) {
+                <button 
+                  (click)="loadSales(period)"
+                  [class.active]="directorStore.currentSalesPeriod() === period"
+                  class="filter-button"
+                  [disabled]="directorStore.salesLoading()"
+                >
+                  {{ period | uppercase }}
+                </button>
+              }
+            </div>
+          </div>
+
+          @if (directorStore.salesLoading()) {
+            <!-- Sales Graph Loading State -->
+            <div class="loading-state sales-loading-state">
+              <div class="loading-bar w-100 h-200"></div>
+            </div>
+          } @else if (directorStore.salesRecords().length > 0) {
+            <!-- Chart Container -->
+            <div class="chart-wrapper">
+              <!-- Canvas element. Chart will be rendered here by JS. -->
+              <canvas id="salesChart" width="400" height="200"></canvas>
+            </div>
+          } @else {
+            <p class="no-data-message">No sales data available for this period.</p>
+          }
         </div>
-      </div>
-    </div>
-
-    <div fxFlex="50%" fxLayout="column" fxLayoutGap="10px" class="card">
-      <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start center">
-        <mat-icon>people</mat-icon>
-        <span>Attendants</span>
-      </div>
-      <h1>0</h1>
-      <div fxLayout="row" fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start center">
-        <div fxLayout="row" fxLayout="5px" fxLayoutAlign="start center">
-          <mat-icon>account_circle</mat-icon>
-          <span>Active - 0</span>
-        </div>
-        <div fxLayout="row" fxLayout="5px" fxLayoutAlign="start center">
-          <mat-icon>supervisor_account</mat-icon>
-          <span>Suspended - 0</span>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <!--Cards row 2-->
-  <div style="width: 100%" fxLayout.xs="column" fxLayout.gt-xs="row" fxLayoutGap="10px">
-
-    <div fxFlex="50%" fxLayout="column" fxLayoutGap="10px" class="card">
-      <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start center">
-        <mat-icon>assignent</mat-icon>
-        <span>Refuel</span>
-      </div>
-      <h1>0</h1>
-      <div fxLayout="row" fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start center">
-        <div fxLayout="row" fxLayout="5px" fxLayoutAlign="start center">
-          <!--<mat-icon>account_circle</mat-icon>
-          <span>Directors - 0</span>
-        </div>
-        <div fxLayout="row" fxLayout="5px" fxLayoutAlign="start center">
-          <mat-icon>supervisor_account</mat-icon>
-          <span>Manager - 0</span>
-        </div>-->
-      </div>
-    </div>
-
-    <div fxFlex="50%" fxLayout="column" fxLayoutGap="10px" class="card">
-      <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start center">
-        <mat-icon>people</mat-icon>
-        <span>Stations</span>
-      </div>
-      <h1>0</h1>
-      <div fxLayout="row" fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start center">
-        <div fxLayout="row" fxLayout="5px" fxLayoutAlign="start center">
-          <mat-icon>account_circle</mat-icon>
-          <span>Active - 0</span>
-        </div>
-        <div fxLayout="row" fxLayout="5px" fxLayoutAlign="start center">
-          <mat-icon>supervisor_account</mat-icon>
-          <span>Active - 0</span>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-</div>
-
-<!--<div fxFlex fxLayout="column" fxLayoutGap="15px">
-
-  <h1>Director Dashboard</h1>
-  <ul>
-
-    <li>
-      Managers
-      <ul>
-        <li>Total</li>
-        <li>Active</li>
-        <li>Suspended</li>
-      </ul>
-    </li>
-
-    <li>
-      Stations
-      <ul>
-        <li>Total</li>
-        <li>Active</li>
-        <li>Inactive</li>
-      </ul>
-    </li>
-
-
-
-  </ul>
-</div>-->
+      </section>
+</main>

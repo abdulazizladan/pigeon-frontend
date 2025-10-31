@@ -1,6 +1,168 @@
-.card{
-  padding: 25px;
-  background-color: white;
-  box-shadow:1px 1px 15px #cfcfcf;
-  border-radius: 10px;
+:host {
+  display: block;
+  /* Ensure Material components are styled correctly with Tailwind */
+  --mat-card-padding: 1.5rem;
+}
+
+/* Custom styling for Mat-Card to fully control appearance */
+mat-card {
+  @apply p-6; 
+}
+.card-total {
+  height: 40px; /* To reserve space and prevent CLS when loading indicator appears */
+  line-height: 40px;
+}
+
+/* Style for the mat-progress-bar */
+mat-progress-bar {
+  /* Adjust the height and appearance of the progress bar if needed */
+  height: 6px;
+  border-radius: 9999px; /* rounded-full */
+}
+.mat-mdc-progress-bar {
+  /* Apply primary color or custom color */
+  --mdc-linear-progress-track-color: #e5e7eb; /* gray-200 */
+  --mdc-linear-progress-active-indicator-color: #6366f1; /* indigo-500 */
+}
+
+.admin-dashboard-container {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Increased gap for better visual separation */
+  max-width: 1200px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.dashboard-title {
+  font-size: 2.2em; /* Slightly larger title for prominence */
+  font-weight: 800;
+  color: #333333; /* Dark gray title */
+  margin-bottom: 10px;
+  text-align: center;
+  letter-spacing: -0.5px;
+}
+
+.dashboard-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px; /* Increased gap between cards */
+}
+
+/* --- Card Styling: Gray Background, White/Light Fonts --- */
+.dashboard-card {
+  flex: 1 1 calc(50% - 10px); /* Distribute space evenly */
+  min-width: 300px; /* Minimum width for responsiveness */
+  color: #424242; /* Darker Gray Card Background */
+  background-color: #E0E0E0; /* Light Gray Text Color */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Deeper shadow for elevation */
+  border-radius: 12px; /* Smoother rounded corners */
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-5px); /* Noticeable lift on hover */
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4); /* Pronounced hover shadow */
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 15px; /* Increased gap in header */
+  padding: 18px 20px 0; /* More padding */
+}
+
+.card-icon {
+  font-size: 32px; /* Larger icon */
+  width: 32px;
+  height: 32px;
+  color: #2d2d2d; /* Light icon color */
+}
+
+.card-title {
+  font-size: 1.4em;
+  font-weight: 700;
+  color: #1f1f1f; /* White title */
+}
+
+.card-content {
+  padding: 15px 20px 20px; /* Consistent padding */
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.card-spinner {
+  margin: 15px auto;
+}
+
+.card-total {
+  font-size: 3.5em; /* Larger, impactful total font size */
+  font-weight: 900;
+  color: #242424; /* White text for total */
+  margin: 0;
+  line-height: 1;
+}
+
+.card-pills-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px; /* Adjusted gap between pills */
+  margin-top: 5px;
+}
+
+/* Pill styling for contrast on a dark card */
+.card-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #5A5A5A; /* Slightly lighter gray pill background */
+  padding: 8px 14px; /* Generous padding for a better feel */
+  border-radius: 25px; /* Full rounded shape */
+  font-size: 0.9em;
+  color: #FFFFFF; /* White text for pills */
+  white-space: nowrap;
+  transition: background-color 0.2s;
+}
+
+.card-pill:hover {
+    background-color: #616161; /* Slight hover effect */
+}
+
+.pill-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  color: #BBBBBB; /* Slightly softer white for icons */
+}
+
+.pill-text {
+  font-weight: 600;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .admin-dashboard-container {
+    max-width: 90%;
+  }
+  .dashboard-card {
+    flex: 1 1 100%; /* Stack cards on tablets and smaller devices */
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-dashboard-container {
+    padding: 10px;
+    gap: 15px;
+  }
+
+  .dashboard-title {
+    font-size: 1.8em;
+  }
+
+  .card-total {
+    font-size: 3em;
+  }
 }

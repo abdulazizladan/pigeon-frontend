@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
 
@@ -12,6 +12,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatListModule } from '@angular/material/list';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { BaseChartDirective, provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 import { DirectorRoutingModule } from './director-routing.module';
 import { LayoutComponent } from './components/layout/layout.component';
@@ -21,6 +24,10 @@ import { ProfileComponent } from './components/profile/profile.component';
 
 
 @NgModule({
+  providers: [
+    provideHttpClient(),
+    provideCharts(withDefaultRegisterables())
+  ],
   declarations: [
     LayoutComponent,
     DashboardComponent,
@@ -29,7 +36,6 @@ import { ProfileComponent } from './components/profile/profile.component';
   ],
   imports: [
     CommonModule,
-    HttpClientModule,
     FlexLayoutModule,
     MatToolbarModule,
     MatCardModule,
@@ -39,6 +45,9 @@ import { ProfileComponent } from './components/profile/profile.component';
     MatMenuModule,
     MatProgressBarModule,
     MatDividerModule,
+    MatListModule,
+    BaseChartDirective,
+    MatProgressSpinnerModule,
     DirectorRoutingModule
   ]
 })

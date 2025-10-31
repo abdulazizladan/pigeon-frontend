@@ -20,7 +20,7 @@ export class StationsService implements OnInit{
     )
   }
 
-  async get(): Promise<Station[]> {
+  async getAll(): Promise<Station[]> {
     return firstValueFrom(
       this.http.get<{success: boolean, data: Station[], message: string}>(`${this.baseUrl}/station`).pipe(
         map(response => response.data)
@@ -28,7 +28,7 @@ export class StationsService implements OnInit{
     );
   }
 
-  async getById(id: number): Promise<Station> {
+  async getById(id: string): Promise<Station> {
     return firstValueFrom(
       this.http.get<{success: boolean, data: Station, message: string}>(`${this.baseUrl}/station/${id}`).pipe(
       map(response => response.data)

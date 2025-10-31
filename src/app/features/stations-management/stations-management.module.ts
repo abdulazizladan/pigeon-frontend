@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -19,6 +19,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from '@angular/material/list';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 import { StationsManagementRoutingModule } from './stations-management-routing.module';
 import { StationsListComponent } from './components/stations-list/stations-list.component';
@@ -27,6 +28,9 @@ import { AddStationComponent } from './components/add-station/add-station.compon
 
 
 @NgModule({
+  providers: [
+    provideHttpClient()
+  ],
   declarations: [
     StationsListComponent,
     StationDetailsComponent,
@@ -34,7 +38,6 @@ import { AddStationComponent } from './components/add-station/add-station.compon
   ],
   imports: [
     CommonModule,
-    HttpClientModule,
     ReactiveFormsModule,
     FlexLayoutModule,
     MatSlideToggleModule,
@@ -51,6 +54,7 @@ import { AddStationComponent } from './components/add-station/add-station.compon
     MatChipsModule,
     MatDividerModule,
     MatListModule,
+    MatPaginatorModule,
     StationsManagementRoutingModule
   ]
 })

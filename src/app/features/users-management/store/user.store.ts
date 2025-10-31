@@ -1,8 +1,20 @@
-import { signalStore, withState, withMethods, patchState } from '@ngrx/signals';
+// users.store.ts
+
+import { signalStore, withState, withMethods, patchState, withComputed } from '@ngrx/signals';
 import { inject } from '@angular/core';
 import { UserService } from '../services/users.service';
 import { User } from '../models/user.model';
 import { UserDetail } from '../models/user-detail.model';
+import { computed } from '@angular/core';
+
+// --- Type Definitions ---
+
+/** Standard structure for all API responses. */
+interface BackendResponse<T> {
+  success: boolean;
+  data: T;
+  message: string;
+}
 
 interface UserState {
   users: User[];
@@ -18,89 +30,144 @@ const initialState: UserState = {
   error: null
 };
 
-export const UserStore = signalStore(
+// --- Store Implementation ---
 
+export const UserStore = signalStore(
   { providedIn: 'root' },
   withState(initialState),
+
+  // ⭐️ OPTIMIZATION 1: Add a computed signal for derived state
+  withComputed(({ users, selectedUser, loading }) => ({
+    // A selector that indicates if the data is ready (e.g., for showing the UI)
+    isDataLoaded: computed(() => users().length > 0 && !loading()),
+    // A selector for a list of active users
+    activeUsers: computed(() => users().filter(u => u.status === 'active')),
+    // Check if the selected user is active
+    isSelectedUserActive: computed(() => selectedUser()?.status === 'active'),
+  })),
+
   withMethods((store, userService = inject(UserService)) => ({
+
+    // ⭐️ OPTIMIZATION 2: Centralized error handling helper
+    handleError(error: any, defaultMessage: string): void {
+      console.error('API Error:', error);
+      patchState(store, {
+        error: error?.message || defaultMessage,
+        loading: false
+      });
+    },
+
+    // --- Load Users ---
     async loadUsers() {
       patchState(store, { loading: true, error: null });
       try {
-        const users = await userService.getUsers();
-        patchState(store, { users, loading: false });
+        // Assuming userService.getUsers() returns Promise<BackendResponse<User[]>>
+        const response: User[] = await userService.getUsers();
+        
+        // ⭐️ OPTIMIZATION 3: Ensure you use response.data
+        if (!response) {
+           throw new Error( 'Failed to fetch users from the server.');
+        }
+
+        patchState(store, { users: response, loading: false }); 
       } catch (error) {
-        console.error('Error loading users: ', error);
-        patchState(store, {
-          error: 'Failed to load users. Please try again later.',
-          loading: false
-        });
+        this.handleError(error, 'Failed to load users. Please try again later.');
       }
     },
+    
+    // --- Select User ---
     async selectUser(email: string) {
-      patchState(store, { loading: true, error: null });
+      patchState(store, { loading: true, error: null, selectedUser: null }); // Clear previous selection
       try {
-        const user = await userService.getUserByEmail(email);
-        patchState(store, { selectedUser: user, loading: false });
+        const response: UserDetail = await userService.getUserByEmail(email); 
+        
+        if (!response) {
+           throw new Error( `Failed to find user with email: ${email}.`);
+        }
+        
+        patchState(store, { selectedUser: response, loading: false });
       } catch (error) {
-        console.log('Error selecting user: ', error);
-        patchState(store, {
-          error: 'Failed to load user. Please try again later.',
-          loading: false
-        });
+        this.handleError(error, 'Failed to load user details. Please try again later.');
       }
     },
+    
+    // --- Add User ---
     async addUser(user: User) {
       patchState(store, { loading: true, error: null });
       try {
-        const newUser = await userService.createUser(user);
+        const response = await userService.createUser(user); 
+        if (!response) {
+           throw new Error( 'Failed to create user on the server.');
+        }
+        // ⭐️ OPTIMIZATION 4: Update the array immutably with the new user from the backend
         patchState(store, state => ({
-          users: [...state.users, user],
+          users: [
+            ...state.users, 
+            response
+          ],
           loading: false,
-          error: null
         }));
       } catch (error) {
-        patchState(store, {
-          error: 'Failed to create user. Please try again later.',
-          loading: false
-        });
+        this.handleError(error, 'Failed to create user. Please try again later.');
       }
     },
+    
+    // --- Update User ---
     async updateUser(user: User) {
       patchState(store, { loading: true, error: null });
       try {
-        const updatedUser = await userService.updateUser(user);
-        /**const updatedUsers = store.users.map((u: { id: number; }) => {
-          if (u.id === user.id) {
-            return updatedUser;
-          }
-          return u;
-        });**/
-        //patchState(store, { user: updatedUser, loading: false, error: null });
+        const response: User = await userService.updateUser(user);
+        
+        if (!response) {
+           throw new Error( 'Failed to update user on the server.');
+        }
+        
+        const updatedUser = response;
+        
+        // ⭐️ OPTIMIZATION 5: Immutable update via map
+        patchState(store, state => ({
+          users: state.users.map(u => 
+            u.id === updatedUser.id ? updatedUser : u
+          ),
+          // ⭐️ OPTIMIZATION 6: Update selected user if it matches
+          selectedUser: state.selectedUser?.id === updatedUser.id
+            ? { ...state.selectedUser, ...updatedUser, info: { ...state.selectedUser.info, ...updatedUser.info }, contact: { ...state.selectedUser.contact, ...updatedUser.contact } }
+            : state.selectedUser,
+          loading: false, 
+        }));
       } catch (error) {
-        patchState(store, {
-          error: 'Failed to update user. Please try again later.',
-          loading: false
-        });
+        this.handleError(error, 'Failed to update user. Please try again later.');
       }
     },
-    /**async suspendUser(id: number) {
-      patchState(store, {loading: true, error: null})
+    
+    // --- Suspend User ---
+    async suspendUser(id: string) {
+      patchState(store, {loading: true, error: null});
       try {
-        const user = await userService.suspendUser(id);
-        const updatedUsers = store.users.map((user: { id: number; }) => {
-          if (user.id === id) {
-            return {
-              ...user,
-              status: 'suspended'
-            };
-          }
-          return user;
-        });
-        patchState(store, {users: updatedUsers});
-        patchState(store, {loading: false, error: null})
+        const response = await userService.suspendUser(id); 
+        
+        // Assume suspendUser returns the updated user or a generic success response
+        if (!response ) {
+           throw new Error( 'Suspend operation failed on the server.');
+        }
+
+        // ⭐️ OPTIMIZATION 7: Immutable state update for the suspension statu
+        patchState(store, state => ({
+          users: state.users.map(u => {
+            if (u.id === id) {
+              return { ...u, status: 'inactive' }; // Assumed status change
+            }
+            return u;
+          }),
+          // Update selected user status if it matches
+          selectedUser: state.selectedUser?.id === id
+            ? { ...state.selectedUser, status: 'inactive' }
+            : state.selectedUser,
+          loading: false, 
+        }));
       } catch(error) {
-        patchState(store, {loading: false, error: "Unable to suspend user. Please check your connection and try again later."})
+        this.handleError(error, 'Unable to suspend user. Please check your connection and try again later.');
       }
-    }**/
+    }
   }))
 );

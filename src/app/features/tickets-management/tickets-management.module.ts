@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -23,6 +23,9 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 
 @NgModule({
+  providers: [
+    provideHttpClient()
+  ],
   declarations: [
     TicketsListComponent,
     TicketDetailsComponent,
@@ -30,7 +33,6 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
   ],
   imports: [
     CommonModule,
-    HttpClientModule,
     ReactiveFormsModule,
     FlexLayoutModule,
     MatSlideToggleModule,

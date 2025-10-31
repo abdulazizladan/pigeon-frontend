@@ -6,6 +6,11 @@ const routes: Routes = [
   {
     path: '',
     component: SalesDashboardComponent
+  },
+  {
+    path: '**',
+    redirectTo: '',
+    pathMatch: 'full'
   }
 ];
 

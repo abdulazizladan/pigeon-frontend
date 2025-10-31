@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -25,6 +25,9 @@ import { AddManagerComponent } from './components/add-manager/add-manager.compon
 
 
 @NgModule({
+  providers: [
+    provideHttpClient()
+  ],
   declarations: [
     ManagersListComponent,
     ManagerDetailsComponent,
@@ -32,7 +35,6 @@ import { AddManagerComponent } from './components/add-manager/add-manager.compon
   ],
   imports: [
     CommonModule,
-    HttpClientModule,
     ReactiveFormsModule,
     FlexLayoutModule,
     MatSlideToggleModule,

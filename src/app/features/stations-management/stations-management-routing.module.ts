@@ -11,6 +11,11 @@ const routes: Routes = [
   {
     path: ':id',
     component: StationDetailsComponent
+  },
+  {
+    path: '**',
+    redirectTo: '',
+    pathMatch: 'full'
   }
 ];
 

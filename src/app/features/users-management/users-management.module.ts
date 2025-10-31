@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -28,6 +28,9 @@ import { DeativateUserDialogComponent } from './components/deativate-user-dialog
 
 
 @NgModule({
+  providers: [
+    provideHttpClient()
+  ],
   declarations: [
     UsersListComponent,
     UserDetailsComponent,
@@ -37,7 +40,6 @@ import { DeativateUserDialogComponent } from './components/deativate-user-dialog
   ],
   imports: [
     CommonModule,
-    HttpClientModule,
     ReactiveFormsModule,
     FlexLayoutModule,
     MatSlideToggleModule,

@@ -1,25 +1,27 @@
-<div fxLayout="column" id="body">
-  <mat-toolbar color="tertiary">
-    <button mat-icon-button (click)="drawer.toggle()">
+<div id="body" class="app-container">
+  <mat-toolbar color="primary" class="app-toolbar">
+    <button
+      mat-icon-button
+      (click)="drawer.toggle()"
+      class="menu-button"
+      [class.hidden-on-large]="!isHandset"
+      >
       <mat-icon>menu</mat-icon>
     </button>
-    PigeonApp
-    <span fxFlex="1 1 auto"></span>
-    <span style="font-size: small;">{{authStore.userEmail()}}</span>
-    <button mat-icon-button [matMenuTriggerFor]="menu">
-      <mat-icon>
-        more_vert
-      </mat-icon>
+
+    <span class="app-title">Pigeon App</span>
+
+    <span class="toolbar-spacer"></span>
+
+    <span class="user-email">{{authStore.userEmail()}}</span>
+    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="User menu">
+      <mat-icon>more_vert</mat-icon>
     </button>
     <mat-menu #menu="matMenu">
       <button mat-menu-item routerLink="profile">
         <mat-icon>person</mat-icon>
         Profile
       </button>
-      <!--<button mat-menu-item routerLink="settings">
-        <mat-icon>settings</mat-icon>
-        Settings
-      </button>-->
       <button mat-menu-item (click)="logout()">
         <mat-icon>exit_to_app</mat-icon>
         Logout
@@ -27,30 +29,41 @@
     </mat-menu>
   </mat-toolbar>
 
-  <mat-drawer-container class="example-container" fxFlex="1 1 auto">
-    <mat-drawer mode="over" opened #drawer fxLayout="column" class="nav-menu">
-      <div style="padding: 10px" fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="center center">
-        <div id="profile"> </div>
-        <div fxLayout="row" fxLayoutAlign="center">
-          <span style="font-size: smaller;">{{authStore.userRole()}}</span>
+  <mat-drawer-container class="app-drawer-container">
+    <mat-drawer
+      #drawer
+      class="app-sidenav"
+      [mode]="(isHandset) ? 'over' : 'side'"
+      [opened]="!isHandset"
+    >
+      <div class="profile-section">
+        <div id="profile" class="profile-avatar">
+          <mat-icon>account_circle</mat-icon>
+        </div>
+        <div class="user-role">
+          <span>{{authStore.userRole()}}</span>
         </div>
       </div>
-      <button mat-button routerLink="./" class="nav-menu-item" routerLinkActive="active">
-        <mat-icon>dashboard</mat-icon>
-        Dashboard
-      </button>
-      <button mat-button routerLink="users" class="nav-menu-item" routerLinkActive="active">
-        <mat-icon>people</mat-icon>
-        Users
-      </button>
-      <button mat-button routerLink="issues" class="nav-menu-item" routerLinkActive="active">
-        <mat-icon>bug_report</mat-icon>
-        Issues
-      </button>
+
+      <mat-nav-list class="nav-menu-list">
+        <a mat-list-item routerLink="./" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+          <mat-icon matListItemIcon>dashboard</mat-icon>
+          <span matListItemTitle>Dashboard</span>
+        </a>
+        <a mat-list-item routerLink="users" routerLinkActive="active">
+          <mat-icon matListItemIcon>people</mat-icon>
+          <span matListItemTitle>Users</span>
+        </a>
+        <a mat-list-item routerLink="issues" routerLinkActive="active">
+          <mat-icon matListItemIcon>bug_report</mat-icon>
+          <span matListItemTitle>Issues</span>
+        </a>
+      </mat-nav-list>
     </mat-drawer>
-    <mat-drawer-content id="main" fxLayout="row" fxLayoutAlign="center">
-      <div fxFlex.xs="100%" fxFlex.gt-xs="800px">
-      <router-outlet></router-outlet>
+
+    <mat-drawer-content class="app-drawer-content">
+      <div class="main-content-wrapper">
+        <router-outlet></router-outlet>
       </div>
     </mat-drawer-content>
   </mat-drawer-container>

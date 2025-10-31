@@ -21,7 +21,20 @@ export class UserDetailsComponent implements OnInit {
     this.userStore.selectUser(this.email)
   }
 
-  openSuspendUserDialog(id: number | undefined) {
+  openSuspendUserDialog(email: string | undefined) {
+    const dialogRef = this.dialog.open(SuspendUserComponent, {
+      width: '400px',
+      data: { email: this.email }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        //this.userStore.suspendUser(this.email);
+      }
+    });
+  }
+
+  openEnableUserDialog(email: string | undefined) {
     const dialogRef = this.dialog.open(SuspendUserComponent, {
       width: '400px',
       data: { email: this.email }

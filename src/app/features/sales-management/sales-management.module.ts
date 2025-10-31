@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -22,9 +22,13 @@ import { SalesManagementRoutingModule } from './sales-management-routing.module'
 import { SalesDashboardComponent } from './components/sales-dashboard/sales-dashboard.component';
 import { AddSaleComponent } from './components/add-sale/add-sale.component';
 import { BranchSaleComponent } from './components/branch-sale/branch-sale.component';
+import { provideCharts } from 'ng2-charts';
 
 
 @NgModule({
+  providers: [
+    provideHttpClient(),
+  ],
   declarations: [
     SalesDashboardComponent,
     AddSaleComponent,
@@ -32,7 +36,6 @@ import { BranchSaleComponent } from './components/branch-sale/branch-sale.compon
   ],
   imports: [
     CommonModule,
-    HttpClientModule,
     ReactiveFormsModule,
     FlexLayoutModule,
     MatButtonModule,

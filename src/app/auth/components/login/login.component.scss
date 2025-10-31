@@ -1,7 +1,112 @@
-#container {
+/* Container: Mimics full screen height and centers content */
+.login-page-wrapper {
+  min-height: 100vh;
   width: 100%;
-  height: 100%;
-  mat-card {
-    padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* Subtle Gradient Background */
+  background: linear-gradient(135deg, #f0f4f8 0%, #e0e8f0 100%); 
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Card Styling */
+.login-card {
+  max-width: 420px;
+  width: 100%;
+  border-radius: 16px; /* Enhanced rounded corners */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Deeper, softer shadow */
+  padding: 32px 24px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.login-card:hover {
+  transform: translateY(-2px); /* Slight lift on hover */
+}
+
+/* Logo Area Styling */
+.logo-area {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.app-logo {
+  width: 100px;
+  height: 100px;
+  /* Adjusting text styles within SVG for better visual hierarchy */
+}
+
+.app-title-text {
+  font-weight: 800; /* Extra bold for prominence */
+  font-size: 98.425px;
+  line-height: 0.9;
+  font-family: 'Inter', sans-serif; /* Using a modern font */
+  fill: #3b82f6; /* Blue primary color */
+  stroke-width: 2.0475;
+}
+
+/* Adjusting Material Typography for card header */
+mat-card-title {
+  margin-bottom: 4px !important;
+}
+
+mat-card-subtitle {
+  color: #6b7280 !important;
+  margin-bottom: 24px !important;
+}
+
+/* Error/Footer Styling */
+.error-footer {
+  margin-top: 16px;
+  padding: 12px 0;
+  text-align: center;
+  border-top: 1px solid #f3f4f6;
+}
+
+/* Custom Button Styling (for reset password) */
+.mat-flat-button.text-blue-500 {
+  color: #3b82f6 !important;
+  background-color: transparent !important;
+  border: 1px solid #3b82f6 !important;
+  transition: all 0.2s;
+}
+
+.mat-flat-button.text-blue-500:hover {
+  background-color: #dbeafe !important;
+}
+
+/* Standard Primary Button */
+.mat-raised-button.mat-primary {
+  background-color: #3b82f6 !important;
+  color: white !important;
+  font-weight: 600;
+  padding: 10px 0;
+  height: auto;
+  border-radius: 8px; /* Slightly rounded buttons */
+  transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+}
+
+.mat-raised-button.mat-primary:hover:not(:disabled) {
+  background-color: #2563eb !important;
+  transform: translateY(-1px);
+}
+
+.mat-raised-button:disabled {
+  opacity: 0.6;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .login-page-wrapper {
+    padding: 10px;
+    align-items: flex-start;
+    min-height: 100%;
+  }
+  .login-card {
+    border-radius: 0;
+    box-shadow: none;
+    max-width: 100%;
   }
 }

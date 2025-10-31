@@ -4,6 +4,14 @@ import { Sale } from '../models/sale.model';
 import { environment } from '../../../../environments/environment';
 import { firstValueFrom, map } from 'rxjs';
 
+class CreateStationDTO {
+  "product": string;
+  "pricePerLitre": number;
+  "openingMeterReading": number;
+  "closingMeterReading": number;
+  "pumpId": string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -16,16 +24,29 @@ export class SalesService {
 
   }
 
+  /**
+   * 
+   * @param stationId 
+   * @returns 
+   */
   loadStationSales(stationId: number): Promise<Sale[]>{
     return firstValueFrom(
-      this.http.get<{success: Boolean, data: Sale[], error: string}>(`${this.baseUrl}`).pipe(
+      this.http.get<{success: Boolean, data: Sale[], error: string}>(`${this.baseUrl}/${stationId}`).pipe(
         map(result => result.data)
       )
     )
   }
 
-  addSale(stationId: number, sale: Sale) {
-
+  /**
+   * 
+   * @param sale 
+   * @returns 
+   */
+  addSale(sale: CreateStationDTO) {
+    return firstValueFrom(
+      this.http.post<{success: Boolean, data: any, error: string}>(`${this.baseUrl}`, sale).pipe(
+      )
+    )
   }
 
   constructor() { }
