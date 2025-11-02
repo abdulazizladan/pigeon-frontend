@@ -1,5 +1,5 @@
 export class AttendantsSummary {
-  "total": number;
-  "active": number;
-  "suspended": number;
+  "total": number | null;
+  "active": number | null;
+  "suspended": number | null;
 }

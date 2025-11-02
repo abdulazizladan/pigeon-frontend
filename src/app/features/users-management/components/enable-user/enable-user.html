@@ -1,0 +1,17 @@
+<h1 matDialogTitle>Enable user account</h1>
+
+<mat-dialog-content fxLayout="column" fxLayoutGap="15px">
+    Are you sure you want to enable this user: {{data.email}}?
+    <div fxLayout="column" fxLayoutGap="15px">
+        <mat-form-field appearance="outline">
+            <mat-label>Reason for suspension</mat-label>
+            <textarea matInput></textarea>
+        </mat-form-field>
+    </div>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+    <button mat-button matDialogClose>Cancel</button>
+    <span fxFlex="1 1 auto"></span>
+    <button mat-flat-button color="primary" (click)="onSubmit()">Yes</button>
+</mat-dialog-actions>

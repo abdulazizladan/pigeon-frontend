@@ -1,47 +1,245 @@
+:host {
+  display: block;
+  font-family: 'Roboto', sans-serif;
+  background-color: #f3f4f6; /* Matching the bg-gray-50/100 from User Details */
+  padding: 24px 16px;
+  min-height: 100vh;
+}
+
+.profile-page-wrapper {
+  max-width: 960px; /* MATCHING max-w-4xl width (960px) of User Details container */
+  margin: 0 auto;
+}
+
+.page-title {
+  font-size: 32px;
+  font-weight: 800; /* Matching font-extrabold */
+  margin-bottom: 24px;
+  color: #1f2937;
+  text-align: left; /* Aligning title to the left like User Details */
+}
+
+/* --- Profile Card Styling --- */
 .profile-card {
-  max-width: 600px;
-  margin: 20px auto;
+  /* MATCHING shadow-2xl and border from User Details card */
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05), 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb; /* Subtle border */
+  border-radius: 12px;
+  background-color: white;
+  transition: all 0.3s ease; /* Added a subtle transition */
+}
 
-  .mat-mdc-card-header {
-    padding: 16px 16px 0;
+.profile-content-area {
+  padding: 20px 24px;
+}
+
+/* --- Loading and Error Indicators --- */
+.loading-bar {
+  margin-bottom: 16px;
+  /* Ensure consistent appearance */
+  --mdc-linear-progress-track-color: #e5e7eb;
+  --mdc-linear-progress-active-indicator-color: #4f46e5;
+}
+
+.error-message {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  background-color: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+  font-size: 14px;
+}
+.error-icon {
+  margin-right: 8px;
+  font-size: 18px;
+}
+
+/* --- 1. Profile Header Summary --- */
+.profile-header-summary {
+  display: flex;
+  align-items: center;
+  gap: 24px; /* Increased gap for better spacing */
+  padding-bottom: 24px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid #e5e7eb; /* Added separator like User Details */
+}
+
+.avatar-badges-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.profile-avatar {
+  object-fit: cover;
+  width: 96px; /* W:24/H:24 from original details component */
+  height: 96px; /* W:24/H:24 from original details component */
+  border-radius: 50%;
+  border: 4px solid #f0f0f0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 10px;
+}
+
+.name-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.full-name {
+  font-size: 28px; /* Matching User Details name size */
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 4px 0;
+}
+
+.email-summary {
+  font-size: 16px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.badges-container {
+  display: flex;
+  gap: 8px;
+}
+
+.profile-badge {
+  padding: 4px 10px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Badge Theming */
+.role-badge.admin {
+  background-color: #ff4081; /* Accent Pink */
+  color: white;
+}
+.status-badge.active {
+  background-color: #69f0ae; /* Light Green */
+  color: #1f2937;
+}
+
+/* --- 2. Detailed Information Sections --- */
+.mat-divider {
+  margin: 24px 0;
+}
+
+.info-section-header {
+  font-size: 18px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 12px;
+}
+
+.info-details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Consistent column sizing */
+  gap: 16px 32px;
+}
+
+.detail-item {
+  display: grid;
+  grid-template-columns: 24px 100px 1fr;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px dashed #f3f4f6;
+}
+
+.detail-item:last-child {
+  border-bottom: none;
+}
+
+.detail-icon {
+  font-size: 20px;
+  color: #6b7280;
+}
+
+.detail-label {
+  font-weight: 500;
+  color: #4b5563;
+  font-size: 14px;
+}
+
+.detail-value {
+  color: #1f2937;
+  font-size: 16px;
+  word-break: break-all;
+}
+
+/* --- Account Action Item --- */
+.action-item-container {
+  padding-bottom: 10px;
+}
+.detail-item-action {
+  display: grid;
+  grid-template-columns: 24px 100px 1fr;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+}
+.action-button-wrapper {
+  justify-self: end;
+}
+
+/* --- Footer Actions --- */
+.card-footer-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 16px 24px;
+  border-top: 1px solid #e5e7eb;
+}
+
+/* Responsive adjustments */
+@media (max-width: 960px) {
+  .profile-page-wrapper {
+    max-width: 90%; /* Allow container to shrink gracefully */
   }
-
-  img[matCardAvatar] {
-    object-fit: cover;
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-  }
-
-  .mat-mdc-card-content {
-    padding-top: 16px;
-  }
-
-  .mat-divider {
-    margin: 16px 0;
-  }
-
-  .role-badge, .status-badge {
-    padding: 4px 8px;
-    border-radius: 12px;
-    font-size: 12px;
-    margin-right: 8px;
-  }
-
-  .role-badge.admin {
-    background-color: #ff4081;
-    color: white;
-  }
-
-  .status-badge.active {
-    background-color: #69f0ae;
-    color: black;
-  }
-
-  .error-message {
-    display: block;
-    padding: 16px;
-    margin: 16px;
+}
+@media (max-width: 600px) {
+  .profile-header-summary {
+    flex-direction: column;
     text-align: center;
+  }
+  .name-details {
+    align-items: center;
+  }
+  .full-name {
+    font-size: 24px;
+  }
+  .info-details-grid {
+    grid-template-columns: 1fr;
+  }
+  .detail-item, .detail-item-action {
+    grid-template-columns: 24px 1fr auto;
+  }
+  .detail-label {
+    grid-column: 2 / span 2;
+  }
+  .detail-value {
+    grid-column: 2 / span 2;
+    margin-top: 4px;
+  }
+  .detail-item {
+    grid-template-rows: auto auto;
+    align-items: flex-start;
+  }
+  .detail-icon {
+    grid-row: 1 / span 2;
+  }
+  .action-button-wrapper {
+    grid-column: 3 / 4;
+    grid-row: 1 / span 2;
+    align-self: center;
+  }
+  .card-footer-actions {
+    justify-content: center;
   }
 }

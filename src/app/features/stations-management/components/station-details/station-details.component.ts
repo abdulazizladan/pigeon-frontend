@@ -116,7 +116,6 @@ export class StationDetailsComponent implements OnInit { // Implemented OnInit
       take(1) // Only take the first value when the component initializes
     ).subscribe(params => {
       const idParam = params.get('id'); // Get the 'id' parameter as a string
-      
       if (idParam) {
         this.stationStore.loadSelectedStation(idParam)
       } 

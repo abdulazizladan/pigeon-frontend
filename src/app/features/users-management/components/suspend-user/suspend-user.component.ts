@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-suspend-user',
@@ -8,6 +8,12 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
   styleUrl: './suspend-user.component.scss'
 })
 export class SuspendUserComponent {
-  readonly data = inject<string>(MAT_DIALOG_DATA);
+  readonly data = inject<{email: string}>(MAT_DIALOG_DATA);
+
+  private dialogRef =  inject(MatDialogRef<SuspendUserComponent>)
+
+  onSubmit() {
+    this.dialogRef.close(this.data.email)
+  }
 
 }

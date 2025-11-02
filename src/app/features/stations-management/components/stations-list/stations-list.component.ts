@@ -5,8 +5,7 @@ import { MatSort } from '@angular/material/sort';
 import { StationStore } from '../../store/stations.store'; // Corrected import path/name
 import { MatDialog } from '@angular/material/dialog';
 import { Station } from '../../models/station.model';
-// Assuming AddStationComponent exists elsewhere for the button functionality
-// import { AddStationComponent } from '../add-station/add-station.component'; 
+import { AddStationComponent } from '../add-station/add-station.component'; 
 
 @Component({
   selector: 'app-stations-list',
@@ -66,13 +65,12 @@ export class StationsListComponent implements OnInit {
 
   // Placeholder function for the 'Add Station' button
   public openAddStationDialog() {
-    console.log("Opening Add Station Dialog (Placeholder)");
-    // const dialogRef = this.dialog.open(AddStationComponent, {});
-    // dialogRef.afterClosed().subscribe(result => {
-    //   if(result) {
-    //     this.stationStore.addStation(result) // Assuming addStation exists on the store
-    //   }
-    // });
+     const dialogRef = this.dialog.open(AddStationComponent, {});
+     dialogRef.afterClosed().subscribe(result => {
+       if(result) {
+         this.stationStore.createStation(result) // Assuming addStation exists on the store
+       }
+     });
   }
   
   /**

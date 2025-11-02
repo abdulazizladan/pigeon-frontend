@@ -16,7 +16,9 @@ export class StationsService implements OnInit{
 
   async createStation(station: Omit<Station, 'id'>): Promise<Station> {
     return firstValueFrom(
-      this.http.post<Station>(`${this.baseUrl}/station`, station)
+      this.http.post<{success: boolean, data: Station, message: string}>(`${this.baseUrl}/station`, station).pipe(
+        map(response => response.data)
+      )
     )
   }
 

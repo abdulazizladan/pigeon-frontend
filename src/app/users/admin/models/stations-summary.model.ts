@@ -1,5 +1,5 @@
 export class StationsSummary {
-  "total": number;
-  "active": number;
-  "inactive": number;
+  "total": number | null;
+  "active": number | null;
+  "inactive": number | null;
 }

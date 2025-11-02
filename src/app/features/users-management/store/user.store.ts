@@ -93,7 +93,12 @@ export const UserStore = signalStore(
     
     // --- Add User ---
     async addUser(user: User) {
-      patchState(store, { loading: true, error: null });
+      patchState(
+        store, { 
+          loading: true, 
+          error: null 
+        }
+      );
       try {
         const response = await userService.createUser(user); 
         if (!response) {
@@ -108,7 +113,12 @@ export const UserStore = signalStore(
           loading: false,
         }));
       } catch (error) {
-        this.handleError(error, 'Failed to create user. Please try again later.');
+        patchState(
+          store, {
+            loading: false,
+            error: "Failed to add manager. Please try again later"
+          }
+        )
       }
     },
     
@@ -141,10 +151,10 @@ export const UserStore = signalStore(
     },
     
     // --- Suspend User ---
-    async suspendUser(id: string) {
+    async suspendUser(email: string) {
       patchState(store, {loading: true, error: null});
       try {
-        const response = await userService.suspendUser(id); 
+        const response = await userService.suspendUser(email); 
         
         // Assume suspendUser returns the updated user or a generic success response
         if (!response ) {
@@ -154,19 +164,47 @@ export const UserStore = signalStore(
         // ⭐️ OPTIMIZATION 7: Immutable state update for the suspension statu
         patchState(store, state => ({
           users: state.users.map(u => {
-            if (u.id === id) {
+            if (u.email === email) {
               return { ...u, status: 'inactive' }; // Assumed status change
             }
             return u;
           }),
           // Update selected user status if it matches
-          selectedUser: state.selectedUser?.id === id
+          selectedUser: state.selectedUser?.email === email
             ? { ...state.selectedUser, status: 'inactive' }
             : state.selectedUser,
           loading: false, 
         }));
       } catch(error) {
         this.handleError(error, 'Unable to suspend user. Please check your connection and try again later.');
+      }
+    },
+    async enableUser(email: string) {
+      patchState(store, {loading: true, error: null});
+      try {
+        const response = await userService.enableUser(email); 
+        
+        // Assume suspendUser returns the updated user or a generic success response
+        if (!response ) {
+           throw new Error( 'Suspend operation failed on the server.');
+        }
+
+        // ⭐️ OPTIMIZATION 7: Immutable state update for the suspension statu
+        patchState(store, state => ({
+          users: state.users.map(u => {
+            if (u.email === email) {
+              return { ...u, status: 'active' }; // Assumed status change
+            }
+            return u;
+          }),
+          // Update selected user status if it matches
+          selectedUser: state.selectedUser?.email === email
+            ? { ...state.selectedUser, status: 'active' }
+            : state.selectedUser,
+          loading: false, 
+        }));
+      } catch(error) {
+        this.handleError(error, 'Unable to active user. Please check your connection and try again later.');
       }
     }
   }))

@@ -41,6 +41,34 @@ export const StationStore = signalStore(
   // Add methods for state manipulation and side effects
   withMethods((store, stationService = inject(StationsService)) => ({
     
+    async createStation(station: Station) {
+      patchState(
+        store, { 
+          loading: true, 
+          error: null, 
+        }
+      ); 
+      try {
+        const response = await stationService.createStation(station);
+        if (!response) {
+          throw new Error('Failed to creat new station')
+        }
+        patchState(store, state => ({
+          stations: [
+            ...state.stations,
+            response
+          ],
+          loading: false,
+        }))
+      } catch(error) {
+        patchState(
+          store, {
+            loading: false,
+            error: "Failed to add station. Please check the network connection.",
+          }
+        )
+      }
+    },
     /**
      * Loads the list of all stations from the service into the 'stations' array.
      */
@@ -50,13 +78,12 @@ export const StationStore = signalStore(
       patchState(store, { loading: true, error: null, stations: [] }); 
 
       try {
-        // ASSUMPTION: stationService.getAll() returns Promise<Station[]>
         const allStations = await (stationService as any).getAll(); 
         patchState(store, { stations: allStations, loading: false, error: null });
       } catch (error) {
         const message = (error as any)?.message || 'Failed to load station list. Please check the network.';
         patchState(store, {
-          error: message,
+          error: "Failed to load station list. Please check the network.",
           loading: false,
           stations: []
         });
@@ -68,13 +95,13 @@ export const StationStore = signalStore(
      * @param id The ID of the station to load.
      */
     async loadSelectedStation(id: string) {
-      patchState(store, { 
-        loading: true, 
-        error: null, 
-        selectedStation: null // Clear previous station while loading
-      });
+      patchState(
+        store, { 
+          loading: true, 
+          error: null
+        }
+      );
       try {
-        // Service expects a numeric id; coerce if a string is provided
         const station = await (stationService as any).getById(id);
         patchState(store, { 
           selectedStation: station, 
@@ -83,7 +110,8 @@ export const StationStore = signalStore(
         });
       } catch (error) {
         const message = (error as any)?.message || 'Failed to load station details. Please try again later.';
-        patchState(store, {
+        patchState(
+          store, {
           error: message,
           loading: false, 
           selectedStation: null

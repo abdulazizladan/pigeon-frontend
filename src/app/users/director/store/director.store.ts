@@ -16,11 +16,18 @@ export interface StationStats {
   inactive: number;
 }
 
+export class RecentSales {
+  "stationName": string;
+  "managerName": string;
+  "amount": number;
+}
+
 interface DirectorState {
   "userProfile": User | null;
   "profile": User | null;
   "stationStats": StationStats | null;
   "salesRecords": SalesDataPoint[]; // New: Sales data points for the graph
+  "recentSales": RecentSales[];
   "currentSalesPeriod": string; // New: Tracks the active filter (daily/weekly/monthly)
   "salesLoading": boolean; // New: Loading state specifically for sales data
   "loading": boolean;
@@ -31,6 +38,7 @@ const initialState: DirectorState = {
   loading: false,
   salesLoading: false, // Initial state for sales data loading
   error: null,
+  recentSales: [],
   profile: null,
   stationStats: null,
   userProfile: null,
@@ -42,7 +50,7 @@ export const DirectorStore = signalStore(
   {providedIn: 'root'},
   withState(initialState),
   // Inject AdminService to fetch the station statistics
-  withMethods((store, adminService = inject(DirectorService)) => ({ 
+  withMethods((store, directorService = inject(DirectorService)) => ({ 
     /**
      * Fetches station statistics from the service and updates the store state.
      */
@@ -50,7 +58,7 @@ export const DirectorStore = signalStore(
       patchState(store, {loading: true, error: null})
       try {
         // Use firstValueFrom to convert the Observable<StationStats> into a Promise<StationStats>
-        const stationStats = await firstValueFrom(adminService.getStationStats());
+        const stationStats = await firstValueFrom(directorService.getStationStats());
         
         // Update the stationStats and set loading to false
         patchState(store, { stationStats, loading: false });
@@ -73,7 +81,7 @@ export const DirectorStore = signalStore(
 
       try {
         // 2. Fetch the data using firstValueFrom
-        const sales = await firstValueFrom(adminService.getSalesRecords(period));
+        const sales = await firstValueFrom(directorService.getSalesRecords(period));
         
         // 3. Patch the state with the new data
         patchState(store, {
@@ -95,8 +103,8 @@ export const DirectorStore = signalStore(
       patchState(store, {loading: true, error: null});
       try{
         // Placeholder for profile service call
-        const profile = await (adminService as any).getProfile(email); 
-        patchState(store, {profile, loading: false});
+        const userProfile = await directorService.getProfile(email); 
+        patchState(store, {error: null, profile: userProfile, loading: false});
       }catch (error) {
         patchState(store, {
           error: 'Failed to load profile. Please check your connection and try again.',

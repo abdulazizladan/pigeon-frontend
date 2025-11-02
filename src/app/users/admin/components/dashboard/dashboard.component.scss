@@ -1,168 +1,176 @@
 :host {
   display: block;
-  /* Ensure Material components are styled correctly with Tailwind */
-  --mat-card-padding: 1.5rem;
 }
 
-/* Custom styling for Mat-Card to fully control appearance */
-mat-card {
-  @apply p-6; 
-}
-.card-total {
-  height: 40px; /* To reserve space and prevent CLS when loading indicator appears */
-  line-height: 40px;
-}
-
-/* Style for the mat-progress-bar */
-mat-progress-bar {
-  /* Adjust the height and appearance of the progress bar if needed */
-  height: 6px;
-  border-radius: 9999px; /* rounded-full */
-}
-.mat-mdc-progress-bar {
-  /* Apply primary color or custom color */
-  --mdc-linear-progress-track-color: #e5e7eb; /* gray-200 */
-  --mdc-linear-progress-active-indicator-color: #6366f1; /* indigo-500 */
-}
-
-.admin-dashboard-container {
-  padding: 15px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px; /* Increased gap for better visual separation */
+/* --- Global Layout/Page Styling --- */
+.dashboard-wrapper {
+  padding: 32px 24px;
+  background-color: #f7f7f7; /* Very light gray background */
+  min-height: 100vh;
+  font-family: 'Roboto', sans-serif;
   max-width: 1200px;
   margin: 0 auto;
-  box-sizing: border-box;
 }
 
-.dashboard-title {
-  font-size: 2.2em; /* Slightly larger title for prominence */
-  font-weight: 800;
-  color: #333333; /* Dark gray title */
-  margin-bottom: 10px;
+.page-title {
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 3px solid #eeeeee; /* Stronger title separator */
+  color: #1f2937;
   text-align: center;
-  letter-spacing: -0.5px;
 }
 
-.dashboard-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px; /* Increased gap between cards */
+/* --- Dashboard Rows (Flex Layout compatibility) --- */
+/* The Flex Layout directives will control the grid-like behavior, but we add a bottom margin for separation */
+.dashboard-grid-row {
+  margin-bottom: 24px;
 }
 
-/* --- Card Styling: Gray Background, White/Light Fonts --- */
-.dashboard-card {
-  flex: 1 1 calc(50% - 10px); /* Distribute space evenly */
-  min-width: 300px; /* Minimum width for responsiveness */
-  color: #424242; /* Darker Gray Card Background */
-  background-color: #E0E0E0; /* Light Gray Text Color */
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Deeper shadow for elevation */
-  border-radius: 12px; /* Smoother rounded corners */
+/* --- Statistic Card Styling --- */
+.stat-card {
+  /* Mimic the subtle shadow and border from the original design, but use standard CSS */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
   transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-  cursor: pointer;
+  height: 100%; /* Important for equal height in flex row */
 }
 
-.dashboard-card:hover {
-  transform: translateY(-5px); /* Noticeable lift on hover */
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4); /* Pronounced hover shadow */
+.stat-card:hover {
+  transform: translateY(-4px); /* Noticeable lift on hover */
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.15); /* Pronounced hover shadow */
 }
 
+/* --- Card Header and Icons (Color-coded for clarity) --- */
 .card-header {
+  padding: 16px 20px 12px;
   display: flex;
   align-items: center;
-  gap: 15px; /* Increased gap in header */
-  padding: 18px 20px 0; /* More padding */
+  gap: 12px;
+  border-bottom: 1px solid #f3f4f6; /* Subtle line below header */
 }
 
 .card-icon {
-  font-size: 32px; /* Larger icon */
-  width: 32px;
-  height: 32px;
-  color: #2d2d2d; /* Light icon color */
+  font-size: 30px;
 }
 
 .card-title {
-  font-size: 1.4em;
-  font-weight: 700;
-  color: #1f1f1f; /* White title */
+  font-size: 1.3em;
+  font-weight: 600;
+  color: #1f2937;
 }
 
+/* Header Theming (Icon color only) */
+.user-card-header .card-icon { color: #4f46e5; }     /* Indigo */
+.attendant-card-header .card-icon { color: #059669; } /* Emerald */
+.station-card-header .card-icon { color: #3b82f6; }  /* Blue */
+.ticket-card-header .card-icon { color: #f97316; }  /* Orange */
+
+/* --- Card Content --- */
 .card-content {
-  padding: 15px 20px 20px; /* Consistent padding */
+  padding: 20px 20px 20px;
   display: flex;
   flex-direction: column;
-  gap: 15px;
 }
 
-.card-spinner {
-  margin: 15px auto;
+/* Total Count (Largest and most prominent element) */
+.stat-total {
+  font-size: 56px; /* Large, bold number */
+  font-weight: 800;
+  color: #1f2937;
+  margin: 0 0 16px 0;
+  line-height: 1; /* Prevent extra space */
+  min-height: 56px; /* Reserve space for loading bar */
 }
 
-.card-total {
-  font-size: 3.5em; /* Larger, impactful total font size */
-  font-weight: 900;
-  color: #242424; /* White text for total */
-  margin: 0;
-  line-height: 1;
-}
-
-.card-pills-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px; /* Adjusted gap between pills */
-  margin-top: 5px;
-}
-
-/* Pill styling for contrast on a dark card */
-.card-pill {
+/* Loading Area */
+.loading-indicator-area {
+  height: 56px; /* Match the height of stat-total */
   display: flex;
   align-items: center;
-  gap: 8px;
-  background-color: #5A5A5A; /* Slightly lighter gray pill background */
-  padding: 8px 14px; /* Generous padding for a better feel */
-  border-radius: 25px; /* Full rounded shape */
-  font-size: 0.9em;
-  color: #FFFFFF; /* White text for pills */
-  white-space: nowrap;
-  transition: background-color 0.2s;
+  justify-content: center;
+}
+mat-progress-bar {
+  width: 75%;
+  height: 6px;
+  border-radius: 9999px;
+  /* Override Material defaults (if needed) to ensure custom color */
+  --mdc-linear-progress-track-color: #e5e7eb; 
+  --mdc-linear-progress-active-indicator-color: #4f46e5;
 }
 
-.card-pill:hover {
-    background-color: #616161; /* Slight hover effect */
+/* --- Pills Container and Pills --- */
+.stat-pills-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px; /* Tighten up the gap between pills */
+  margin-top: 12px;
+}
+
+.stat-pill {
+  display: flex;
+  align-items: center;
+  padding: 5px 10px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 9999px;
+  gap: 6px;
+  transition: transform 0.15s ease-out;
+}
+
+.stat-pill:hover {
+  transform: scale(1.03);
 }
 
 .pill-icon {
-  font-size: 18px;
-  width: 18px;
-  height: 18px;
-  color: #BBBBBB; /* Slightly softer white for icons */
+  font-size: 16px;
 }
 
-.pill-text {
-  font-weight: 600;
+/* Pill Theming */
+.pill-indigo {
+  background-color: #eef2ff; /* Indigo 50 */
+  color: #4f46e5; /* Indigo 600 */
+}
+.pill-green {
+  background-color: #ecfdf5; /* Green 50 */
+  color: #059669; /* Green 700 */
+}
+.pill-red {
+  background-color: #fef2f2; /* Red 50 */
+  color: #b91c1c; /* Red 700 */
+}
+.pill-blue {
+  background-color: #eff6ff; /* Blue 50 */
+  color: #2563eb; /* Blue 700 */
+}
+.pill-gray {
+  background-color: #f3f4f6; /* Gray 100 */
+  color: #4b5563; /* Gray 700 */
+}
+.pill-orange {
+  background-color: #fff7ed; /* Orange 50 */
+  color: #f97316; /* Orange 600 */
+}
+.pill-green-light {
+  background-color: #f0fdf4; /* Green 50 */
+  color: #15803d; /* Green 700 */
 }
 
-/* Responsive adjustments */
-@media (max-width: 1024px) {
-  .admin-dashboard-container {
-    max-width: 90%;
+/* --- Responsive Adjustments --- */
+@media (max-width: 600px) {
+  .dashboard-wrapper {
+    padding: 24px 16px;
   }
-  .dashboard-card {
-    flex: 1 1 100%; /* Stack cards on tablets and smaller devices */
+  .page-title {
+    font-size: 30px;
+    margin-bottom: 20px;
   }
-}
-
-@media (max-width: 480px) {
-  .admin-dashboard-container {
-    padding: 10px;
-    gap: 15px;
+  .stat-card {
+    margin-bottom: 16px; /* Add margin to stacked cards */
   }
-
-  .dashboard-title {
-    font-size: 1.8em;
-  }
-
-  .card-total {
-    font-size: 3em;
+  .stat-total {
+    font-size: 48px;
   }
 }

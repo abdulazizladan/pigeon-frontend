@@ -1,0 +1,247 @@
+:host {
+    display: block;
+    font-family: 'Roboto', sans-serif;
+    background-color: #f3f4f6; /* Consistent Page Background */
+    padding: 32px 24px;
+    min-height: 100vh;
+  }
+  
+  .station-page-wrapper {
+    max-width: 960px; /* Consistent Max Width */
+    margin: 0 auto;
+  }
+  
+  .page-title {
+    font-size: 32px;
+    font-weight: 800;
+    margin-bottom: 24px;
+    color: #1f2937;
+  }
+  
+  /* --- Main Card Styling (Consistent with others) --- */
+  .station-main-card {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05), 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    background-color: white;
+    transition: all 0.3s ease;
+  }
+  
+  .loading-bar {
+    margin-bottom: 16px;
+    --mdc-linear-progress-track-color: #e5e7eb;
+    --mdc-linear-progress-active-indicator-color: #4f46e5;
+  }
+  
+  .main-divider {
+    margin: 24px 0;
+    width: calc(100% - 48px); /* Full width minus card padding */
+    margin-left: 24px;
+    margin-right: 24px;
+  }
+  
+  /* --- 1. Header Section --- */
+  .station-header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 24px 24px 0;
+  }
+  
+  .station-name {
+    font-size: 28px;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0 0 4px 0;
+  }
+  
+  .station-id-subtitle {
+    font-size: 14px;
+    color: #6b7280;
+    margin: 0;
+  }
+  
+  /* Status Pill */
+  .status-indicator-wrapper {
+    flex-shrink: 0;
+    padding-top: 5px;
+  }
+  .status-pill {
+    padding: 6px 12px;
+    border-radius: 18px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    min-width: 100px;
+    text-align: center;
+  }
+  .status-operational {
+    background-color: #d1fae5; /* Green 100 */
+    color: #065f46; /* Green 700 */
+  }
+  .status-maintenance {
+    background-color: #fff7ed; /* Orange 100 */
+    color: #9a3412; /* Orange 700 */
+  }
+  .status-unknown {
+    background-color: #f3f4f6;
+    color: #4b5563;
+  }
+  
+  
+  /* --- 2. Details Section (Two-Column Grid) --- */
+  .details-section-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two equal columns for basic & operational */
+    gap: 32px;
+    padding: 0 24px;
+  }
+  
+  .info-section-header {
+    font-size: 18px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 16px;
+  }
+  
+  .info-details-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px; /* Vertical spacing between items */
+  }
+  
+  .detail-item {
+    display: grid;
+    grid-template-columns: 24px 120px 1fr; /* Icon, Label, Value */
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px dashed #f3f4f6;
+  }
+  
+  .detail-icon {
+    font-size: 20px;
+    color: #4f46e5; /* Primary color for icons */
+  }
+  
+  .detail-label {
+    font-weight: 500;
+    color: #4b5563;
+    font-size: 14px;
+  }
+  
+  .detail-value {
+    color: #1f2937;
+    font-size: 16px;
+    word-break: break-word;
+  }
+  
+  /* Operational Value Styling */
+  .fuel-level-value {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .fuel-level-bar {
+    height: 8px;
+    border-radius: 4px;
+    --mdc-linear-progress-track-color: #e5e7eb;
+    --mdc-linear-progress-active-indicator-color: #10b981; /* Green for level */
+  }
+  .alert-value {
+    font-weight: 600;
+    color: #ef4444; /* Red for alerts */
+  }
+  
+  
+  /* --- 3. Sales Graph Section --- */
+  .sales-performance-section {
+    padding: 0 24px 24px;
+  }
+  .chart-header {
+    margin-top: 0;
+  }
+  
+  .chart-wrapper {
+    height: 300px;
+    margin-bottom: 24px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  }
+  .sales-chart-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  
+  /* Sales Summary Table (Redesigned from list) */
+  .sales-summary-subheader {
+    font-size: 16px;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 12px;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 8px;
+  }
+  
+  .summary-table-header, .summary-table-row {
+    display: grid;
+    grid-template-columns: 30px 1fr 1fr 1fr; /* Icon, Date, Petrol, Diesel */
+    align-items: center;
+    padding: 10px 0;
+  }
+  
+  .summary-table-header {
+    font-weight: 600;
+    font-size: 14px;
+    color: #4b5563;
+    border-bottom: 2px solid #e5e7eb;
+  }
+  
+  .summary-table-row {
+    font-size: 16px;
+    color: #1f2937;
+    border-bottom: 1px solid #f3f4f6;
+  }
+  
+  .table-column-icon {
+    font-size: 18px;
+    color: #4f46e5;
+    justify-self: center;
+  }
+  .table-column-date, .table-column-petrol, .table-column-diesel {
+    padding-left: 8px;
+  }
+  .table-column-petrol { color: #4f46e5; font-weight: 500;} /* Petrol: Indigo */
+  .table-column-diesel { color: #f97316; font-weight: 500;} /* Diesel: Orange */
+  
+  
+  /* --- Footer Actions --- */
+  .card-footer-actions {
+    display: flex;
+    justify-content: flex-end;
+    padding: 16px 24px;
+    border-top: 1px solid #e5e7eb;
+  }
+  
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .details-section-grid {
+      grid-template-columns: 1fr; /* Single column on tablets/mobile */
+      gap: 24px;
+    }
+    .station-header-section {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .status-indicator-wrapper {
+      margin-top: 12px;
+    }
+    .summary-table-header, .summary-table-row {
+      grid-template-columns: 30px 1fr 1fr 1fr;
+      font-size: 14px;
+    }
+  }

@@ -1,0 +1,184 @@
+:host {
+    display: block;
+    font-family: 'Roboto', sans-serif;
+    background-color: #f3f4f6; /* Consistent Page Background */
+    padding: 32px 24px;
+    min-height: 100vh;
+  }
+  
+  .manager-page-wrapper {
+    max-width: 960px; /* Consistent Max Width */
+    margin: 0 auto;
+  }
+  
+  .page-title {
+    font-size: 32px;
+    font-weight: 800;
+    margin-bottom: 24px;
+    color: #1f2937;
+  }
+  
+  /* --- Main Card Styling (Consistent with others) --- */
+  .manager-main-card {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05), 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    background-color: white;
+    transition: all 0.3s ease;
+  }
+  
+  .loading-bar {
+    margin-bottom: 16px;
+    --mdc-linear-progress-track-color: #e5e7eb;
+    --mdc-linear-progress-active-indicator-color: #4f46e5;
+  }
+  
+  .main-divider {
+    margin: 24px 0;
+    width: calc(100% - 48px);
+    margin-left: 24px;
+    margin-right: 24px;
+  }
+  
+  /* --- 1. Header Section --- */
+  .manager-header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 24px 24px 0;
+  }
+  
+  .manager-name {
+    font-size: 28px;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0 0 4px 0;
+  }
+  
+  .station-assignment-subtitle {
+    font-size: 14px;
+    color: #6b7280;
+    margin: 0;
+  }
+  
+  /* Status Pill */
+  .status-indicator-wrapper {
+    flex-shrink: 0;
+    padding-top: 5px;
+  }
+  .status-pill {
+    padding: 6px 12px;
+    border-radius: 18px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    min-width: 100px;
+    text-align: center;
+  }
+  .status-active {
+    background-color: #d1fae5; /* Green 100 */
+    color: #065f46; /* Green 700 */
+  }
+  .status-suspended {
+    background-color: #fee2e2; /* Red 100 */
+    color: #991b1b; /* Red 700 */
+  }
+  .status-pending {
+    background-color: #fef9c3; /* Yellow 100 */
+    color: #a16207; /* Yellow 700 */
+  }
+  
+  
+  /* --- 2. Details Section (Single Column Grid) --- */
+  /* This section defaults to a single column, unlike the Station Details */
+  .details-section-grid {
+    padding: 0 24px;
+  }
+  
+  .info-section-header {
+    font-size: 18px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 16px;
+    padding-top: 10px; /* Add vertical space after divider */
+  }
+  
+  .info-details-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .single-column-details {
+    /* Ensure details align nicely in a single column */
+    max-width: 600px;
+  }
+  
+  .detail-item {
+    display: grid;
+    grid-template-columns: 24px 140px 1fr; /* Icon, Label (Wider), Value */
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px dashed #f3f4f6;
+  }
+  
+  .detail-icon {
+    font-size: 20px;
+    color: #4f46e5;
+  }
+  
+  .detail-label {
+    font-weight: 500;
+    color: #4b5563;
+    font-size: 14px;
+  }
+  
+  .detail-value {
+    color: #1f2937;
+    font-size: 16px;
+    word-break: break-word;
+  }
+  .assignment-value {
+      font-weight: 600;
+      color: #059669; /* Green for assigned station */
+  }
+  
+  
+  /* --- Footer Actions --- */
+  .card-footer-actions {
+    display: flex;
+    justify-content: flex-end;
+    padding: 16px 24px;
+    border-top: 1px solid #e5e7eb;
+  }
+  
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .manager-header-section {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .status-indicator-wrapper {
+      margin-top: 12px;
+    }
+    .detail-item {
+      grid-template-columns: 24px 1fr; /* Simplified grid on smaller screens */
+      /* Stack label/value vertically */
+      grid-template-rows: auto auto;
+      align-items: flex-start;
+    }
+    .detail-icon {
+      grid-row: 1 / span 2;
+    }
+    .detail-label {
+      grid-column: 2 / 3;
+      font-size: 12px;
+      padding-top: 2px;
+    }
+    .detail-value {
+      grid-column: 2 / 3;
+      margin-top: 2px;
+    }
+  }

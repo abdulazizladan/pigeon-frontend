@@ -1,76 +1,89 @@
-<h1>Admin Profile</h1>
+<div class="profile-page-wrapper">
+  <h1 class="page-title">Director Profile</h1>
 
-@if(adminStore.loading()) {
-  <mat-progress-bar mode="query"></mat-progress-bar>
-}
-@if(adminStore.error()){
-  <span class="error-message">{{adminStore.error()}}</span>
-}
+  @if(directorStore.loading()) {
+    <mat-progress-bar mode="query" class="loading-bar"></mat-progress-bar>
+  }
+  @if(directorStore.error()){
+    <mat-error class="error-message">
+      <mat-icon class="error-icon">error_outline</mat-icon>
+      {{directorStore.error()}}
+    </mat-error>
+  }
 
-<!--<mat-card class="profile-card">
-  <mat-card-header>
-    <img matCardAvatar [src]="adminStore.profile()?.info?.image || 'assets/default-avatar.png'" alt="Profile image">
-    <mat-card-title>
-      {{adminStore.profile()?.info?.firstName | titlecase}} {{adminStore.profile()?.info?.lastName | titlecase}}
-    </mat-card-title>
-    <mat-card-subtitle>
-      <span class="role-badge" [class]="adminStore.profile()?.role?.toLowerCase()">
-        {{adminStore.profile()?.role}}
-      </span>
-      <span class="status-badge" [class]="adminStore.profile()?.status?.toLowerCase()">
-        {{adminStore.profile()?.status}}
-      </span>
-    </mat-card-subtitle>
-  </mat-card-header>
+  <mat-card class="profile-card">
+    
+    <mat-card-content class="profile-content-area">
+      
+      <div class="profile-header-summary">
+        <div class="avatar-badges-group">
+          <img class="profile-avatar" 
+               [src]="directorStore.profile()?.info?.image || 'assets/default-avatar.png'" 
+               alt="Profile image">
+          
+          <div class="badges-container">
+            <span class="profile-badge role-badge" [class]="directorStore.profile()?.role?.toLowerCase()">
+              {{directorStore.profile()?.role}}
+            </span>
+            <span class="profile-badge status-badge" [class]="directorStore.profile()?.status?.toLowerCase()">
+              {{directorStore.profile()?.status}}
+            </span>
+          </div>
+        </div>
 
-  <mat-card-content>
-    <mat-divider></mat-divider>
+        <div class="name-details">
+          <h2 class="full-name">
+            {{directorStore.profile()?.info?.firstName | titlecase}} {{directorStore.profile()?.info?.lastName | titlecase}}
+          </h2>
+          <p class="email-summary">{{directorStore.profile()?.email}}</p>
+        </div>
+      </div>
 
-    <mat-list>
-      <h3 matSubheader>Basic Information</h3>
-      <mat-list-item>
-        <mat-icon matListItemIcon>person</mat-icon>
-        <div matListItemTitle>ID</div>
-        <div matListItemLine>{{adminStore.profile()?.id}}</div>
-      </mat-list-item>
+      <mat-divider class="main-divider"></mat-divider>
 
-      <mat-list-item>
-        <mat-icon matListItemIcon>email</mat-icon>
-        <div matListItemTitle>Email</div>
-        <div matListItemLine>{{adminStore.profile()?.email}}</div>
-      </mat-list-item>
+      <h3 class="info-section-header">Basic Information</h3>
+      <div class="info-details-grid">
+        
+        <div class="detail-item">
+          <mat-icon class="detail-icon">person</mat-icon>
+          <span class="detail-label">ID</span>
+          <span class="detail-value">{{directorStore.profile()?.id}}</span>
+        </div>
 
-      <mat-list-item>
-        <mat-icon matListItemIcon>cake</mat-icon>
-        <div matListItemTitle>Age</div>
-        <div matListItemLine>{{adminStore.profile()?.info?.age}} years</div>
-      </mat-list-item>
-    </mat-list>
+        <div class="detail-item">
+          <mat-icon class="detail-icon">cake</mat-icon>
+          <span class="detail-label">Age</span>
+          <span class="detail-value">{{directorStore.profile()?.info?.age}} years</span>
+        </div>
+        
+        <div class="detail-item">
+          <mat-icon class="detail-icon">phone</mat-icon>
+          <span class="detail-label">Phone</span>
+          <span class="detail-value">{{directorStore.profile()?.contact?.phone || 'Not provided'}}</span>
+        </div>
+      </div>
 
-    <mat-divider></mat-divider>
+      <mat-divider class="main-divider"></mat-divider>
 
-    <mat-list>
-      <h3 matSubheader>Contact Information</h3>
-      <mat-list-item>
-        <mat-icon matListItemIcon>phone</mat-icon>
-        <div matListItemTitle>Phone</div>
-        <div matListItemLine>{{adminStore.profile()?.contact?.phone || 'Not provided'}}</div>
-      </mat-list-item>
-    </mat-list>
+      <h3 class="info-section-header">Account Management</h3>
+      <div class="action-item-container">
+        <div class="detail-item-action">
+          <mat-icon class="detail-icon">security</mat-icon>
+          <span class="detail-label">Password</span>
+          
+          <div class="action-button-wrapper">
+             <span class="password-mask">{{directorStore.profile()?.password ? '******' : 'Not set'}}</span>
+            <button mat-flat-button color="accent" class="password-change-button">
+              Change password
+            </button>
+          </div>
+        </div>
+      </div>
+      
+    </mat-card-content>
 
-    <mat-divider></mat-divider>
-
-    <mat-list>
-      <h3 matSubheader>Account Details</h3>
-      <mat-list-item>
-        <mat-icon matListItemIcon>security</mat-icon>
-        <div matListItemTitle>Password</div>
-        <div matListItemLine>{{adminStore.profile()?.password ? '******' : 'Not set'}}</div>
-      </mat-list-item>
-    </mat-list>
-  </mat-card-content>
-
-  <mat-card-actions align="end">
-    <button mat-button color="primary">EDIT PROFILE</button>
-  </mat-card-actions>
-</mat-card>-->
+    <mat-card-actions class="card-footer-actions">
+      <button mat-stroked-button color="primary">EDIT PROFILE</button>
+    </mat-card-actions>
+  </mat-card>
+</div>

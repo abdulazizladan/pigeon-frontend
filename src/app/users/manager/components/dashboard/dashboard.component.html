@@ -1,65 +1,77 @@
-<div fxFlex fxLayout="column" fxLayoutGap="15px">
+<div class="dashboard-page-wrapper">
+  <h1 class="page-title">Manager Dashboard</h1>
 
-  <h1>Manager Dashboard</h1>
+  <section class="summary-cards-section">
+    <div class="dashboard-grid-container">
 
-  <div fxLayout.xs="column" fxLayout.gt-xs="row" fxLayoutGap="15px">
+      <mat-card class="stat-card sales-card-theme">
+        <mat-card-content class="stat-card-content">
+          <div class="stat-text-group">
+            <span class="stat-title">Today's Sale</span>
+            <span class="stat-main-value color-indigo">
+              &#8358;0.00
+            </span>
+            <span class="stat-trend-text color-success">
+              +0.0% from yesterday
+            </span>
+          </div>
+          <mat-icon class="stat-icon color-indigo">
+            attach_money
+          </mat-icon>
+        </mat-card-content>
+      </mat-card>
 
-    <!-- dashboard card -->
-    <div class="card" fxLayout="row" style="width: 100%;">
-      <div fxLayout="column" fxFlex.xs="100%" fxFlex.gt-xs="50%">
-        <span class="title">Today's sale</span>
-        <span class="mainText">&#8358;0.00</span>
-        <span> +0.0% from yesterday</span>
-      </div>
-      <span fxFlex="1 1 auto"></span>
-      <mat-icon>
-        attach_money
-      </mat-icon>
+      <mat-card class="stat-card pumps-card-theme">
+        <mat-card-content class="stat-card-content">
+          <div class="stat-text-group">
+            <span class="stat-title">Fuel Pumps</span>
+            <span class="stat-main-value color-green">
+              
+            </span>
+            <span class="stat-trend-text color-info">
+              active today
+            </span>
+          </div>
+          <mat-icon class="stat-icon color-green">
+            local_gas_station
+          </mat-icon>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card stock-card-theme">
+        <mat-card-content class="stat-card-content">
+          <div class="stat-text-group">
+            <span class="stat-title">Fuel Stock</span>
+            <span class="stat-main-value color-orange">
+              0%
+            </span>
+            <span class="stat-trend-text color-warning">
+              -0.0% from yesterday
+            </span>
+          </div>
+          <mat-icon class="stat-icon color-orange">
+            bar_chart
+          </mat-icon>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card attendants-card-theme">
+        <mat-card-content class="stat-card-content">
+          <div class="stat-text-group">
+            <span class="stat-title">Attendants</span>
+            <span class="stat-main-value color-teal">
+              0
+            </span>
+            <span class="stat-trend-text color-info">
+              active today
+            </span>
+          </div>
+          <mat-icon class="stat-icon color-teal">
+            person_pin
+          </mat-icon>
+        </mat-card-content>
+      </mat-card>
+
     </div>
-
-    <div class="card" fxLayout="row" fxFlex.gt-xs="50%">
-      <div fxLayout="column" fxFlex.xs="100%">
-        <span class="title">Fuel Pumps</span>
-        <span class="mainText">4</span>
-        <span> 2 active today </span>
-      </div>
-      <span fxFlex="1 1 auto"></span>
-      <mat-icon>
-        local_gas_station
-      </mat-icon>
-    </div>
-
-  </div>
-
-  <div fxLayout.xs="column" fxLayout.gt-xs="row" fxLayoutGap="15px">
-
-    <!-- dashboard card -->
-    <div class="card" fxLayout="row" style="width: 100%;">
-
-      <div fxLayout="column" fxFlex.xs="100%" fxFlex.gt-xs="50%">
-        <span class="title">Fuel stock</span>
-        <span class="mainText">50.0%</span>
-        <span> -0.0% from yesterday</span>
-      </div>
-      <span fxFlex="1 1 auto"></span>
-      <mat-icon>
-
-      </mat-icon>
-    </div>
-
-    <div class="card" fxLayout="row" fxFlex.gt-xs="50%">
-
-      <div fxLayout="column" fxFlex.xs="100%" fxFlex.gt-xs="50%">
-        <span class="title">Attendants</span>
-        <span class="mainText">16</span>
-        <span> 2 active today </span>
-      </div>
-      <span fxFlex="1 1 auto"></span>
-      <mat-icon>
-        person
-      </mat-icon>
-    </div>
-
-  </div>
-
+  </section>
 </div>

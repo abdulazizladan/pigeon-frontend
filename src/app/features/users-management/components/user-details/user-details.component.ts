@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { UserStore } from '../../store/user.store';
 import { MatDialog } from '@angular/material/dialog';
 import { SuspendUserComponent } from '../suspend-user/suspend-user.component';
+import { EnableUser } from '../enable-user/enable-user';
 
 @Component({
   selector: 'app-user-details',
@@ -29,20 +30,20 @@ export class UserDetailsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        //this.userStore.suspendUser(this.email);
+        this.userStore.suspendUser(this.email);
       }
     });
   }
 
   openEnableUserDialog(email: string | undefined) {
-    const dialogRef = this.dialog.open(SuspendUserComponent, {
+    const dialogRef = this.dialog.open(EnableUser, {
       width: '400px',
       data: { email: this.email }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        //this.userStore.suspendUser(this.email);
+        this.userStore.enableUser(this.email);
       }
     });
   }

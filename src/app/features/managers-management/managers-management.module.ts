@@ -17,11 +17,14 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatDividerModule } from '@angular/material/divider';
 
 import { ManagersManagementRoutingModule } from './managers-management-routing.module';
 import { ManagersListComponent } from './components/managers-list/managers-list.component';
 import { ManagerDetailsComponent } from './components/manager-details/manager-details.component';
 import { AddManagerComponent } from './components/add-manager/add-manager.component';
+import { MatListModule } from '@angular/material/list';
 
 
 @NgModule({
@@ -49,6 +52,9 @@ import { AddManagerComponent } from './components/add-manager/add-manager.compon
     MatMenuModule,
     MatProgressBarModule,
     MatChipsModule,
+    MatPaginatorModule,
+    MatDividerModule,
+    MatListModule,
     ManagersManagementRoutingModule
   ]
 })

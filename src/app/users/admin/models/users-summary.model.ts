@@ -1,9 +1,9 @@
 export class usersSummary {
-    "total": number;
-    "active": number;
-    "suspended": number;
-    "removed": number;
-    "admin": number;
-    "directors": number;
-    "managers": number
+    "total": null | number;
+    "active": null | number;
+    "suspended": null | number;
+    "removed": null | number;
+    "admin": null | number;
+    "directors": null | number;
+    "managers": null | number
 }

@@ -1,155 +1,154 @@
-<div class="p-6 bg-gray-50 min-h-screen font-sans">
-  <div class="max-w-4xl mx-auto">
-    
-    <h1 class="text-3xl font-extrabold mb-6 text-gray-800">User Details</h1>
-    
-    <div class="bg-white shadow-2xl rounded-xl p-6 md:p-8 border border-gray-100 transition duration-300">
-      
-      <!-- Loading and Error Indicators -->
+<div class="user-details-page-wrapper">
+  <div class="user-details-container">
+    <h1 class="page-title">User Details</h1>
+
+    <mat-card class="user-profile-card">
       @if(userStore.loading()) {
-        <mat-progress-bar mode="query" class="w-full h-2 mb-4 rounded-full"></mat-progress-bar>
+        <mat-progress-bar mode="query"></mat-progress-bar>
       }
 
       @if(userStore.error()) {
-        <mat-error class="p-3 bg-red-50 text-red-700 rounded-lg mb-4 block border border-red-200">
-          <mat-icon class="text-lg mr-2 align-middle">error_outline</mat-icon>
+        <mat-error class="error-banner">
+          <mat-icon class="error-icon">error_outline</mat-icon>
           {{userStore.error()}}
         </mat-error>
       }
-      
-      <div class="flex flex-col sm:flex-row gap-6 mb-8">
-        <!-- Profile Image/Avatar Section -->
-        <div class="flex-shrink-0 flex justify-center">
-          <div class="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-gray-300 flex items-center justify-center text-4xl text-gray-500 shadow-md overflow-hidden">
+
+      <div class="profile-header-section">
+        <div class="profile-avatar-wrapper">
+          <div class="profile-avatar">
             <mat-icon>person</mat-icon>
           </div>
         </div>
 
-        <!-- User Info List -->
-        <div class="flex-grow">
-          <h2 class="text-2xl font-semibold mb-4 text-gray-900">{{userStore.selectedUser()?.info?.firstName}} {{userStore.selectedUser()?.info?.lastName}}</h2>
+        <div class="profile-summary">
+          <h2 class="user-full-name">
+            {{userStore.selectedUser()?.info?.firstName}} {{userStore.selectedUser()?.info?.lastName}}
+          </h2>
           
-          <mat-list role="list" class="user-details-list">
-            <!-- Account Status -->
-            <mat-list-item role="listitem" class="text-gray-700">
-              <mat-icon matListItemIcon class="text-indigo-500">verified_user</mat-icon>
-              <div class="flex items-center space-x-2">
-                <span class="font-medium">Account Status:</span>
-                <!-- Status Pills using Tailwind -->
-                @switch (userStore.selectedUser()?.status) {
-                  @case ('active') {
-                    <span class="bg-green-100 text-green-700 px-3 py-1 text-xs font-semibold rounded-full min-w-[75px] text-center">Active</span>
-                  }
-                  @case ('inactive') {
-                    <span class="bg-red-100 text-red-700 px-3 py-1 text-xs font-semibold rounded-full min-w-[75px] text-center">Inactive</span>
-                  }
-                  @case ('suspended') {
-                    <span class="bg-orange-100 text-orange-700 px-3 py-1 text-xs font-semibold rounded-full min-w-[75px] text-center">Suspended</span>
-                  }
-                  @default {
-                    <span class="bg-gray-100 text-gray-700 px-3 py-1 text-xs font-semibold rounded-full min-w-[75px] text-center">Unknown</span>
-                  }
-                }
-              </div>
-            </mat-list-item>
-            
-            <!-- Account Created -->
-            <mat-list-item role="listitem" class="text-gray-700">
-              <mat-icon matListItemIcon class="text-blue-500">access_time</mat-icon>
-              <span class="font-medium">Account Created:</span> {{userStore.selectedUser()?.createdAt | date: 'medium'}}
-            </mat-list-item>
-
-            <!-- Role -->
-            <mat-list-item role="listitem" class="text-gray-700">
-              <mat-icon matListItemIcon class="text-purple-500">account_circle</mat-icon>
-              <span class="font-medium">Role:</span> {{userStore.selectedUser()?.role | titlecase}}
-            </mat-list-item>
-            
-            <!-- Email -->
-            <mat-list-item role="listitem" class="text-gray-700">
-              <mat-icon matListItemIcon class="text-pink-500">email</mat-icon>
-              <span class="font-medium">Email:</span> {{userStore.selectedUser()?.email}}
-            </mat-list-item>
-            
-            <!-- Phone -->
-            <mat-list-item role="listitem" class="text-gray-700">
-              <mat-icon matListItemIcon class="text-green-500">phone</mat-icon>
-              <span class="font-medium">Phone:</span> +234{{userStore.selectedUser()?.contact?.phone}}
-            </mat-list-item>
-
-            <!-- Reports (Conditional) -->
-            @if(userStore.selectedUser()?.role === 'manager') {
-              <mat-list-item role="listitem" class="text-gray-700">
-                <mat-icon matListItemIcon class="text-orange-500">assignment</mat-icon>
-                <span class="font-medium">Reports:</span> {{userStore.selectedUser()?.reports?.length}}
-              </mat-list-item>
+          <div class="status-indicator">
+            <span class="status-label">Account Status:</span>
+            @switch (userStore.selectedUser()?.status) {
+              @case ('active') {
+                <span class="status-pill status-active">Active</span>
+              }
+              @case ('inactive') {
+                <span class="status-pill status-inactive">Inactive</span>
+              }
+              @case ('suspended') {
+                <span class="status-pill status-suspended">Suspended</span>
+              }
+              @default {
+                <span class="status-pill status-unknown">Unknown</span>
+              }
             }
-            
-            <!-- Support Tickets Count -->
-            <mat-list-item role="listitem" class="text-gray-700">
-              <mat-icon matListItemIcon class="text-red-500">support_agent</mat-icon>
-              <span class="font-medium">Support Tickets:</span> {{userStore.selectedUser()?.tickets?.length}}
-            </mat-list-item>
-          </mat-list>
+          </div>
         </div>
       </div>
 
-     <!-- Suspend / Enable Button Section (Dynamically rendered) -->
-     <div class="flex justify-end pt-4 border-t border-gray-100">
-      @if(userStore.selectedUser()?.id) {
-        @if(userStore.selectedUser()?.status === 'active') {
-          <!-- SUSPEND Button (If active) -->
-          <button mat-flat-button color="warn" (click)="openSuspendUserDialog(userStore.selectedUser()?.email)">
-            <mat-icon>block</mat-icon>
-            Suspend User Account
-          </button>
-        } @else {
-          <!-- ENABLE Button (If inactive or suspended) -->
-          <button mat-flat-button color="primary" (click)="openEnableUserDialog(userStore.selectedUser()?.email)">
-            <mat-icon>check_circle_outline</mat-icon>
-            Enable User Account
-          </button>
-        }
-      }
-    </div>
+      <div class="details-grid">
+        <div class="detail-item">
+          <mat-icon color="primary">account_circle</mat-icon>
+          <div class="detail-content">
+            <span class="detail-label">Role:</span>
+            <span class="detail-value">{{userStore.selectedUser()?.role | titlecase}}</span>
+          </div>
+        </div>
+        
+        <div class="detail-item">
+          <mat-icon>email</mat-icon>
+          <div class="detail-content">
+            <span class="detail-label">Email:</span>
+            <span class="detail-value">{{userStore.selectedUser()?.email}}</span>
+          </div>
+        </div>
+        
+        <div class="detail-item">
+          <mat-icon>phone</mat-icon>
+          <div class="detail-content">
+            <span class="detail-label">Phone:</span>
+            <span class="detail-value">+234{{userStore.selectedUser()?.contact?.phone}}</span>
+          </div>
+        </div>
 
-      <!-- Support Tickets List -->
-      <h2 class="text-2xl font-semibold mt-8 mb-4 border-t pt-4 text-gray-800">Support Tickets</h2>
-      
-      @if(userStore.selectedUser()?.tickets?.length) {
-        @for(ticket of userStore.selectedUser()?.tickets; track ticket.id) {
-          <div class="ticket-card bg-gray-50 p-4 rounded-lg shadow-sm mb-3 border border-gray-200 hover:bg-gray-100 transition duration-150">
-            <h3 class="text-lg font-semibold text-gray-900 mb-1">{{ticket.title}}</h3>
-            <p class="text-sm text-gray-600 mb-2 truncate">{{ticket.description}}</p>
-            <div class="flex justify-between items-center text-xs text-gray-500">
-              <p>
-                Status: 
-                @switch (ticket.status) {
-                  @case ('active') {
-                    <span class="font-medium text-blue-600">{{ticket.status | titlecase}}</span>
-                  }
-                  @case ('resolved') {
-                    <span class="font-medium text-green-600">{{ticket.status | titlecase}}</span>
-                  }
-                  @default {
-                    <span class="font-medium text-gray-600">{{ticket.status | titlecase}}</span>
-                  }
-                }
-              </p>
-              <p>Date Created: {{ticket.dateCreated | date:'short'}}</p>
-            </div>
-            <div class="mt-3">
-               <!-- Replaced routerLink with a mock action for demonstration -->
-              <!--<button mat-flat-button color="primary" (click)="viewTicketDetails(ticket.id)">
-                View Ticket Details
-              </button>-->
+        <div class="detail-item">
+          <mat-icon>access_time</mat-icon>
+          <div class="detail-content">
+            <span class="detail-label">Account Created:</span>
+            <span class="detail-value">{{userStore.selectedUser()?.createdAt | date: 'medium'}}</span>
+          </div>
+        </div>
+
+        @if(userStore.selectedUser()?.role === 'manager') {
+          <div class="detail-item">
+            <mat-icon color="accent">assignment</mat-icon>
+            <div class="detail-content">
+              <span class="detail-label">Reports:</span>
+              <span class="detail-value">{{userStore.selectedUser()?.reports?.length}}</span>
             </div>
           </div>
         }
-      } @else {
-       <h3 class="text-lg text-gray-500 italic p-4 bg-gray-100 rounded-lg">No support tickets found for this user.</h3>
-      }
+        
+        <div class="detail-item">
+          <mat-icon color="warn">support_agent</mat-icon>
+          <div class="detail-content">
+            <span class="detail-label">Support Tickets:</span>
+            <span class="detail-value">{{userStore.selectedUser()?.tickets?.length}}</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="action-buttons-footer">
+        @if(userStore.selectedUser()?.id && userStore.selectedUser()?.role != 'admin') {
+          @if(userStore.selectedUser()?.status === 'active') {
+            <button mat-flat-button color="warn" (click)="openSuspendUserDialog(userStore.selectedUser()?.email)">
+              <mat-icon>block</mat-icon>
+              Suspend User Account
+            </button>
+          } @else {
+            <button mat-flat-button color="primary" (click)="openEnableUserDialog(userStore.selectedUser()?.email)">
+              <mat-icon>check_circle_outline</mat-icon>
+              Enable User Account
+            </button>
+          }
+        }
+      </div>
+    </mat-card>
 
-    </div>
+    <mat-card class="tickets-section-card">
+      <h2 class="section-title">Support Tickets</h2>
+      
+      @if(userStore.selectedUser()?.tickets?.length) {
+        <div class="tickets-list">
+          @for(ticket of userStore.selectedUser()?.tickets; track ticket.id) {
+            <div class="ticket-card">
+              <div class="ticket-header">
+                <h3 class="ticket-title">{{ticket.title}}</h3>
+                <div class="ticket-status">
+                   Status: 
+                  @switch (ticket.status) {
+                    @case ('active') {
+                      <span class="status-value status-active">{{ticket.status | titlecase}}</span>
+                    }
+                    @case ('resolved') {
+                      <span class="status-value status-resolved">{{ticket.status | titlecase}}</span>
+                    }
+                    @default {
+                      <span class="status-value status-default">{{ticket.status | titlecase}}</span>
+                    }
+                  }
+                </div>
+              </div>
+              <p class="ticket-description">{{ticket.description}}</p>
+              <div class="ticket-footer">
+                <p class="ticket-date">Date Created: {{ticket.dateCreated | date:'short'}}</p>
+                </div>
+            </div>
+          }
+        </div>
+      } @else {
+       <div class="no-tickets-message">No support tickets found for this user.</div>
+      }
+    </mat-card>
   </div>
 </div>

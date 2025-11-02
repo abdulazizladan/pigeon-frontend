@@ -9,6 +9,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatDividerModule } from '@angular/material/divider';
@@ -48,7 +49,8 @@ import { ProfileComponent } from './components/profile/profile.component';
     MatListModule,
     BaseChartDirective,
     MatProgressSpinnerModule,
-    AdminRoutingModule
-  ]
+    AdminRoutingModule,
+    MatInputModule
+]
 })
 export class AdminModule { }

@@ -1,24 +1,309 @@
 :host {
-    display: block;
+  display: block;
+}
+
+/* --- Global Layout/Page Styling --- */
+.user-details-page-wrapper {
+  padding: 24px;
+  background-color: #f3f4f6; /* Light gray background */
+  min-height: 100vh;
+  font-family: 'Roboto', sans-serif; /* Consistent font */
+}
+
+.user-details-container {
+  max-width: 960px; /* Wider max-width for better use of space */
+  margin: 0 auto;
+}
+
+.page-title {
+  font-size: 32px;
+  font-weight: 800;
+  margin-bottom: 24px;
+  color: #1f2937; /* Darker text */
+}
+
+/* --- Main Profile Card --- */
+.user-profile-card {
+  margin-bottom: 32px;
+  padding: 24px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Softer shadow */
+}
+
+/* Error/Loading */
+.error-banner {
+  padding: 12px;
+  background-color: #fef2f2; /* Light red */
+  color: #b91c1c; /* Dark red */
+  border-radius: 8px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  border: 1px solid #fecaca;
+  font-size: 14px;
+}
+.error-icon {
+  margin-right: 8px;
+  font-size: 18px;
+}
+mat-progress-bar {
+  margin-bottom: 16px;
+}
+
+/* --- Profile Header Section (Avatar + Name/Status) --- */
+.profile-header-section {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding-bottom: 24px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid #e5e7eb; /* Subtle separator */
+}
+
+.profile-avatar-wrapper {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.profile-avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background-color: #e5e7eb; /* Light gray */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+  color: #6b7280; /* Gray icon */
+  box-shadow: 0 0 0 4px #ffffff, 0 0 0 5px #d1d5db; /* Ring effect */
+}
+
+.user-full-name {
+  font-size: 28px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 8px 0;
+}
+
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  color: #4b5563;
+}
+
+.status-label {
+  font-weight: 500;
+}
+
+/* Status Pills */
+.status-pill {
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 9999px; /* Fully rounded */
+  min-width: 75px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.status-active {
+  background-color: #d1fae5; /* Green 100 */
+  color: #065f46; /* Green 700 */
+}
+.status-inactive {
+  background-color: #fee2e2; /* Red 100 */
+  color: #991b1b; /* Red 700 */
+}
+.status-suspended {
+  background-color: #fff7ed; /* Orange 100 */
+  color: #9a3412; /* Orange 700 */
+}
+.status-unknown {
+  background-color: #f3f4f6; /* Gray 100 */
+  color: #4b5563; /* Gray 700 */
+}
+
+/* --- Details Grid --- */
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Responsive 2-column layout */
+  gap: 20px 32px; /* Vertical and horizontal spacing */
+  padding-bottom: 24px;
+}
+
+.detail-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.detail-item mat-icon {
+  font-size: 20px;
+  margin-top: 2px;
+  color: #6b7280; /* Default icon color */
+  /* Specific colors can be set in HTML if needed, e.g., using Material color attributes */
+}
+
+.detail-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.detail-label {
+  font-weight: 500;
+  color: #4b5563; /* Label color */
+  font-size: 14px;
+}
+
+.detail-value {
+  color: #1f2937; /* Value color */
+  font-size: 16px;
+  word-break: break-all; /* Break long words/emails */
+}
+
+/* --- Action Buttons --- */
+.action-buttons-footer {
+  padding-top: 24px;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.action-buttons-footer button {
+  min-width: 200px;
+}
+
+
+/* --- Support Tickets Section --- */
+.tickets-section-card {
+  padding: 24px;
+}
+
+.section-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #f3f4f6; /* Lighter separator */
+}
+
+.tickets-list {
+  display: grid;
+  gap: 16px;
+}
+
+.ticket-card {
+  padding: 16px;
+  background-color: #f9fafb; /* Very light gray */
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  transition: all 0.2s ease-in-out;
+}
+.ticket-card:hover {
+  background-color: #ffffff;
+  border-color: #d1d5db;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.ticket-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.ticket-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+  flex-grow: 1;
+}
+
+.ticket-status {
+  flex-shrink: 0;
+  font-size: 12px;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.status-value {
+  font-weight: 500;
+}
+.status-resolved {
+  color: #059669; /* Green */
+}
+.status-active {
+  color: #3b82f6; /* Blue */
+}
+.status-default {
+  color: #4b5563;
+}
+
+.ticket-description {
+  font-size: 14px;
+  color: #4b5563;
+  margin-bottom: 12px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.ticket-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.no-tickets-message {
+  padding: 16px;
+  background-color: #f3f4f6;
+  color: #6b7280;
+  font-style: italic;
+  border-radius: 8px;
+  text-align: center;
+}
+
+/* --- Material Overrides (from original) --- */
+.mat-mdc-progress-bar {
+  --mdc-linear-progress-track-color: #e5e7eb; /* gray-200 */
+  --mdc-linear-progress-active-indicator-color: #4f46e5; /* indigo-600 */
+}
+.mat-mdc-button.mat-warn {
+  --mdc-button-persistent-ripple-color: #fca5a5; /* red-300 */
+}
+
+/* Tablet/Desktop Adjustments */
+@media (max-width: 768px) {
+  .profile-header-section {
+    flex-direction: column;
+    text-align: center;
   }
-  .user-details-list .mat-list-item {
-    height: auto; /* Allow items to adjust height */
-    padding-top: 8px;
-    padding-bottom: 8px;
+  .user-full-name {
+    margin-top: 16px;
   }
-  .user-details-list .mat-list-item-content {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+  .status-indicator {
+    justify-content: center;
   }
-  .user-details-list .mat-list-item-content > span {
-    flex-grow: 1;
+  .details-grid {
+    grid-template-columns: 1fr; /* Single column on mobile */
   }
-  /* General Material component color adjustments (similar to the previous file) */
-  .mat-mdc-progress-bar {
-    --mdc-linear-progress-track-color: #e5e7eb; /* gray-200 */
-    --mdc-linear-progress-active-indicator-color: #4f46e5; /* indigo-600 */
+  .detail-item {
+    padding: 8px 0;
+    border-bottom: 1px dashed #f3f4f6;
   }
-  .mat-mdc-button.mat-warn {
-    --mdc-button-persistent-ripple-color: #fca5a5; /* red-300 */
+  .detail-item:last-child {
+    border-bottom: none;
   }
+  .action-buttons-footer {
+    justify-content: center;
+  }
+}

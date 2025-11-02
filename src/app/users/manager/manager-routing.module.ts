@@ -28,21 +28,21 @@ const routes: Routes = [
         component: ProfileComponent
       },
       {
-        path: 'dispensers',
-        loadChildren: () => import('../../features/dispensers-management/dispensers-management.module').then(module => module.DispensersManagementModule)
+        path: 'my-station',
+        loadChildren: () => import('../../features/station-management/station-management-module').then(module => module.StationManagementModule)
       },
       {
-        path: 'stations',
-        loadChildren: () => import('../../features/stations-management/stations-management.module').then(module => module.StationsManagementModule)
+        path: 'dispensers',
+        loadChildren: () => import('../../features/dispensers-management/dispensers-management.module').then(module => module.DispensersManagementModule)
       },
       {
         path: 'sales',
         loadChildren: () => import('../../features/sales-management/sales-management.module').then(module => module.SalesManagementModule)
       },
-      {
-        path: 'issues',
-        loadChildren: () => import('../../features/tickets-management/tickets-management.module').then(module => module.TicketsManagementModule)
-      }
+      //{
+      //  path: 'issues',
+      //  loadChildren: () => import('../../features/tickets-management/tickets-management.module').then(module => module.TicketsManagementModule)
+      //}
     ]
   }
 ];

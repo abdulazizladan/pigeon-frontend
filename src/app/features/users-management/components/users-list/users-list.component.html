@@ -5,14 +5,14 @@
       <mat-card-subtitle>Manage your application users</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
-      <div class="table-controls">
-        <mat-form-field appearance="outline" class="search-input">
+      <div fxLayout="row" fxLayoutGap="25px">
+        <mat-form-field appearance="outline" fxFlex="1 1 auto">
           <mat-label>Search users</mat-label>
           <input matInput [formControl]="searchControl" placeholder="e.g., John Doe, admin@example.com">
           <mat-icon matSuffix>search</mat-icon>
         </mat-form-field>
 
-        <button mat-raised-button color="primary" (click)="openAddUserDialog()">
+        <button mat-flat-button color="primary" (click)="openAddUserDialog()">
           <mat-icon>person_add</mat-icon>
           Add User
         </button>

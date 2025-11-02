@@ -1,1 +1,60 @@
-<p>add-manager works!</p>
+<div fxFlex fxLayout="column" fxLayoutGap="15px">
+
+    <h2 mat-dialog-title>Add New Manager</h2>
+        <form [formGroup]="managerForm" (ngSubmit)="submit()">
+            <mat-dialog-content>
+                <div>
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Email</mat-label>
+                        <input matInput formControlName="email" required type="email">
+                        <mat-error *ngIf="managerForm.get('email')?.errors?.['email']">
+                            Please enter a valid email address
+                        </mat-error>
+                    </mat-form-field>
+            
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Password</mat-label>
+                        <input matInput formControlName="password" required type="password">
+                        <mat-error *ngIf="managerForm.get('password')?.errors?.['required']">
+                            Password is required
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+        
+                <div formGroupName="info">
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>First Name</mat-label>
+                        <input matInput formControlName="firstName" required>
+                    </mat-form-field>
+        
+                    <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Last Name</mat-label>
+                    <input matInput formControlName="lastName" required>
+                    </mat-form-field>
+        
+                    <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Age</mat-label>
+                    <input matInput formControlName="age" type="number" required>
+                    </mat-form-field>
+        
+                    <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Profile Image URL</mat-label>
+                    <input matInput formControlName="image">
+                    </mat-form-field>
+                </div>
+        
+                <div formGroupName="contact">
+                    <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Phone</mat-label>
+                    <input matInput formControlName="phone" required>
+                    </mat-form-field>
+                </div>
+            </mat-dialog-content>
+            <mat-dialog-actions align="end">
+                <button mat-button mat-dialog-close>Cancel</button>
+                <button mat-flat-button color="primary" type="submit" [disabled]="managerForm.invalid">
+                  Add User
+                </button>
+            </mat-dialog-actions> 
+        </form>
+</div>

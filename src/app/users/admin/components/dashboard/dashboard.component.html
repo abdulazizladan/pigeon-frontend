@@ -1,129 +1,118 @@
-<div class="admin-dashboard-container p-6 bg-gray-50 min-h-screen font-sans text-gray-800">
+<div class="dashboard-wrapper">
 
-  <h1 class="dashboard-title text-3xl font-bold mb-8 border-b pb-3 text-gray-900">Admin Dashboard</h1>
+  <h1 class="page-title">Admin Dashboard</h1>
 
-  <!-- Cards row 1 -->
-  <div class="dashboard-row grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+  <div class="dashboard-grid-row" fxLayout.lt-md="column" fxLayout.gt-sm="row" fxLayoutGap="24px">
     
-    <!-- Users Card -->
-    <mat-card class="dashboard-card bg-white shadow-lg border border-gray-100 rounded-xl transition duration-300 hover:shadow-2xl">
-      <mat-card-header class="card-header pb-4 flex items-center">
-        <mat-icon class="card-icon text-indigo-500 mr-3 text-3xl">people</mat-icon>
-        <mat-card-title class="card-title text-xl font-semibold">Users</mat-card-title>
+    <mat-card fxFlex="50" class="stat-card">
+      <mat-card-header class="card-header user-card-header">
+        <mat-icon class="card-icon">people</mat-icon>
+        <mat-card-title class="card-title">Users</mat-card-title>
       </mat-card-header>
       <mat-card-content class="card-content">
         @if(adminStore.loading()){
-          <!-- Replaced spinner with progress bar -->
-          <div class="h-10 flex items-center justify-center">
-             <mat-progress-bar mode="indeterminate" class="w-2/3"></mat-progress-bar>
+          <div class="loading-indicator-area">
+             <mat-progress-bar mode="indeterminate"></mat-progress-bar>
           </div>
-        } @else{
-          <h1 class="card-total text-5xl font-extrabold mb-4 text-gray-900">{{adminStore.usersSummary().total}}</h1>
+        } @else {
+          <h1 class="stat-total">{{adminStore.usersSummary().total ?? 0}}</h1>
+          <div class="stat-pills-container">
+            <div class="stat-pill pill-indigo">
+              <mat-icon class="pill-icon">shield</mat-icon>
+              <span class="pill-text">Admin - {{adminStore.usersSummary().admin ?? 0}}</span>
+            </div>
+            <div class="stat-pill pill-indigo">
+              <mat-icon class="pill-icon">admin_panel_settings</mat-icon>
+              <span class="pill-text">Directors - {{adminStore.usersSummary().directors ?? 0}}</span>
+            </div>
+            <div class="stat-pill pill-indigo">
+              <mat-icon class="pill-icon">supervisor_account</mat-icon>
+              <span class="pill-text">Managers - {{adminStore.usersSummary().managers ?? 0}}</span>
+            </div>
+          </div>
         }
-        <div class="card-pills-container flex flex-wrap gap-2 mt-4">
-          <div class="card-pill flex items-center bg-indigo-50 text-indigo-700 text-sm px-3 py-1 rounded-full">
-            <mat-icon class="pill-icon text-base mr-1">shield</mat-icon>
-            <span class="pill-text">Admin - {{adminStore.usersSummary().admin}}</span>
-          </div>
-          <div class="card-pill flex items-center bg-indigo-50 text-indigo-700 text-sm px-3 py-1 rounded-full">
-            <mat-icon class="pill-icon text-base mr-1">admin_panel_settings</mat-icon>
-            <span class="pill-text">Directors - {{adminStore.usersSummary().directors}}</span>
-          </div>
-          <div class="card-pill flex items-center bg-indigo-50 text-indigo-700 text-sm px-3 py-1 rounded-full">
-            <mat-icon class="pill-icon text-base mr-1">supervisor_account</mat-icon>
-            <span class="pill-text">Managers - {{adminStore.usersSummary().managers}}</span>
-          </div>
-        </div>
       </mat-card-content>
     </mat-card>
 
-    <!-- Fuel Attendants Card -->
-    <mat-card class="dashboard-card bg-white shadow-lg border border-gray-100 rounded-xl transition duration-300 hover:shadow-2xl">
-      <mat-card-header class="card-header pb-4 flex items-center">
-        <mat-icon class="card-icon text-emerald-500 mr-3 text-3xl">local_gas_station</mat-icon>
-        <mat-card-title class="card-title text-xl font-semibold">Fuel Attendants</mat-card-title>
+    <mat-card fxFlex="50" class="stat-card">
+      <mat-card-header class="card-header attendant-card-header">
+        <mat-icon class="card-icon">local_gas_station</mat-icon>
+        <mat-card-title class="card-title">Fuel Attendants</mat-card-title>
       </mat-card-header>
       <mat-card-content class="card-content">
         @if(adminStore.loading()){
-          <!-- Replaced spinner with progress bar -->
-          <div class="h-10 flex items-center justify-center">
-             <mat-progress-bar mode="indeterminate" class="w-2/3"></mat-progress-bar>
+          <div class="loading-indicator-area">
+             <mat-progress-bar mode="indeterminate"></mat-progress-bar>
           </div>
-        } @else{
-          <h1 class="card-total text-5xl font-extrabold mb-4 text-gray-900">{{adminStore.attendantsSummary().total}}</h1>
+        } @else {
+          <h1 class="stat-total">{{adminStore.attendantsSummary().total ?? 0}}</h1>
+          <div class="stat-pills-container">
+            <div class="stat-pill pill-green">
+              <span class="pill-text">Active - {{adminStore.attendantsSummary().active ?? 0}}</span>
+            </div>
+            <div class="stat-pill pill-red">
+              <span class="pill-text">Inactive - {{adminStore.attendantsSummary().suspended ?? 0}}</span>
+            </div>
+          </div>
         }
-        <div class="card-pills-container flex flex-wrap gap-2 mt-4">
-          <div class="card-pill bg-emerald-50 text-emerald-700 text-sm px-3 py-1 rounded-full">
-            <span class="pill-text font-medium">Active - {{adminStore.attendantsSummary().active}}</span>
-          </div>
-          <div class="card-pill bg-red-50 text-red-700 text-sm px-3 py-1 rounded-full">
-            <span class="pill-text font-medium">Inactive - {{adminStore.attendantsSummary().suspended}}</span>
-          </div>
-        </div>
       </mat-card-content>
     </mat-card>
   </div>
 
-  <!-- Cards row 2 -->
-  <div class="dashboard-row grid grid-cols-1 md:grid-cols-2 gap-6">
+  <div class="dashboard-grid-row" fxLayout.lt-md="column" fxLayout.gt-sm="row" fxLayoutGap="24px">
 
-    <!-- Fuel Stations Card -->
-    <mat-card class="dashboard-card bg-white shadow-lg border border-gray-100 rounded-xl transition duration-300 hover:shadow-2xl">
-      <mat-card-header class="card-header pb-4 flex items-center">
-        <mat-icon class="card-icon text-blue-500 mr-3 text-3xl">business</mat-icon>
-        <mat-card-title class="card-title text-xl font-semibold">Fuel Stations</mat-card-title>
+    <mat-card fxFlex="50" class="stat-card">
+      <mat-card-header class="card-header station-card-header">
+        <mat-icon class="card-icon">business</mat-icon>
+        <mat-card-title class="card-title">Fuel Stations</mat-card-title>
       </mat-card-header>
       <mat-card-content class="card-content">
         @if(adminStore.loading()){
-          <!-- Replaced spinner with progress bar -->
-          <div class="h-10 flex items-center justify-center">
-             <mat-progress-bar mode="indeterminate" class="w-2/3"></mat-progress-bar>
+          <div class="loading-indicator-area">
+             <mat-progress-bar mode="indeterminate"></mat-progress-bar>
           </div>
-        } @else{
-          <h1 class="card-total text-5xl font-extrabold mb-4 text-gray-900">{{adminStore.stationsSummary().total}}</h1>
+        } @else {
+          <h1 class="stat-total">{{adminStore.stationsSummary().total ?? 0}}</h1>
+          <div class="stat-pills-container">
+            <div class="stat-pill pill-blue">
+              <span class="pill-text">Active - {{adminStore.stationsSummary().active ?? 0}}</span>
+            </div>
+            <div class="stat-pill pill-gray">
+              <span class="pill-text">Inactive - {{adminStore.stationsSummary().inactive ?? 0}}</span>
+            </div>
+          </div>
         }
-        <div class="card-pills-container flex flex-wrap gap-2 mt-4">
-          <div class="card-pill bg-blue-50 text-blue-700 text-sm px-3 py-1 rounded-full">
-            <span class="pill-text font-medium">Active - {{adminStore.stationsSummary().active}}</span>
-          </div>
-          <div class="card-pill bg-gray-200 text-gray-700 text-sm px-3 py-1 rounded-full">
-            <span class="pill-text font-medium">Inactive - {{adminStore.stationsSummary().inactive}}</span>
-          </div>
-        </div>
       </mat-card-content>
     </mat-card>
 
-    <!-- Support Tickets Card -->
-    <mat-card class="dashboard-card bg-white shadow-lg border border-gray-100 rounded-xl transition duration-300 hover:shadow-2xl">
-      <mat-card-header class="card-header pb-4 flex items-center">
-        <mat-icon class="card-icon text-orange-500 mr-3 text-3xl">support_agent</mat-icon>
-        <mat-card-title class="card-title text-xl font-semibold">Support Tickets</mat-card-title>
+    <mat-card fxFlex="50" class="stat-card">
+      <mat-card-header class="card-header ticket-card-header">
+        <mat-icon class="card-icon">support_agent</mat-icon>
+        <mat-card-title class="card-title">Support Tickets</mat-card-title>
       </mat-card-header>
       <mat-card-content class="card-content">
         @if(adminStore.loading()){
-          <!-- Replaced spinner with progress bar -->
-          <div class="h-10 flex items-center justify-center">
-             <mat-progress-bar mode="indeterminate" class="w-2/3"></mat-progress-bar>
+          <div class="loading-indicator-area">
+             <mat-progress-bar mode="indeterminate"></mat-progress-bar>
           </div>
-        } @else{
-          <h1 class="card-total text-5xl font-extrabold mb-4 text-gray-900">{{adminStore.ticketsSummary().total}}</h1>
+        } @else {
+          <h1 class="stat-total">{{adminStore.ticketsSummary().total ?? 0}}</h1>
+          <div class="stat-pills-container">
+            <div class="stat-pill pill-orange">
+              <mat-icon class="pill-icon">local_activity</mat-icon>
+              <span class="pill-text">Active - {{adminStore.ticketsSummary().active ?? 0}}</span>
+            </div>
+            <div class="stat-pill pill-green-light">
+              <mat-icon class="pill-icon">done_all</mat-icon>
+              <span class="pill-text">Resolved - {{adminStore.ticketsSummary().resolved ?? 0}}</span>
+            </div>
+            <div class="stat-pill pill-red">
+              <mat-icon class="pill-icon">cancel</mat-icon>
+              <span class="pill-text">Dismissed - {{adminStore.ticketsSummary().dismissed ?? 0}}</span>
+            </div>
+          </div>
         }
-        <div class="card-pills-container flex flex-wrap gap-2 mt-4">
-          <div class="card-pill flex items-center bg-orange-50 text-orange-700 text-sm px-3 py-1 rounded-full">
-            <mat-icon class="pill-icon text-base mr-1">local_activity</mat-icon>
-            <span class="pill-text">Active - {{adminStore.ticketsSummary().active}}</span>
-          </div>
-          <div class="card-pill flex items-center bg-green-50 text-green-700 text-sm px-3 py-1 rounded-full">
-            <mat-icon class="pill-icon text-base mr-1">done_all</mat-icon>
-            <span class="pill-text">Resolved - {{adminStore.ticketsSummary().resolved}} </span>
-          </div>
-          <div class="card-pill flex items-center bg-red-50 text-red-700 text-sm px-3 py-1 rounded-full">
-            <mat-icon class="pill-icon text-base mr-1">cancel</mat-icon>
-            <span class="pill-text">Dismissed - {{adminStore.ticketsSummary().dismissed}} </span>
-          </div>
-        </div>
       </mat-card-content>
     </mat-card>
   </div>
-
 </div>

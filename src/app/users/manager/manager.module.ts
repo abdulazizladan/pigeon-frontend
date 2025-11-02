@@ -22,6 +22,7 @@ import { SettingsComponent } from './components/settings/settings.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { LayoutComponent } from './components/layout/layout.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { MatInputModule } from '@angular/material/input';
 
 
 @NgModule({
@@ -49,6 +50,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
     MatListModule,
     BaseChartDirective,
     MatProgressSpinnerModule,
+    MatInputModule,
     ManagerRoutingModule
   ]
 })

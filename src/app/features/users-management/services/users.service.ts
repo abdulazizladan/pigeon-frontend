@@ -57,18 +57,17 @@ export class UserService {
     );
   }
 
-  async suspendUser(id: string): Promise<UserDetail> {
+  async suspendUser(email: string): Promise<UserDetail> {
     return firstValueFrom(
-      this.http.patch<{success: boolean, data: UserDetail, message: string}>(`${this.baseUrl}/user/suspend/${id}, {status: 'inactive}`, {}).pipe(
-        map(response => response.data)
+      this.http.patch<UserDetail>(`${this.baseUrl}/user/${email}`, {status: 'inactive'}).pipe(
+
       )
     );
   }
 
-  async unsuspendUser(id: string): Promise<UserDetail> {
+  async enableUser(email: string): Promise<UserDetail> {
     return firstValueFrom(
-      this.http.patch<{success: boolean, data: UserDetail, message: string}>(`${this.baseUrl}/user/unsuspend/${id}`, {status: 'active'}).pipe(
-        map(response => response.data)
+      this.http.patch<UserDetail>(`${this.baseUrl}/user/${email}`, {status: 'active'}).pipe(
       )
     );
   }

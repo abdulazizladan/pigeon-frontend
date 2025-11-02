@@ -1,7 +1,29 @@
 import { ChangeDetectionStrategy, Component, computed, effect, inject, OnInit } from '@angular/core';
 import { DirectorStore } from '../../store/director.store';
 import { SalesPeriod } from '../../services/director.service';
-import { Chart } from 'chart.js';
+import {
+  Chart,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  LineController,
+  Legend,
+  Title,
+  Tooltip
+} from 'chart.js';
+
+// Register Chart.js components
+Chart.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  LineController,
+  Legend,
+  Title,
+  Tooltip
+);
 
 @Component({
   selector: 'app-dashboard',
@@ -12,8 +34,7 @@ import { Chart } from 'chart.js';
 })
 export class DashboardComponent implements OnInit{
 
-  // We use a simplified class for the store here, as we can't inject a real NGRX store in isolation
-  public directorStore = new DirectorStore();
+  public directorStore = inject(DirectorStore);
 
   // Reference to the Chart.js instance
   private chartInstance: Chart | null = null;
@@ -55,10 +76,9 @@ export class DashboardComponent implements OnInit{
     effect(() => {
       // We only attempt to render the chart when loading is false and data is available.
       if (!this.directorStore.salesLoading() && this.directorStore.salesRecords().length > 0) {
-        // FIX: Added a 50ms timeout to ensure the canvas element has been rendered 
+        // Use setTimeout to ensure the canvas element has been rendered 
         // by the change detection cycle before Chart.js tries to find it.
-        //setTimeout(() => this.renderChart(), 50); 
-        this.renderChart()
+        setTimeout(() => this.renderChart(), 50); 
       }
     });
   }
@@ -70,12 +90,7 @@ export class DashboardComponent implements OnInit{
     // 2. Load Sales Data for the default 'daily' period
     this.directorStore.loadSalesRecords('daily');
     
-    // 3. Set up an effect for sales data changes to update the chart
-    effect(() => {
-      // Accessing the signal will cause this effect to rerun when salesRecords changes
-      this.directorStore.salesRecords();
-      this.renderChart();
-    });
+    // Note: Chart rendering is handled by the effect in the constructor
   }
   /**
    * Calls the store method to fetch sales data for a specific period.
@@ -90,11 +105,7 @@ export class DashboardComponent implements OnInit{
   /**
    * Renders or updates the Chart.js instance.
    */
-  private async renderChart() {
-    // Dynamically import Chart.js from the CDN. This waits for the library to load 
-    // before the Chart constructor is accessed, fixing the TypeError.
-    const { Chart } = await import('https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js' as any);
-    
+  private renderChart() {
     const data = this.chartData();
     const ctx = document.getElementById('salesChart') as HTMLCanvasElement;
     
@@ -106,7 +117,7 @@ export class DashboardComponent implements OnInit{
     }
 
     // Chart.js configuration
-    // Use the dynamically imported 'Chart' constructor
+    // Use the Chart constructor imported from 'chart.js' package
     this.chartInstance = new Chart(ctx, {
       type: 'line',
       data: data,

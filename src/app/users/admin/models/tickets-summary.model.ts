@@ -1,6 +1,6 @@
 export class TicketsSummary {
-  "total": number;
-  "active": number;
-  "resolved": number;
-  "dismissed": number;
+  "total": number | null;
+  "active": number | null;
+  "resolved": number | null;
+  "dismissed": number | null;
 }

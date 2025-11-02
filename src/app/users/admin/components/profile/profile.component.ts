@@ -12,11 +12,11 @@ export class ProfileComponent implements OnInit{
 
   private authStore = inject(AuthStore);
   public adminStore = inject(AdminStore)
-  email: any;
+  email: string | null = '';
 
   ngOnInit(): void {
     this.email = this.authStore.userEmail();
-    this.adminStore.loadProfile(this.email)
+    this.adminStore.loadProfile(this.email as string);
   }
 
 }

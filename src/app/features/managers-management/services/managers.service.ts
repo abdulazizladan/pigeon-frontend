@@ -1,9 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Manager } from '../models/manager.moel';
-import { filter, firstValueFrom, map } from 'rxjs';
+import { Manager } from '../models/manager.model';
+import { firstValueFrom, map } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { User } from '../../users-management/models/user.model';
+
+
 
 @Injectable({
   providedIn: 'root'
@@ -13,13 +15,26 @@ export class ManagersService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = environment.baseUrl;
 
-  async getManagers(): Promise<User[]> {
+  async getManagers(): Promise<Manager[]> {
     return firstValueFrom(
-      this.http.get<User[]>(`${this.baseUrl}/user`).pipe(
-        map(response => response),
-        //filter(user => user.role === 'manager')
+      this.http.get<Manager[]>(`${this.baseUrl}/user/managers`).pipe(
       )
     );
+  }
+
+  async getById(id: string): Promise<Manager> {
+    return firstValueFrom(
+      this.http.get<Manager>(`${this.baseUrl}/user/manager/${id}`).pipe(
+      )
+    )
+  }
+
+  async add(manager: Omit<User, 'id'>): Promise<User> {
+    return firstValueFrom(
+      this.http.post<{data: User, success: boolean, message: string}>(`${this.baseUrl}/user`, manager).pipe(
+        map(response => response.data)
+      )
+    ) 
   }
 
   constructor() { }

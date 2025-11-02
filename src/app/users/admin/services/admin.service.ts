@@ -19,7 +19,7 @@ export class AdminService {
 
   async getUserSummary(): Promise<usersSummary> {
     return firstValueFrom(
-      this.http.get<{success: boolean, data: usersSummary, messsage: string}>(`https://pigeon-backend-17s7.onrender.com/user/stats`).pipe(
+      this.http.get<{success: boolean, data: usersSummary, messsage: string}>(`${this.baseUrl}/user/stats`).pipe(
         map(response => response.data)
       )
     )
@@ -27,7 +27,7 @@ export class AdminService {
 
   async getTicketsSummary(): Promise<TicketsSummary> {
     return firstValueFrom(
-      this.http.get<{success: boolean, data: TicketsSummary, messsage: string}>(`https://pigeon-backend-17s7.onrender.com/ticket/stats`).pipe(
+      this.http.get<{success: boolean, data: TicketsSummary, messsage: string}>(`${this.baseUrl}/ticket/stats`).pipe(
         map(response => response.data)
       )
     )
@@ -35,7 +35,7 @@ export class AdminService {
 
   async getAttendantsSummary(): Promise<{total: number, active: number, suspended: number}> {
     return firstValueFrom(
-      this.http.get<{success: boolean, data: {total: number, active: number, suspended: number}, messsage: string}>(`https://pigeon-backend-17s7.onrender.com/dispenser/stats`).pipe(
+      this.http.get<{success: boolean, data: {total: number, active: number, suspended: number}, messsage: string}>(`${this.baseUrl}/dispenser/stats`).pipe(
         map(response => response.data)
       )
     )
@@ -43,7 +43,7 @@ export class AdminService {
 
   async getStationsSummary(): Promise<{total: number, active: number, inactive: number}> {
     return firstValueFrom(
-      this.http.get<{success: boolean, data: {total: number, active: number, inactive: number}, messsage: string}>(`https://pigeon-backend-17s7.onrender.com/station/stats`).pipe(
+      this.http.get<{success: boolean, data: {total: number, active: number, inactive: number}, messsage: string}>(`${this.baseUrl}/station/stats`).pipe(
         map(response => response.data)
       )
     )

@@ -25,6 +25,7 @@ import { UserDetailsComponent } from './components/user-details/user-details.com
 import { AddUserComponent } from './components/add-user/add-user.component';
 import { SuspendUserComponent } from './components/suspend-user/suspend-user.component';
 import { DeativateUserDialogComponent } from './components/deativate-user-dialog/deativate-user-dialog.component';
+import { EnableUser } from './components/enable-user/enable-user';
 
 
 @NgModule({
@@ -36,7 +37,8 @@ import { DeativateUserDialogComponent } from './components/deativate-user-dialog
     UserDetailsComponent,
     AddUserComponent,
     SuspendUserComponent,
-    DeativateUserDialogComponent
+    DeativateUserDialogComponent,
+    EnableUser
   ],
   imports: [
     CommonModule,
