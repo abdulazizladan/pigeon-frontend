@@ -25,6 +25,7 @@ import { StationsManagementRoutingModule } from './stations-management-routing.m
 import { StationsListComponent } from './components/stations-list/stations-list.component';
 import { StationDetailsComponent } from './components/station-details/station-details.component';
 import { AddStationComponent } from './components/add-station/add-station.component';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 
 @NgModule({
@@ -55,6 +56,7 @@ import { AddStationComponent } from './components/add-station/add-station.compon
     MatDividerModule,
     MatListModule,
     MatPaginatorModule,
+    MatSnackBarModule,
     StationsManagementRoutingModule
   ]
 })

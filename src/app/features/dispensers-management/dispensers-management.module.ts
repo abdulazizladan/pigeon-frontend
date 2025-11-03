@@ -17,6 +17,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { DispensersListComponent } from './components/dispensers-list/dispensers-list.component';
 import { DispenserDetailsComponent } from './components/dispenser-details/dispenser-details.component';
@@ -50,6 +51,7 @@ import { DispensersManagementRoutingModule } from './dispensers-management-routi
     MatMenuModule,
     MatProgressBarModule,
     MatChipsModule,
+    MatSnackBarModule,
     DispensersManagementRoutingModule
   ]
 })

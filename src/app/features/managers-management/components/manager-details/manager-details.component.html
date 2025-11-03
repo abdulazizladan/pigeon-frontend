@@ -89,7 +89,7 @@
                 <mat-icon class="detail-icon">local_gas_station</mat-icon>
                 <span class="detail-label">Assigned Station</span>
                 <span class="detail-value assignment-value">
-                  <!--{{ managersStore.selectedManager()?.assignedStationName || 'Not Assigned' }}-->
+                  {{ managersStore.selectedManager()?.station?.name || 'Not Assigned' }}
                 </span>
               </div>
 
@@ -97,9 +97,17 @@
                 <mat-icon class="detail-icon">map</mat-icon>
                 <span class="detail-label">Location</span>
                 <span class="detail-value">
-                   <!--{{ managersStore.selectedManager()?.stationLocation || 'N/A' }}-->
+                   {{ managersStore.selectedManager()?.station?.address || 'N/A' }}, {{ managersStore.selectedManager()?.station?.ward | titlecase}}, {{ managersStore.selectedManager()?.station?.lga | titlecase }}, {{ managersStore.selectedManager()?.station?.state | titlecase}} 
                 </span>
               </div>
+            </div>
+            <div fxLayout="row" fxLayoutGap="25px" style="padding: 12px 0px">
+              <span fxFlex="1 1 auto"></span>
+              @if(managersStore.selectedManager()?.station) {
+                <button mat-stroke-button color="primary">Unassign station</button>
+              } @else {
+                <button mat-flat-button color="accent">Assign to station</button>
+              }
             </div>
           </div>
         </div>

@@ -11,6 +11,7 @@ import { MatDividerModule } from '@angular/material/divider';
 
 import { StationManagementRoutingModule } from './station-management-routing-module';
 import { MyStation } from './components/my-station/my-station';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 
 @NgModule({
@@ -28,6 +29,7 @@ import { MyStation } from './components/my-station/my-station';
     MatButtonModule,
     MatChipsModule,
     MatDividerModule,
+    MatSnackBarModule,
     StationManagementRoutingModule
   ]
 })

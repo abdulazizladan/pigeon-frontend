@@ -16,13 +16,13 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatChipsModule } from '@angular/material/chips';
-import { MatSelect } from '@angular/material/select';
 
 import { SalesManagementRoutingModule } from './sales-management-routing.module';
 import { SalesDashboardComponent } from './components/sales-dashboard/sales-dashboard.component';
 import { AddSaleComponent } from './components/add-sale/add-sale.component';
 import { BranchSaleComponent } from './components/branch-sale/branch-sale.component';
 import { provideCharts } from 'ng2-charts';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 
 @NgModule({
@@ -49,7 +49,7 @@ import { provideCharts } from 'ng2-charts';
     MatMenuModule,
     MatProgressBarModule,
     MatChipsModule,
-    MatSelect,
+    MatSnackBarModule,
     SalesManagementRoutingModule
   ]
 })

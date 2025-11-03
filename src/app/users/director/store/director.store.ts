@@ -2,12 +2,8 @@ import { inject } from "@angular/core";
 import { patchState, signalStore, withMethods, withState } from "@ngrx/signals";
 import { DirectorService, SalesDataPoint, SalesPeriod, } from "../services/director.service";
 import { firstValueFrom } from "rxjs"; // Needed to convert Observable to Promise for async/await
-
-// NOTE: Assuming AdminService is the correct service for station data, 
-// based on the structure defined in the Canvas file.
-//import { AdminService } from "../services/admin.service"; 
-// Assuming User model is available
 import { User } from "../models/user.model";
+
 
 // Define the StationStats interface locally for state integrity, matching the Canvas definition.
 export interface StationStats {
@@ -102,7 +98,6 @@ export const DirectorStore = signalStore(
     async loadProfile(email: string) {
       patchState(store, {loading: true, error: null});
       try{
-        // Placeholder for profile service call
         const userProfile = await directorService.getProfile(email); 
         patchState(store, {error: null, profile: userProfile, loading: false});
       }catch (error) {

@@ -58,7 +58,7 @@ export class MyStation implements OnInit {
   }
 
   getStatusColor(status: string): string {
-    switch (status.toLowerCase()) {
+    switch (status) {
       case 'active':
       case 'operational':
         return '#10b981'; // green

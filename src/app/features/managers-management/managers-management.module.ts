@@ -25,6 +25,7 @@ import { ManagersListComponent } from './components/managers-list/managers-list.
 import { ManagerDetailsComponent } from './components/manager-details/manager-details.component';
 import { AddManagerComponent } from './components/add-manager/add-manager.component';
 import { MatListModule } from '@angular/material/list';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 
 @NgModule({
@@ -55,6 +56,7 @@ import { MatListModule } from '@angular/material/list';
     MatPaginatorModule,
     MatDividerModule,
     MatListModule,
+    MatSnackBarModule,
     ManagersManagementRoutingModule
   ]
 })

@@ -1,6 +1,8 @@
 import { Component, effect, inject, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ActivatedRoute, Router } from '@angular/router'; // 👈 New Import
 import { MatSort } from '@angular/material/sort';
 import { ManagersStore } from '../../store/manager.store';
 import { MatDialog } from '@angular/material/dialog';
@@ -16,7 +18,15 @@ import { Manager } from '../../models/manager.model';
 export class ManagersListComponent implements OnInit{
 
   public managersStore = inject(ManagersStore);
-  private dialog = inject(MatDialog)
+  private dialog = inject(MatDialog);
+
+  constructor(
+    private route: ActivatedRoute,
+    private snackBar: MatSnackBar, // 👈 Inject MatSnackBar
+    private router: Router,
+  ) {
+
+  }
   
   public dataSource = new MatTableDataSource<Manager>([])
   
@@ -57,11 +67,31 @@ export class ManagersListComponent implements OnInit{
   }
 
   openAddManagerDialog() {
-    const dialogRef = this.dialog.open(AddManagerComponent, {});
-    dialogRef.afterClosed().subscribe(
-      result => {
+    const dialogRef = this.dialog.open(AddManagerComponent, {
+      width: '400px'
+    });
+    dialogRef.afterClosed().subscribe(result => {
         if(result) {
-          this.managersStore.addManager(result)
+          this.managersStore.addManager(result);
+          const snackBarRef = this.snackBar.open(
+            `Manager successfully added!`,
+            'Open Details', // The action button text
+            {
+              duration: 5000, // Duration in milliseconds (e.g., 5 seconds)
+            }
+          );
+  
+          // 3. Subscribe to the action button click
+          snackBarRef.onAction().subscribe(() => {
+            // Assuming the added user object has an 'id' property
+            if (result.id) {
+              // Navigate to the user details page, using the user's ID
+              this.router.navigate([`./${result.id}`], {relativeTo: this.route}); 
+            } else {
+              // Handle case where user ID might be missing after creation
+              console.error('Added user is missing an ID for navigation.');
+            }
+          });
         }
       }
     )

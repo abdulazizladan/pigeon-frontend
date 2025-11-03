@@ -1,6 +1,5 @@
 <div class="station-page-wrapper">
   <h1 class="page-title">My Station</h1>
-
   <div class="station-details-container">
     @if(loading()) {
       <mat-progress-bar mode="query" class="loading-bar"></mat-progress-bar>
@@ -17,13 +16,16 @@
       </mat-card>
     }
 
-    @else if(station()) {
+    @else if(stationStore.station()) {
       <mat-card class="station-main-card">
         
         <div class="station-header-section">
           <div class="station-title-group">
-            <h2 class="station-name">{{ station()?.name }}</h2>
-            <p class="station-id-subtitle">Station ID: {{ station()?.id }}</p>
+            <h2 class="station-name">{{ stationStore.station()?.name }}</h2>
+            <p class="station-id-subtitle">
+              Manager: {{ stationStore.station()?.manager?.email }}
+
+            </p>
           </div>
         </div>
 
@@ -38,31 +40,31 @@
               <div class="detail-item">
                 <mat-icon class="detail-icon">location_on</mat-icon>
                 <span class="detail-label">Address</span>
-                <span class="detail-value">{{ station()?.address }}</span>
+                <span class="detail-value">{{ stationStore.station()?.address }}</span>
               </div>
               
               <div class="detail-item">
                 <mat-icon class="detail-icon">map</mat-icon>
                 <span class="detail-label">Ward</span>
-                <span class="detail-value">{{ station()?.ward }}</span>
+                <span class="detail-value">{{ stationStore.station()?.ward}}</span>
               </div>
               
               <div class="detail-item">
                 <mat-icon class="detail-icon">account_balance</mat-icon>
                 <span class="detail-label">LGA</span>
-                <span class="detail-value">{{ station()?.lga }}</span>
+                <span class="detail-value">{{ stationStore.station()?.lga }}</span>
               </div>
               
               <div class="detail-item">
                 <mat-icon class="detail-icon">flag</mat-icon>
                 <span class="detail-label">State</span>
-                <span class="detail-value">{{ station()?.state }}</span>
+                <span class="detail-value">{{ stationStore.station()?.state }}</span>
               </div>
               
               <div class="detail-item">
                 <mat-icon class="detail-icon">calendar_today</mat-icon>
                 <span class="detail-label">Created</span>
-                <span class="detail-value">{{ formatDate(station()?.createdAt!) }}</span>
+                <span class="detail-value">{{ stationStore.station()?.createdAt | date}}</span>
               </div>
             </div>
           </div>
@@ -74,35 +76,35 @@
               <div class="detail-item">
                 <mat-icon class="detail-icon">local_gas_station</mat-icon>
                 <span class="detail-label">Price/Liter</span>
-                <span class="detail-value">₦{{ station()?.pricePerLiter }}</span>
+                <span class="detail-value">₦{{ stationStore.station()?.pricePerLiter | number }}</span>
               </div>
               
               <div class="detail-item">
                 <mat-icon class="detail-icon">info</mat-icon>
                 <span class="detail-label">Status</span>
                 <span class="detail-value" [style.color]="getStatusColor(station()?.status!)">
-                  {{ station()?.status | titlecase }}
+                  {{ stationStore.station()?.status }}
                 </span>
               </div>
               
               <div class="detail-item">
                 <mat-icon class="detail-icon">navigation</mat-icon>
                 <span class="detail-label">Coordinates</span>
-                <span class="detail-value">{{ station()?.latitude }}, {{ station()?.longitude }}</span>
+                <span class="detail-value">
+                  {{ stationStore.station()?.latitude | number}}, 
+                  {{ stationStore.station()?.longitude | number}}</span>
               </div>
               
               <div class="detail-item">
                 <mat-icon class="detail-icon">speed</mat-icon>
                 <span class="detail-label">Total Pumps</span>
-                <span class="detail-value">{{ station()?.pumps?.length || 0 }}</span>
+                <span class="detail-value">{{ stationStore.station()?.pumps?.length }}</span>
               </div>
             </div>
           </div>
         </div>
-
-        @if(station()?.manager) {
-          <mat-divider class="main-divider"></mat-divider>
           
+          <!--
           <div class="manager-section">
             <h3 class="info-section-header">Manager Information</h3>
             <div class="info-details-grid">
@@ -117,16 +119,16 @@
                 <span class="detail-value">{{ station()?.manager?.status | titlecase }}</span>
               </div>
             </div>
-          </div>
-        }
+          </div> -->
+        
 
-        @if(station()?.pumps && station()!.pumps.length > 0) {
+        @if(stationStore.station()?.pumps && stationStore.station()!.pumps.length > 0) {
           <mat-divider class="main-divider"></mat-divider>
           
           <div class="pumps-section">
-            <h3 class="info-section-header">Pumps ({{ station()?.pumps?.length }})</h3>
+            <h3 class="info-section-header">Pumps ({{ stationStore.station()?.pumps?.length }})</h3>
             <div class="pumps-grid">
-              @for(pump of station()?.pumps; track pump.id) {
+              @for(pump of stationStore.station()?.pumps; track pump.id) {
                 <mat-chip [color]="getPumpProductBadgeColor(pump.dispensedProduct)" class="pump-chip">
                   <mat-icon>local_gas_station</mat-icon>
                   Pump #{{ pump.pumpNumber }} - {{ pump.dispensedProduct | titlecase }}

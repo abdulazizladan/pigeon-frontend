@@ -3,7 +3,7 @@ import { signalStore, withState, withMethods, patchState } from "@ngrx/signals";
 import { ManagerService } from "../services/manager.service";
 import { User } from "../models/user.model";
 
-class ManagerState {
+export class ManagerState {
   //"stationSummary"
   "loading": boolean;
   "error": string | null;
@@ -27,7 +27,8 @@ export const ManagerStore = signalStore(
       } catch (error) {
         patchState(store, {loading: false, error: 'Error loadingdata. Please check your connection and try again'})
       }
-    }, async loadProfile(email: string) {
+    }, 
+    async loadProfile(email: string) {
       patchState(store, {loading: true, error: null})
       try {
         const userProfile = await managerService.getProfile(email);

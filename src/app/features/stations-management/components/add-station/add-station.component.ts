@@ -1,6 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators, FormsModule } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-station',
@@ -12,6 +14,8 @@ export class AddStationComponent {
 
   private fb = inject(FormBuilder);
   private dialogRef = inject(MatDialogRef<AddStationComponent>)
+  private snackBar = inject(MatSnackBar);
+  private router = inject(Router);
 
   stationForm = this.fb.group({
     name: ['', Validators.required],
@@ -28,6 +32,19 @@ export class AddStationComponent {
     if (this.stationForm.valid) {
       const formData = this.stationForm.value;
       this.dialogRef.close(formData)
+
+      const snackBarRef = this.snackBar.open('Station successfully added!', 'Open Details', {
+        duration: 5000
+      });
+
+      snackBarRef.onAction().subscribe(() => {
+        const id = (formData as any)?.id;
+        if (id) {
+          this.router.navigate(['/stations', id]);
+        } else {
+          this.router.navigate(['/stations']);
+        }
+      });
     }
   }
 

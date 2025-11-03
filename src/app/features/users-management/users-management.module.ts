@@ -18,6 +18,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatListModule } from '@angular/material/list';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 import { UsersManagementRoutingModule } from './users-management-routing.module';
 import { UsersListComponent } from './components/users-list/users-list.component';
@@ -26,6 +27,7 @@ import { AddUserComponent } from './components/add-user/add-user.component';
 import { SuspendUserComponent } from './components/suspend-user/suspend-user.component';
 import { DeativateUserDialogComponent } from './components/deativate-user-dialog/deativate-user-dialog.component';
 import { EnableUser } from './components/enable-user/enable-user';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 
 @NgModule({
@@ -57,6 +59,8 @@ import { EnableUser } from './components/enable-user/enable-user';
     MatProgressBarModule,
     MatChipsModule,
     MatListModule,
+    MatPaginatorModule,
+    MatSnackBarModule,
     UsersManagementRoutingModule
   ]
 })

@@ -22,7 +22,7 @@
           <mat-progress-bar mode="query"></mat-progress-bar>
       }
       <div class="mat-elevation-z2 table-responsive">
-        <table mat-table [dataSource]="filteredUsers()" class="full-width-table">
+        <table mat-table [dataSource]="pagedUsers()" class="full-width-table">
 
           <ng-container matColumnDef="name">
             <th mat-header-cell *matHeaderCellDef> Name </th>
@@ -104,6 +104,13 @@
           </tr>
         </table>
       </div>
+
+      <mat-paginator
+        [length]="totalUsers()"
+        [pageSize]="pageSize()"
+        [pageSizeOptions]="pageSizeOptions"
+        (page)="onPage($event)">
+      </mat-paginator>
     </mat-card-content>
   </mat-card>
 </div>

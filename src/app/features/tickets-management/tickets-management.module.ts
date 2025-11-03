@@ -19,6 +19,7 @@ import { TicketsListComponent } from './components/tickets-list/tickets-list.com
 import { TicketDetailsComponent } from './components/ticket-details/ticket-details.component';
 import { AddTicketComponent } from './components/add-ticket/add-ticket.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 
 
@@ -44,6 +45,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     MatProgressBarModule,
     MatCardModule,
     MatSelectModule,
+    MatSnackBarModule,
     TicketsManagementRoutingModule
   ]
 })
