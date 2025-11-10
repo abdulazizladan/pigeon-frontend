@@ -1,48 +1,70 @@
-<h1>Fuel attendants</h1>
+<h1>My station's Fuel attendants</h1>
 
 <div class="users-list-container">
-  <div class="header" fxLayout="row">
-    <span fxFlex="1 1 auto"></span>
-    <button mat-flat-button color="primary" (click)="openNewDispenserDialog()">
-      <mat-icon>add</mat-icon>
-      Add Fuel attendant
+  <div class="header">
+    <mat-form-field appearance="outline" class="search-field" fxFlex="1 1 auto">
+      <mat-label>Search attendants</mat-label>
+      <input matInput [formControl]="searchControl" placeholder="e.g., John Doe, 0700123456">
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+    
+    <button mat-flat-button color="primary" (click)="openAddDispenserDialog()">
+      <mat-icon>person_add</mat-icon> Add Fuel attendant
     </button>
   </div>
 
 @if (dispenserStore.loading()) {
-  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-}
+  <mat-progress-bar mode="query"></mat-progress-bar> }
 
 @if (dispenserStore.error()) {
   <mat-error class="error-message">{{ dispenserStore.error()}}</mat-error>
 }
 
-<table mat-table [dataSource]="dispenserStore.dispensers()" class="mat-elevation-z8">
+<div class="mat-elevation-z8 table-responsive">
+  <table mat-table [dataSource]="pagedDispensers()" class="full-width-table">
 
-  <ng-container matColumnDef="name">
-    <th mat-header-cell *matHeaderCellDef>Name</th>
-    <td mat-cell *matCellDef="let dispenser">{{ dispenser.firstName | titlecase}} {{ dispenser.lastNamee | titlecase}}</td>
-  </ng-container>
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let dispenser">
+        {{ dispenser.firstName | titlecase}} 
+        {{ dispenser.middleName ? (dispenser.middleName | titlecase) + ' ' : ''}} {{ dispenser.lastName | titlecase}}
+      </td>
+    </ng-container>
 
-  <ng-container matColumnDef="phone">
-    <th mat-header-cell *matHeaderCellDef>Phone</th>
-    <td mat-cell *matCellDef="let dispenser">{{ dispenser.phone | titlecase}}</td>
-  </ng-container>
+    <ng-container matColumnDef="phone">
+      <th mat-header-cell *matHeaderCellDef>Phone</th>
+      <td mat-cell *matCellDef="let dispenser">{{ dispenser.phone }}</td>
+    </ng-container>
 
-  <ng-container matColumnDef="status">
-    <th mat-header-cell *matHeaderCellDef>Status</th>
-    <td mat-cell *matCellDef="let dispenser">active</td>
-  </ng-container>
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef>Status</th>
+      <td mat-cell *matCellDef="let dispenser">
+        <span [ngClass]="{'status-active': dispenser.status === 'active', 'status-inactive': dispenser.status === 'inactive'}">
+          {{ dispenser.status | titlecase }}
+        </span>
+      </td>
+    </ng-container>
 
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row 
+        *matRowDef="let row; columns: displayedColumns;"
+        [routerLink]="[row.id]" 
+        class="clickable-row">
+    </tr>
 
-  <tr class="mat-row" *matNoDataRow>
-    <td class="mat-cell" colspan="3">
-        No users available
-    </td>
-  </tr>
+    <tr class="mat-row" *matNoDataRow>
+      <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+          No attendants matching "{{searchTerm()}}"
+      </td>
+    </tr>
 
-</table>
+  </table>
+</div>
+<mat-paginator
+  [length]="totalDispensers()"
+  [pageSize]="pageSize()"
+  [pageSizeOptions]="pageSizeOptions"
+  (page)="onPage($event)">
+</mat-paginator>
 
 </div>

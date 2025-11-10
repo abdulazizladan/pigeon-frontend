@@ -4,4 +4,8 @@ export interface Manager{
     "role": string;
     "status": string;
     "createdAt": Date;
+    "info": {
+      "firstName": string;
+      "lastName": string;
+    }
   }

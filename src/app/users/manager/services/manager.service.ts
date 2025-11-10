@@ -34,4 +34,20 @@ export class ManagerService {
       )
     );
   }
+
+  changePassword(newPassword: string): Promise<{success: boolean, message: string, data: {access_token: string}}> {
+    // FIX: Wrap the password string in a JSON object with the expected key (e.g., 'newPassword')
+    const body = { 
+      newPassword: newPassword 
+    };
+    
+    return firstValueFrom(
+      this.http.patch<{success: boolean, message: string, data: {access_token: string}}>(
+        `${this.baseUrl}/auth/change-password`, 
+        body // 👈 Send the JSON object
+      ).pipe(
+        
+      )
+    )
+  }
 }

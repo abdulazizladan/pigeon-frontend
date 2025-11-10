@@ -43,9 +43,9 @@
 
       <!-- Pump Count Column (New) -->
       <ng-container matColumnDef="pumps">
-        <th mat-header-cell *matHeaderCellDef> Pumps (A/T) </th>
+        <th mat-header-cell *matHeaderCellDef> Pumps </th>
         <td mat-cell *matCellDef="let station">
-          {{ station.pumps ? (station.pumps ) : 0 }} / {{ station.pumps?.length || 0 }}
+          {{ station.pumps?.length || 0}}
         </td>
       </ng-container>
       <!-- Fuel Status Column (New) -->
@@ -53,9 +53,8 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Fuel Level </th>
         <td mat-cell *matCellDef="let station"> 
             <span 
-                [class]="'fuel-level-chip fuel-level-' + (station.fuelLevelPercentage < 20 ? 'low' : station.fuelLevelPercentage < 50 ? 'medium' : 'high')"
-            >
-                {{ station.fuelLevelPercentage }}% 
+                [class]="'fuel-level-chip fuel-level-' + (station.fuelLevelPercentage < 20 ? 'low' : station.fuelLevelPercentage < 50 ? 'medium' : 'high')">
+                {{ station.fuelLevelPercentage || 0}}% 
             </span>
         </td>
       </ng-container>
@@ -67,9 +66,9 @@
           <button mat-icon-button color="primary" [routerLink]="[station.id]" title="View Details">
             <mat-icon>visibility</mat-icon>
           </button>
-          <button mat-icon-button color="accent" title="Edit Station">
+          <!--<button mat-icon-button color="accent" title="Edit Station">
             <mat-icon>edit</mat-icon>
-          </button>
+          </button>-->
         </td>
       </ng-container>
 

@@ -31,19 +31,29 @@ export const DispenserStore = signalStore(
       }
     },
     async addDispenser(dispenser: Dispenser) {
-      patchState(store, {loading: true, error: null})
+      patchState(
+        store, {
+          loading: true, 
+          error: null
+        }
+      );
       try{
         const newDispenser = await dispenserService.create(dispenser);
         patchState(store, state => ({
-          dispensers: [...state.dispensers, dispenser],
+          dispensers: [
+            ...state.dispensers, 
+            newDispenser
+          ],
           loading: false,
           error: null
         }))
       } catch (error) {
-        patchState(store, {
-          loading: false,
-          error: "Unable to add dispenser. Check your connection and try again."
-        })
+        patchState(
+          store, {
+            loading: false,
+            error: "Unable to add dispenser. Check your connection and try again."
+          }
+        )
       }
     }
   }))

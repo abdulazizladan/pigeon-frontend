@@ -5,7 +5,10 @@ import { MatSort } from '@angular/material/sort';
 import { StationStore } from '../../store/stations.store'; // Corrected import path/name
 import { MatDialog } from '@angular/material/dialog';
 import { Station } from '../../models/station.model';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { AddStationComponent } from '../add-station/add-station.component'; 
+import { Subject, takeUntil } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-stations-list',
@@ -18,9 +21,13 @@ export class StationsListComponent implements OnInit {
   // Use the correct store name/path
   public stationStore = inject(StationStore); 
   private dialog = inject(MatDialog);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router)
+  private destroy$ = new Subject<void>();
   
   // Data source for the mat-table, must be a MatTableDataSource for filtering
   public dataSource = new MatTableDataSource<Station>([]);
+  private snackbar = inject(MatSnackBar);
 
   public displayedColumns: string[] = ['name', 'location', 'pumps', 'status', 'actions'];
 
@@ -68,7 +75,21 @@ export class StationsListComponent implements OnInit {
      const dialogRef = this.dialog.open(AddStationComponent, {});
      dialogRef.afterClosed().subscribe(result => {
        if(result) {
-         this.stationStore.createStation(result) // Assuming addStation exists on the store
+         this.stationStore.createStation(result);
+         const snackBarRef = this.snackbar.open(
+          `New station added successfully`,
+          `OpenDetails`,
+          {
+            duration: 5000
+          }
+         );
+         snackBarRef.onAction().pipe(takeUntil(this.destroy$)).subscribe(() => {
+          if(result) {
+            this.router.navigate([`./${this.stationStore.lastAddedId()}`], {relativeTo: this.route})
+          }else{
+            console.error(`Added station is missing an ID for navigation`)
+          }
+         })
        }
      });
   }

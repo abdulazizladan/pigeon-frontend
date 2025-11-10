@@ -7,6 +7,7 @@ import { StationsService } from "../services/stations.service";
 type StationState = {
   loading: boolean;
   error: string | null;
+  lastAddedId: string | null;
   stations: Station[]; // List of all stations
   selectedStation: Station | null; // The station currently being viewed
   selectedStationId: string | null; // Tracks the ID for easier loading/routing
@@ -15,6 +16,7 @@ type StationState = {
 export const initialState: StationState = {
   loading: false,
   error: null,
+  lastAddedId: null,
   stations: [], // Start with an empty list
   selectedStation: null,
   selectedStationId: null // No default selection by default
@@ -58,6 +60,7 @@ export const StationStore = signalStore(
             ...state.stations,
             response
           ],
+          lastAddedId: response.id,
           loading: false,
         }))
       } catch(error) {

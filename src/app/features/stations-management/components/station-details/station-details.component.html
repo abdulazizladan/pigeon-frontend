@@ -9,10 +9,26 @@
     @else {
       <mat-card class="station-main-card">
         
-        <div class="station-header-section">
-          <div class="station-title-group">
+        <div style="padding: 15px">
+          <div>
             <h2 class="station-name">{{ stationStore.selectedStation()?.name }}</h2>
-            <p class="station-id-subtitle">Manager: </p>
+            <p fxLayout="row" style="padding: 15px">Manager: 
+              @if(stationStore.selectedStation()?.manager){ 
+                {{stationStore.selectedStation()?.manager?.info?.firstName | titlecase}} {{stationStore.selectedStation()?.manager?.info?.lastName | titlecase}}
+                <span fxFlex="1 1 auto"></span>
+                <button mat-flat-button color="primary" (click)="openUnassignManagerDialog()">
+                  Unassign manager
+                </button>
+              }@else {
+                <div fxFlex="row" style="width: 100%;">
+                  Not assigned
+                <span fxFlex="1 1 auto"></span>
+                <button mat-flat-button color="primary" (click)="openAssignManagerDialog()">
+                  Assign manager
+                </button>
+                </div>
+              }
+            </p>
           </div>
           
           <!--<div class="status-indicator-wrapper">
@@ -58,7 +74,7 @@
                 <mat-icon class="detail-icon">calendar_today</mat-icon>
                 <span class="detail-label">Last Updated</span>
                 <span class="detail-value">
-                  N/A
+                  {{stationStore.selectedStation()?.lastUpdated | date}}
                 </span>
               </div>
               
@@ -89,7 +105,7 @@
                 <mat-icon class="detail-icon">speed</mat-icon>
                 <span class="detail-label">Active Pumps</span>
                 <span class="detail-value">
-                  {{ stationStore.activePumpCount() }} / {{ stationStore.totalPumpCount() }}
+                  {{stationStore.selectedStation()?.pumps?.length}} / {{stationStore.selectedStation()?.pumps?.length}}
                 </span>
               </div>
             </div>
@@ -147,11 +163,10 @@
           </div>
         </div>
 
-        <mat-card-actions fxLayout="row">
+        <<mat-card-actions fxLayout="row">
           <span fxFlex="1 1 auto"></span>
-          <button mat-stroked-button color="primary">MORE INFO</button>
-          <span fxFlex="15px"></span>
-          <button mat-flat-button color="primary">EDIT</button>
+          <button mat-flat-button color="primary">Station's sales performance</button>
+          <span fxFlex="1 1 auto"></span>
         </mat-card-actions>
       </mat-card>
     }

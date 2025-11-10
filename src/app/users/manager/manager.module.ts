@@ -16,6 +16,7 @@ import { MatListModule } from '@angular/material/list';
 import { BaseChartDirective } from 'ng2-charts';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ChartConfiguration, ChartData, ChartEvent, ChartType } from 'chart.js';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { ManagerRoutingModule } from './manager-routing.module';
 import { SettingsComponent } from './components/settings/settings.component';
@@ -23,6 +24,8 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { LayoutComponent } from './components/layout/layout.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { MatInputModule } from '@angular/material/input';
+import { ChangePassword } from './components/change-password/change-password';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 
 @NgModule({
@@ -33,7 +36,8 @@ import { MatInputModule } from '@angular/material/input';
     SettingsComponent,
     ProfileComponent,
     LayoutComponent,
-    DashboardComponent
+    DashboardComponent,
+    ChangePassword
   ],
   imports: [
     CommonModule,
@@ -50,6 +54,10 @@ import { MatInputModule } from '@angular/material/input';
     MatListModule,
     BaseChartDirective,
     MatProgressSpinnerModule,
+    MatInputModule,
+    MatSnackBarModule,
+    FormsModule,
+    ReactiveFormsModule,
     MatInputModule,
     ManagerRoutingModule
   ]

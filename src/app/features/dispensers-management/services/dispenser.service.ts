@@ -11,6 +11,8 @@ export class DispenserService {
 
   private baseUrl = environment.baseUrl;
 
+  constructor() { }
+
   private readonly http = inject(HttpClient);
 
   async get(): Promise<Dispenser[]> {
@@ -21,7 +23,7 @@ export class DispenserService {
     )
   }
 
-  create(dispenser: Dispenser): Promise<Dispenser> {
+  async create(dispenser: Dispenser): Promise<Dispenser> {
     return firstValueFrom(
       this.http.post<{success: boolean, data: Dispenser, message: string}>(`${this.baseUrl}/dispenser`, dispenser).pipe(
         map(response => response.data)
@@ -29,9 +31,7 @@ export class DispenserService {
     );
   }
 
-  update() {
-
+  async update(id: string) {
+    
   }
-
-  constructor() { }
 }

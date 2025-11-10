@@ -66,8 +66,24 @@ export const AuthStore = signalStore(
 
     logout() {
       localStorage.removeItem('auth_token');
-      patchState(store, {loading: false, error: null, isAuthenticated: false, token: null, userRole: null, userEmail: null});
+      patchState(store, 
+        {
+          loading: false, 
+          error: null, 
+          isAuthenticated: false, 
+          token: null, 
+          userRole: null, 
+          userEmail: null
+        }
+      );
       router.navigate(['/auth/login']);
+    },
+    changeToken(newToken: string) {
+      patchState(
+        store, {
+          token: newToken
+        }
+      )
     }
   }))
 );

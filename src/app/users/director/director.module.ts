@@ -14,7 +14,11 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from '@angular/material/list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { BaseChartDirective, provideCharts, withDefaultRegisterables } from 'ng2-charts';
+import { ChartConfiguration, ChartData, ChartEvent } from 'chart.js';
+import { BaseChartDirective, 
+  provideCharts, 
+  withDefaultRegisterables } from 'ng2-charts';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { DirectorRoutingModule } from './director-routing.module';
 import { LayoutComponent } from './components/layout/layout.component';
@@ -22,6 +26,8 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { MatInputModule } from '@angular/material/input';
+import { ChangePassword } from './components/change-password/change-password';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 
 @NgModule({
@@ -33,10 +39,12 @@ import { MatInputModule } from '@angular/material/input';
     LayoutComponent,
     DashboardComponent,
     SettingsComponent,
-    ProfileComponent
+    ProfileComponent,
+    ChangePassword
   ],
   imports: [
     CommonModule,
+    BaseChartDirective,
     FlexLayoutModule,
     MatToolbarModule,
     MatCardModule,
@@ -49,6 +57,10 @@ import { MatInputModule } from '@angular/material/input';
     MatListModule,
     BaseChartDirective,
     MatProgressSpinnerModule,
+    MatInputModule,
+    MatSnackBarModule,
+    FormsModule, 
+    ReactiveFormsModule,
     MatInputModule,
     DirectorRoutingModule
   ]

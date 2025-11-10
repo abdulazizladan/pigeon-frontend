@@ -15,7 +15,6 @@ import { PageEvent } from '@angular/material/paginator';
   templateUrl: './users-list.component.html',
   styleUrls: ['./users-list.component.scss'],
   standalone: false
-  // ❌ Removed 'standalone: false' (it's the default and unnecessary)
 })
 export class UsersListComponent implements OnInit, OnDestroy { // 👈 Implement OnDestroy
   displayedColumns: string[] = ['name', 'email', 'role', 'status'];
@@ -117,7 +116,7 @@ export class UsersListComponent implements OnInit, OnDestroy { // 👈 Implement
           // Assuming the added user object has an 'id' property
           if (result.email) {
             // Navigate to the user details page, using the user's ID
-            console.log(result.email)
+            //console.log(result.email)
             this.router.navigate([`./${result.email}`], {relativeTo: this.route}); 
           } else {
             // Handle case where user ID might be missing after creation

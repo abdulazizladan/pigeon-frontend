@@ -116,7 +116,7 @@ export const UserStore = signalStore(
         patchState(
           store, {
             loading: false,
-            error: "Failed to add manager. Please try again later"
+            error: "Failed to add manager. Xhexk your connection and try again."
           }
         )
       }

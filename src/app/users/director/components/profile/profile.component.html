@@ -39,7 +39,7 @@
         </div>
       </div>
 
-      <mat-divider class="main-divider"></mat-divider>
+      <!--<mat-divider class="main-divider"></mat-divider>-->
 
       <h3 class="info-section-header">Basic Information</h3>
       <div class="info-details-grid">
@@ -63,7 +63,7 @@
         </div>
       </div>
 
-      <mat-divider class="main-divider"></mat-divider>
+      <!--<mat-divider class="main-divider"></mat-divider>-->
 
       <h3 class="info-section-header">Account Management</h3>
       <div class="action-item-container">
@@ -72,8 +72,8 @@
           <span class="detail-label">Password</span>
           
           <div class="action-button-wrapper">
-             <span class="password-mask">{{directorStore.profile()?.password ? '******' : 'Not set'}}</span>
-            <button mat-flat-button color="accent" class="password-change-button">
+            <!--<span class="password-mask">{{directorStore.profile()?.password ? '******' : 'Not set'}}</span>-->
+            <button mat-flat-button color="accent" class="password-change-button" (click)="openChangePasswordDialog()">
               Change password
             </button>
           </div>
@@ -82,8 +82,8 @@
       
     </mat-card-content>
 
-    <mat-card-actions class="card-footer-actions">
+    <!--<mat-card-actions class="card-footer-actions">
       <button mat-stroked-button color="primary">EDIT PROFILE</button>
-    </mat-card-actions>
+    </mat-card-actions>-->
   </mat-card>
 </div>

@@ -1,32 +1,36 @@
-<h1 matDialogTitle>Add new fuel attendant</h1>
+<div fxFlex fxLayout="column" fxLayoutGap="15px">
 
-<mat-dialog-content>
-  <form [formGroup]="dispenserForm" (ngSubmit)="onSubmit()" fxLayout="column">
+  
+  <h2 mat-dialog-title>Add new fuel attendant</h2>
+    <form [formGroup]="dispenserForm" (ngSubmit)="onSubmit()" >
+    <mat-dialog-content>
 
-    <mat-form-field appearance="outline">
-      <mat-label>First name</mat-label>
-      <input type="text" formControlName="firstName" matInput>
-    </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>First name</mat-label>
+          <input type="text" formControlName="firstName" matInput>
+        </mat-form-field>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Middle name</mat-label>
-      <input type="text" formControlName="middleName" matInput>
-    </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Middle name</mat-label>
+          <input type="text" formControlName="middleName" matInput>
+        </mat-form-field>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Last name</mat-label>
-      <input type="text" formControlName="lastName" matInput>
-    </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Last name</mat-label>
+          <input type="text" formControlName="lastName" matInput>
+        </mat-form-field>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Phone number</mat-label>
-      <input type="tel" formControlName="phone" matInput>
-    </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Phone number</mat-label>
+          <input type="tel" formControlName="phone" matInput>
+        </mat-form-field>
 
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+      <button mat-button mat-dialog-close>Cancel</button>
+        <button mat-flat-button color="primary" type="submit" [disabled]="dispenserForm.invalid">Add attendant</button>
+
+    </mat-dialog-actions>
   </form>
-</mat-dialog-content>
-
-<mat-dialog-actions align="end">
-    <button mat-flat-button color="primary" type="submit">Submit</button>
-
-</mat-dialog-actions>
+</div>

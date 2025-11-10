@@ -49,11 +49,11 @@
             <h3 class="info-section-header">Basic Information</h3>
             <div class="info-details-grid single-column-details">
               
-              <div class="detail-item">
+              <!--<div class="detail-item">
                 <mat-icon class="detail-icon">badge</mat-icon>
                 <span class="detail-label">Manager ID</span>
                 <span class="detail-value">{{ managersStore.selectedManager()?.id }}</span>
-              </div>
+              </div>-->
               
               <div class="detail-item">
                 <mat-icon class="detail-icon">email</mat-icon>
@@ -69,9 +69,9 @@
               
               <div class="detail-item">
                 <mat-icon class="detail-icon">calendar_today</mat-icon>
-                <span class="detail-label">Last Activity</span>
+                <span class="detail-label">Last updated</span>
                 <span class="detail-value">
-                  N/A
+                  {{ managersStore.selectedManager()?.lastUpdated | date}}
                 </span>
               </div>
             </div>
@@ -97,14 +97,18 @@
                 <mat-icon class="detail-icon">map</mat-icon>
                 <span class="detail-label">Location</span>
                 <span class="detail-value">
-                   {{ managersStore.selectedManager()?.station?.address || 'N/A' }}, {{ managersStore.selectedManager()?.station?.ward | titlecase}}, {{ managersStore.selectedManager()?.station?.lga | titlecase }}, {{ managersStore.selectedManager()?.station?.state | titlecase}} 
+                  @if(managersStore.selectedManager()?.station?.address) {
+                    {{ managersStore.selectedManager()?.station?.address }}, {{ managersStore.selectedManager()?.station?.ward | titlecase}}, {{ managersStore.selectedManager()?.station?.lga | titlecase }}, {{ managersStore.selectedManager()?.station?.state | titlecase}} 
+                  }@else {
+                    N/A
+                  }
                 </span>
               </div>
             </div>
             <div fxLayout="row" fxLayoutGap="25px" style="padding: 12px 0px">
               <span fxFlex="1 1 auto"></span>
               @if(managersStore.selectedManager()?.station) {
-                <button mat-stroke-button color="primary">Unassign station</button>
+                <button mat-flat-button color="primary">Unassign station</button>
               } @else {
                 <button mat-flat-button color="accent">Assign to station</button>
               }
@@ -113,10 +117,10 @@
         </div>
 
 
-        <mat-card-actions class="card-footer-actions">
+        <!--<mat-card-actions class="card-footer-actions">
           <button mat-stroked-button color="primary">MORE INFO</button>
           <button mat-flat-button color="accent">EDIT DETAILS</button>
-        </mat-card-actions>
+        </mat-card-actions>-->
       </mat-card>
     }
   </div>

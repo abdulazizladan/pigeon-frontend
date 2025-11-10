@@ -1,7 +1,7 @@
 <main class="director-dashboard-main">
   <h1 class="page-title">Station Status Overview</h1>
 
-  <section class="summary-section">
+  <section class="summary-section" fxLayout="column" fxLayoutGap="25px">
     <mat-card class="status-summary-card">
       <mat-card-header>
         <mat-card-title class="card-section-title">Stations Summary</mat-card-title>
@@ -42,6 +42,54 @@
                 <div class="stat-label">Inactive (Needs Service)</div>
                 <div class="stat-value color-red">
                   {{ directorStore.stationStats()?.inactive ?? 0 }}
+                </div>
+              </div>
+            </div>
+          </div>
+          }
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="status-summary-card">
+      <mat-card-header>
+        <mat-card-title class="card-section-title">Sales Summary</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        @if (directorStore.loading()) {
+          <div class="loading-state-summary">
+            <mat-progress-bar mode="indeterminate" color="primary"></mat-progress-bar>
+            <p>Loading sales statistics...</p>
+          </div>
+        } @else {
+          <div class="stats-grid-container">
+            
+            <div class="stat-item total-stats-theme">
+              <mat-icon class="stat-icon" color="primary">storage</mat-icon>
+              <div class="stat-content">
+                <div class="stat-label">Today's sales</div>
+                <div class="stat-value">
+                  &#8358;0.00
+                </div>
+              </div>
+            </div>
+
+            <div class="stat-item active-stats-theme">
+              <mat-icon class="stat-icon color-green">check_circle_outline</mat-icon>
+              <div class="stat-content">
+                <div class="stat-label">Today's expenditure</div>
+                <div class="stat-value color-green">
+                  &#8358;0.00
+                </div>
+              </div>
+            </div>
+            
+            <div class="stat-item inactive-stats-theme">
+              <mat-icon class="stat-icon color-red">report_problem</mat-icon>
+              <div class="stat-content">
+                <div class="stat-label">Litres sold</div>
+                <div class="stat-value color-red">
+                  0.00 L
                 </div>
               </div>
             </div>

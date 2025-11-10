@@ -10,7 +10,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 })
 export class AddUserComponent {
 
-  userForm: FormGroup;
+  userForm: FormGroup = new FormGroup({});
 
   constructor(
     private fb: FormBuilder,

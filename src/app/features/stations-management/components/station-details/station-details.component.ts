@@ -2,6 +2,9 @@ import { Component, inject, OnInit } from '@angular/core'; // Added OnInit
 import { StationStore } from '../../store/stations.store';
 import { ActivatedRoute } from '@angular/router';
 import { take } from 'rxjs/operators'; // Optional: for good practice with router params
+import { MatDialog } from '@angular/material/dialog';
+import { AssignManager } from '../assign-manager/assign-manager';
+import { UnassignManager } from '../unassign-manager/unassign-manager';
 
 export interface SalesDataPoint {
   date: string;
@@ -20,7 +23,10 @@ export class StationDetailsComponent implements OnInit { // Implemented OnInit
 
   // Injecting ActivatedRoute via constructor for compatibility, 
   // though it could be injected via the 'inject' function as well.
-  constructor(private route: ActivatedRoute) {}
+  constructor(
+    private route: ActivatedRoute,
+    private dialog: MatDialog
+  ) {}
 
   public stationStore = inject(StationStore);
   // public id: number = 0; // No longer needed as a property
@@ -120,6 +126,18 @@ export class StationDetailsComponent implements OnInit { // Implemented OnInit
         this.stationStore.loadSelectedStation(idParam)
       } 
     });
+  }
+
+  openAssignManagerDialog() {
+    const dialogRaf = this.dialog.open(AssignManager, {
+      width: '400px'
+    })
+  }
+
+  openUnassignManagerDialog() {
+    const dialogRaf = this.dialog.open(UnassignManager, {
+      width: '400px'
+    })
   }
 
 }

@@ -39,7 +39,7 @@
         </div>
       </div>
 
-      <mat-divider></mat-divider>
+      <!--<mat-divider></mat-divider>-->
 
       <h3 class="info-section-header">Basic Information</h3>
       <div class="info-details-grid">
@@ -63,7 +63,7 @@
         </div>
       </div>
 
-      <mat-divider></mat-divider>
+      <!--<mat-divider></mat-divider>-->
       
       <h3 class="info-section-header">Account Management</h3>
       <div class="action-item-container">
@@ -72,7 +72,7 @@
           <span class="detail-label">Password</span>
           
           <div class="action-button-wrapper">
-            <button mat-flat-button color="primary">
+            <button mat-flat-button color="primary" (click)="openChangePasswordDialog()">
               Change password
             </button>
           </div>

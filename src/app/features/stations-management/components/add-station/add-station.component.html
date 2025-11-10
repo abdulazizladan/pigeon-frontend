@@ -81,8 +81,9 @@
       </div>
     </mat-card-content>
 
-    <mat-card-actions align="end">
-      <button mat-flat-button type="button" (click)="onCancel()">Cancel</button>
+    <mat-card-actions fxLayout="row" fxLayoutGap="25px">
+      <span fxFlex="1 1 auto"></span>
+      <button mat-button type="button" matDialogClose>Cancel</button>
       <button mat-flat-button color="primary" type="submit" [disabled]="!stationForm.valid">
         <mat-icon>save</mat-icon> Submit
       </button>

@@ -18,4 +18,5 @@ export interface Station {
   fuelLevelPercentage: number; // e.g., 0 to 100
   lastInspectionDate: string; // ISO Date string
   lastMaintenanceDate: string; // ISO Date string
+  lastUpdated: Date;
 }

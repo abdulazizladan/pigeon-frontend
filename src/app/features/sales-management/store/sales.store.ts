@@ -21,6 +21,14 @@ export const SalesStore = signalStore(
   {providedIn: 'root'},
   withState(initialState),
   withMethods((store, salesService = inject(SalesService)) => ({
+    async addSale(sale: Sale){
+      patchState(store, {loading: true, error: null})
+      try {
+        
+      } catch (error) {
+        patchState(store, {loading: false, error: "Could not fetch sales records. Please try again later"})
+      }
+    },
     async loadSales() {
       patchState(store, {loading: true, error: null})
       try {

@@ -100,6 +100,15 @@
                 <span class="detail-label">Total Pumps</span>
                 <span class="detail-value">{{ stationStore.station()?.pumps?.length }}</span>
               </div>
+
+              <div class="detail-item">
+                <mat-icon class="detail-icon">date</mat-icon>
+                <span class="detail-label">Last updated</span>
+                <span class="detail-value">
+                  {{ stationStore.station()?.lastUpdated | date}}
+                </span>
+              </div>
+
             </div>
           </div>
         </div>

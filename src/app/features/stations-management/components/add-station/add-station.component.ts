@@ -28,28 +28,20 @@ export class AddStationComponent {
     pricePerLiter: [0, [Validators.required, Validators.min(0)]]
   });
 
+  /**
+   * 
+   */
   onSubmit() {
     if (this.stationForm.valid) {
       const formData = this.stationForm.value;
-      this.dialogRef.close(formData)
-
-      const snackBarRef = this.snackBar.open('Station successfully added!', 'Open Details', {
-        duration: 5000
-      });
-
-      snackBarRef.onAction().subscribe(() => {
-        const id = (formData as any)?.id;
-        if (id) {
-          this.router.navigate(['/stations', id]);
-        } else {
-          this.router.navigate(['/stations']);
-        }
-      });
+      this.dialogRef.close(formData);
     }
   }
 
+  /**
+   * 
+   */
   onCancel() {
     this.stationForm.reset();
-    // Add any additional cancel logic here
   }
 }

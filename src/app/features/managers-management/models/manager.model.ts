@@ -3,6 +3,7 @@ export class Manager {
     "email": string;
     "role": string;
     "status": string;
+    "lastUpdated"?: Date | null;
     "info": {
       "id": string | null;
       "firstName": string;

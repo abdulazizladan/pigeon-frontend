@@ -26,6 +26,8 @@ import { StationsListComponent } from './components/stations-list/stations-list.
 import { StationDetailsComponent } from './components/station-details/station-details.component';
 import { AddStationComponent } from './components/add-station/add-station.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { AssignManager } from './components/assign-manager/assign-manager';
+import { UnassignManager } from './components/unassign-manager/unassign-manager';
 
 
 @NgModule({
@@ -35,7 +37,9 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
   declarations: [
     StationsListComponent,
     StationDetailsComponent,
-    AddStationComponent
+    AddStationComponent,
+    AssignManager,
+    UnassignManager
   ],
   imports: [
     CommonModule,
@@ -57,6 +61,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatListModule,
     MatPaginatorModule,
     MatSnackBarModule,
+    MatDialogModule,
     StationsManagementRoutingModule
   ]
 })

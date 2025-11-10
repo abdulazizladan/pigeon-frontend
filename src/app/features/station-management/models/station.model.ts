@@ -15,5 +15,6 @@ export interface Station {
   createdAt: number;
   manager: Manager;
   pumps: Pump[];
+  lastUpdated: Date;
 }
 

@@ -1,0 +1,16 @@
+
+    <h1 matDialogTitle>Assign manager to station</h1>
+    <mat-dialog-content>
+        <mat-form-field appearance="outline">
+            <mat-label>Select a manager</mat-label>
+            <mat-select>
+                <mat-option value>John Doe</mat-option>
+                <mat-option>Jane Doe</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </mat-dialog-content>
+    <mat-dialog-actions fxLayout="row" fxLayoutGap="25px">
+        <span fxFlex="1 1 auto"></span>
+        <button mat-button matDialogClose>Cancel</button>
+        <button mat-flat-button color="primary">Assign</button>
+    </mat-dialog-actions>
