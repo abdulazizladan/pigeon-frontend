@@ -1,7 +1,7 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { ManagerService } from '../../../../users/manager/services/manager.service';
+import { Component, inject, OnInit } from '@angular/core';
 import { Station } from '../../models/station.model';
 import { StationStore } from '../../store/station.store';
+import { ManagerStore } from '../../../../users/manager/store/manager.store';
 
 @Component({
   selector: 'app-my-station',
@@ -11,31 +11,29 @@ import { StationStore } from '../../store/station.store';
 })
 export class MyStation implements OnInit {
 
-  private managerService = inject(ManagerService);
   public stationStore = inject(StationStore);
-
-  station = signal<Station | null>(null);
-  loading = signal<boolean>(false);
-  error = signal<string | null>(null);
+  public managerStore = inject(ManagerStore);
 
   async ngOnInit() {
-    await this.loadStation();
-    this.stationStore.loadStation("041f6c88-a267-40e2-bdcf-f5a9033db3e5");
+    const stationId = this.managerStore.station()?.id;
+    if (stationId) {
+      this.stationStore.loadStation(stationId);
+    }
   }
 
-  async loadStation() {
-    this.loading.set(true);
-    this.error.set(null);
-    
-    try {
-      const stationData = await this.managerService.getMyStation();
-      this.station.set(stationData);
-    } catch (err) {
-      console.error('Error loading station:', err);
-      this.error.set('Failed to load station data. Please check your connection and try again.');
-    } finally {
-      this.loading.set(false);
-    }
+  // Getter for station from manager store
+  get station(): Station | null {
+    return this.managerStore.station();
+  }
+
+  // Getter for loading state from manager store
+  get loading(): boolean {
+    return this.managerStore.loading();
+  }
+
+  // Getter for error state from manager store
+  get error(): string | null {
+    return this.managerStore.error();
   }
 
   formatDate(timestamp: number): string {

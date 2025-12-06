@@ -19,6 +19,9 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatListModule } from '@angular/material/list';
 
 import { DispensersListComponent } from './components/dispensers-list/dispensers-list.component';
 import { DispenserDetailsComponent } from './components/dispenser-details/dispenser-details.component';
@@ -54,6 +57,9 @@ import { DispensersManagementRoutingModule } from './dispensers-management-routi
     MatChipsModule,
     MatSnackBarModule,
     MatPaginatorModule,
+    MatProgressSpinnerModule,
+    MatDividerModule,
+    MatListModule,
     DispensersManagementRoutingModule
   ]
 })

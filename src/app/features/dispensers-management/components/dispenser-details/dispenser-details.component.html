@@ -1,1 +1,188 @@
-<p>dispenser-details works!</p>
+<div class="dispenser-details-container">
+    <!-- Loading State -->
+    @if (loading()) {
+    <div class="loading-container">
+        <mat-spinner></mat-spinner>
+        <p>Loading dispenser details...</p>
+    </div>
+    }
+
+    <!-- Error State -->
+    @if (error()) {
+    <mat-card class="error-card">
+        <mat-card-content>
+            <mat-icon color="warn">error</mat-icon>
+            <p>{{ error() }}</p>
+        </mat-card-content>
+    </mat-card>
+    }
+
+    <!-- Dispenser Details -->
+    @if (dispenser() && !loading()) {
+    <div class="details-content">
+        <!-- Header Section -->
+        <mat-card class="header-card">
+            <mat-card-header>
+                <div mat-card-avatar class="dispenser-avatar">
+                    <mat-icon>person</mat-icon>
+                </div>
+                <mat-card-title>{{ dispenser()!.firsName }} {{ dispenser()!.middleName }} {{ dispenser()!.lastName
+                    }}</mat-card-title>
+                <mat-card-subtitle>Dispenser Details</mat-card-subtitle>
+            </mat-card-header>
+        </mat-card>
+
+        <!-- Main Details Grid -->
+        <div class="details-grid">
+            <!-- Personal Information Card -->
+            <mat-card class="info-card">
+                <mat-card-header>
+                    <mat-card-title>
+                        <mat-icon>badge</mat-icon>
+                        Personal Information
+                    </mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <div class="info-row">
+                        <span class="info-label">First Name:</span>
+                        <span class="info-value">{{ dispenser()!.firsName }}</span>
+                    </div>
+                    <mat-divider></mat-divider>
+
+                    <div class="info-row">
+                        <span class="info-label">Middle Name:</span>
+                        <span class="info-value">{{ dispenser()!.middleName }}</span>
+                    </div>
+                    <mat-divider></mat-divider>
+
+                    <div class="info-row">
+                        <span class="info-label">Last Name:</span>
+                        <span class="info-value">{{ dispenser()!.lastName }}</span>
+                    </div>
+                    <mat-divider></mat-divider>
+
+                    <div class="info-row">
+                        <span class="info-label">Phone:</span>
+                        <span class="info-value">{{ dispenser()!.phone }}</span>
+                    </div>
+                    <mat-divider></mat-divider>
+
+                    <div class="info-row">
+                        <span class="info-label">Date Added:</span>
+                        <span class="info-value">{{ formatDate(dispenser()!.dateAdded) }}</span>
+                    </div>
+                    <mat-divider></mat-divider>
+
+                    <div class="info-row">
+                        <span class="info-label">Status:</span>
+                        <span class="info-value status-badge"
+                            [style.background-color]="getStatusColor(dispenser()!.status)">
+                            <mat-icon [inline]="true">{{ getStatusIcon(dispenser()!.status) }}</mat-icon>
+                            {{ dispenser()!.status | titlecase }}
+                        </span>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+
+            <!-- Last Sale Card -->
+            <mat-card class="last-sale-card">
+                <mat-card-header>
+                    <mat-card-title>
+                        <mat-icon>receipt</mat-icon>
+                        Last Sale
+                    </mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    @if (lastSale()) {
+                    <div class="sale-summary">
+                        <div class="sale-detail">
+                            <mat-icon color="primary">local_gas_station</mat-icon>
+                            <div>
+                                <span class="sale-label">Product</span>
+                                <span class="sale-value">{{ lastSale()!.product }}</span>
+                            </div>
+                        </div>
+
+                        <div class="sale-detail">
+                            <mat-icon color="accent">attach_money</mat-icon>
+                            <div>
+                                <span class="sale-label">Total Price</span>
+                                <span class="sale-value">₦{{ lastSale()!.totalPrice | number:'1.0-0' }}</span>
+                            </div>
+                        </div>
+
+                        <div class="sale-detail">
+                            <mat-icon>calendar_today</mat-icon>
+                            <div>
+                                <span class="sale-label">Date</span>
+                                <span class="sale-value">{{ formatDate(lastSale()!.createdAt) }}</span>
+                            </div>
+                        </div>
+
+                        <div class="sale-detail">
+                            <mat-icon>speed</mat-icon>
+                            <div>
+                                <span class="sale-label">Volume Sold</span>
+                                <span class="sale-value">{{ (lastSale()!.closingMeterReading -
+                                    lastSale()!.openingMeterReading) | number:'1.2-2' }} L</span>
+                            </div>
+                        </div>
+                    </div>
+                    } @else {
+                    <div class="no-sales">
+                        <mat-icon>info</mat-icon>
+                        <p>No sales recorded yet</p>
+                    </div>
+                    }
+                </mat-card-content>
+            </mat-card>
+        </div>
+
+        <!-- Sales History Card -->
+        <mat-card class="sales-history-card">
+            <mat-card-header>
+                <mat-card-title>
+                    <mat-icon>history</mat-icon>
+                    Sales History
+                </mat-card-title>
+                <mat-card-subtitle>Complete record of all sales transactions</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+                @if (dispenser()!.sales && dispenser()!.sales!.length > 0) {
+                <mat-list>
+                    @for (sale of dispenser()!.sales; track sale.id) {
+                    <mat-list-item>
+                        <mat-icon matListItemIcon [style.color]="sale.product === 'Petrol' ? '#4f46e5' : '#e11d48'">
+                            local_gas_station
+                        </mat-icon>
+                        <div matListItemTitle class="sale-title">
+                            <span class="product-name">{{ sale.product }}</span>
+                            <span class="sale-price">₦{{ sale.totalPrice | number:'1.0-0' }}</span>
+                        </div>
+                        <div matListItemLine class="sale-details-line">
+                            <span>Volume: {{ (sale.closingMeterReading - sale.openingMeterReading) | number:'1.2-2' }}
+                                L</span>
+                            <span class="separator">•</span>
+                            <span>Price/L: ₦{{ sale.pricePerLitre | number:'1.0-0' }}</span>
+                            <span class="separator">•</span>
+                            <span>{{ formatDate(sale.createdAt) }}</span>
+                        </div>
+                        <button mat-icon-button matListItemMeta>
+                            <mat-icon>chevron_right</mat-icon>
+                        </button>
+                    </mat-list-item>
+                    <mat-divider></mat-divider>
+                    }
+                </mat-list>
+                } @else {
+                <div class="no-sales-history">
+                    <mat-icon>inbox</mat-icon>
+                    <p>No sales history available</p>
+                    <span>Sales transactions will appear here once recorded</span>
+                </div>
+                }
+            </mat-card-content>
+        </mat-card>
+    </div>
+    }
+</div>

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { User } from '../models/user.model';
-import { firstValueFrom, map } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { Station } from '../../../features/station-management/models/station.model';
 
@@ -16,37 +16,35 @@ export class ManagerService {
   constructor() { }
 
   getProfile(email: string): Promise<User> {
-      return firstValueFrom(
-        this.http.get<{success: boolean, data: User, message: string}>(`${this.baseUrl}/user/${email}`).pipe(
-          map(response => response.data)
-        )
+    return firstValueFrom(
+      this.http.get<User>(`${this.baseUrl}/user/${email}`).pipe(
       )
-    }
+    )
+  }
 
   /**
    * Fetches the station assigned to the current manager
    * @returns Promise<Station>
    */
-  async getMyStation(): Promise<Station> {
+  async getMyStation(stationId: string): Promise<Station> {
     return firstValueFrom(
-      this.http.get<{success: boolean, data: Station, message: string}>(`${this.baseUrl}/station/me`).pipe(
-        map(response => response.data)
+      this.http.get<Station>(`${this.baseUrl}/station/${stationId}`).pipe(
       )
     );
   }
 
-  changePassword(newPassword: string): Promise<{success: boolean, message: string, data: {access_token: string}}> {
+  changePassword(newPassword: string): Promise<{ success: boolean, message: string, data: { access_token: string } }> {
     // FIX: Wrap the password string in a JSON object with the expected key (e.g., 'newPassword')
-    const body = { 
-      newPassword: newPassword 
+    const body = {
+      newPassword: newPassword
     };
-    
+
     return firstValueFrom(
-      this.http.patch<{success: boolean, message: string, data: {access_token: string}}>(
-        `${this.baseUrl}/auth/change-password`, 
+      this.http.patch<{ success: boolean, message: string, data: { access_token: string } }>(
+        `${this.baseUrl}/auth/change-password`,
         body // 👈 Send the JSON object
       ).pipe(
-        
+
       )
     )
   }

@@ -21,8 +21,11 @@ import { SalesManagementRoutingModule } from './sales-management-routing.module'
 import { SalesDashboardComponent } from './components/sales-dashboard/sales-dashboard.component';
 import { AddSaleComponent } from './components/add-sale/add-sale.component';
 import { BranchSaleComponent } from './components/branch-sale/branch-sale.component';
-import { provideCharts } from 'ng2-charts';
+import { BaseChartDirective } from 'ng2-charts';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDividerModule } from '@angular/material/divider';
 
 
 @NgModule({
@@ -50,6 +53,10 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatProgressBarModule,
     MatChipsModule,
     MatSnackBarModule,
+    MatFormFieldModule,
+    MatProgressSpinnerModule,
+    MatDividerModule,
+    BaseChartDirective,
     SalesManagementRoutingModule
   ]
 })

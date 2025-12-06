@@ -2,7 +2,6 @@ import { signalStore, withState, withMethods, patchState } from '@ngrx/signals';
 import { inject } from '@angular/core';
 import { StationService } from '../services/station-service';
 import { Station } from '../models/station.model';
-import { firstValueFrom } from 'rxjs';
 
 interface StationState {
   station: Station | null;
@@ -28,10 +27,10 @@ export const StationStore = signalStore(
       patchState(store, { loading: true, error: null });
       try {
         const station = await stationService.getStationById(id);
-        patchState(store, { 
-          station, 
-          loading: false, 
-          error: null 
+        patchState(store, {
+          station,
+          loading: false,
+          error: null
         });
       } catch (error) {
         console.error('Error loading station:', error);

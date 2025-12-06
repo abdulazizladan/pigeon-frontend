@@ -17,21 +17,26 @@ export class DispenserService {
 
   async get(): Promise<Dispenser[]> {
     return firstValueFrom(
-      this.http.get<{success: boolean, data: Dispenser[], message: string}>(`${this.baseUrl}/dispenser`).pipe(
-        map(response => response.data)
+      this.http.get<Dispenser[]>(`${this.baseUrl}/dispenser`).pipe(
       )
     )
   }
 
   async create(dispenser: Dispenser): Promise<Dispenser> {
     return firstValueFrom(
-      this.http.post<{success: boolean, data: Dispenser, message: string}>(`${this.baseUrl}/dispenser`, dispenser).pipe(
-        map(response => response.data)
+      this.http.post<Dispenser>(`${this.baseUrl}/dispenser`, dispenser).pipe(
       )
     );
   }
 
+  async getById(id: string): Promise<Dispenser> {
+    return firstValueFrom(
+      this.http.get<Dispenser>(`${this.baseUrl}/dispenser/${id}`).pipe(
+      )
+    )
+  }
+
   async update(id: string) {
-    
+
   }
 }

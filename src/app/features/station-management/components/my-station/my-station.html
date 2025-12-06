@@ -1,119 +1,118 @@
 <div class="station-page-wrapper">
   <h1 class="page-title">My Station</h1>
   <div class="station-details-container">
-    @if(loading()) {
-      <mat-progress-bar mode="query" class="loading-bar"></mat-progress-bar>
-      <p>Loading station information...</p>
-    } 
-    
-    @else if(error()) {
-      <mat-card class="error-card">
-        <mat-card-content>
-          <mat-icon color="warn">error_outline</mat-icon>
-          <p class="error-message">{{ error() }}</p>
-          <button mat-raised-button color="primary" (click)="loadStation()">Retry</button>
-        </mat-card-content>
-      </mat-card>
+    @if(loading) {
+    <mat-progress-bar mode="query" class="loading-bar"></mat-progress-bar>
+    <p>Loading station information...</p>
+    }
+
+    @else if(error) {
+    <mat-card class="error-card">
+      <mat-card-content>
+        <mat-icon color="warn">error_outline</mat-icon>
+        <p class="error-message">{{ error }}</p>
+      </mat-card-content>
+    </mat-card>
     }
 
     @else if(stationStore.station()) {
-      <mat-card class="station-main-card">
-        
-        <div class="station-header-section">
-          <div class="station-title-group">
-            <h2 class="station-name">{{ stationStore.station()?.name }}</h2>
-            <p class="station-id-subtitle">
-              Manager: {{ stationStore.station()?.manager?.email }}
+    <mat-card class="station-main-card">
 
-            </p>
-          </div>
+      <div class="station-header-section">
+        <div class="station-title-group">
+          <h2 class="station-name">{{ stationStore.station()?.name }}</h2>
+          <p class="station-id-subtitle">
+            Manager: {{ stationStore.station()?.manager?.email }}
+
+          </p>
         </div>
+      </div>
 
-        <mat-divider class="main-divider"></mat-divider>
+      <mat-divider class="main-divider"></mat-divider>
 
-        <div class="details-section-grid">
-          
-          <div class="detail-column">
-            <h3 class="info-section-header">Basic Information</h3>
-            <div class="info-details-grid">
-              
-              <div class="detail-item">
-                <mat-icon class="detail-icon">location_on</mat-icon>
-                <span class="detail-label">Address</span>
-                <span class="detail-value">{{ stationStore.station()?.address }}</span>
-              </div>
-              
-              <div class="detail-item">
-                <mat-icon class="detail-icon">map</mat-icon>
-                <span class="detail-label">Ward</span>
-                <span class="detail-value">{{ stationStore.station()?.ward}}</span>
-              </div>
-              
-              <div class="detail-item">
-                <mat-icon class="detail-icon">account_balance</mat-icon>
-                <span class="detail-label">LGA</span>
-                <span class="detail-value">{{ stationStore.station()?.lga }}</span>
-              </div>
-              
-              <div class="detail-item">
-                <mat-icon class="detail-icon">flag</mat-icon>
-                <span class="detail-label">State</span>
-                <span class="detail-value">{{ stationStore.station()?.state }}</span>
-              </div>
-              
-              <div class="detail-item">
-                <mat-icon class="detail-icon">calendar_today</mat-icon>
-                <span class="detail-label">Created</span>
-                <span class="detail-value">{{ stationStore.station()?.createdAt | date}}</span>
-              </div>
+      <div class="details-section-grid">
+
+        <div class="detail-column">
+          <h3 class="info-section-header">Basic Information</h3>
+          <div class="info-details-grid">
+
+            <div class="detail-item">
+              <mat-icon class="detail-icon">location_on</mat-icon>
+              <span class="detail-label">Address</span>
+              <span class="detail-value">{{ stationStore.station()?.address }}</span>
             </div>
-          </div>
 
-          <div class="detail-column">
-            <h3 class="info-section-header">Operational Details</h3>
-            <div class="info-details-grid">
-              
-              <div class="detail-item">
-                <mat-icon class="detail-icon">local_gas_station</mat-icon>
-                <span class="detail-label">Price/Liter</span>
-                <span class="detail-value">₦{{ stationStore.station()?.pricePerLiter | number }}</span>
-              </div>
-              
-              <div class="detail-item">
-                <mat-icon class="detail-icon">info</mat-icon>
-                <span class="detail-label">Status</span>
-                <span class="detail-value" [style.color]="getStatusColor(station()?.status!)">
-                  {{ stationStore.station()?.status }}
-                </span>
-              </div>
-              
-              <div class="detail-item">
-                <mat-icon class="detail-icon">navigation</mat-icon>
-                <span class="detail-label">Coordinates</span>
-                <span class="detail-value">
-                  {{ stationStore.station()?.latitude | number}}, 
-                  {{ stationStore.station()?.longitude | number}}</span>
-              </div>
-              
-              <div class="detail-item">
-                <mat-icon class="detail-icon">speed</mat-icon>
-                <span class="detail-label">Total Pumps</span>
-                <span class="detail-value">{{ stationStore.station()?.pumps?.length }}</span>
-              </div>
+            <div class="detail-item">
+              <mat-icon class="detail-icon">map</mat-icon>
+              <span class="detail-label">Ward</span>
+              <span class="detail-value">{{ stationStore.station()?.ward}}</span>
+            </div>
 
-              <div class="detail-item">
-                <mat-icon class="detail-icon">date</mat-icon>
-                <span class="detail-label">Last updated</span>
-                <span class="detail-value">
-                  {{ stationStore.station()?.lastUpdated | date}}
-                </span>
-              </div>
+            <div class="detail-item">
+              <mat-icon class="detail-icon">account_balance</mat-icon>
+              <span class="detail-label">LGA</span>
+              <span class="detail-value">{{ stationStore.station()?.lga }}</span>
+            </div>
 
+            <div class="detail-item">
+              <mat-icon class="detail-icon">flag</mat-icon>
+              <span class="detail-label">State</span>
+              <span class="detail-value">{{ stationStore.station()?.state }}</span>
+            </div>
+
+            <div class="detail-item">
+              <mat-icon class="detail-icon">calendar_today</mat-icon>
+              <span class="detail-label">Created</span>
+              <span class="detail-value">{{ stationStore.station()?.createdAt | date}}</span>
             </div>
           </div>
         </div>
-          
-          <!--
+
+        <div class="detail-column">
+          <h3 class="info-section-header">Operational Details</h3>
+          <div class="info-details-grid">
+
+            <div class="detail-item">
+              <mat-icon class="detail-icon">local_gas_station</mat-icon>
+              <span class="detail-label">Price/Liter</span>
+              <span class="detail-value">₦{{ stationStore.station()?.pricePerLiter | number }}</span>
+            </div>
+
+            <div class="detail-item">
+              <mat-icon class="detail-icon">info</mat-icon>
+              <span class="detail-label">Status</span>
+              <span class="detail-value" [style.color]="getStatusColor(managerStore.station()?.status!)">
+                {{ stationStore.station()?.status }}
+              </span>
+            </div>
+
+            <div class="detail-item">
+              <mat-icon class="detail-icon">navigation</mat-icon>
+              <span class="detail-label">Coordinates</span>
+              <span class="detail-value">
+                {{ stationStore.station()?.latitude | number}},
+                {{ stationStore.station()?.longitude | number}}</span>
+            </div>
+
+            <div class="detail-item">
+              <mat-icon class="detail-icon">speed</mat-icon>
+              <span class="detail-label">Total Pumps</span>
+              <span class="detail-value">{{ stationStore.station()?.pumps?.length }}</span>
+            </div>
+
+            <div class="detail-item">
+              <mat-icon class="detail-icon">date</mat-icon>
+              <span class="detail-label">Last updated</span>
+              <span class="detail-value">
+                {{ stationStore.station()?.lastUpdated | date}}
+              </span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!--
           <div class="manager-section">
             <h3 class="info-section-header">Manager Information</h3>
             <div class="info-details-grid">
@@ -129,34 +128,34 @@
               </div>
             </div>
           </div> -->
-        
 
-        @if(stationStore.station()?.pumps && stationStore.station()!.pumps.length > 0) {
-          <mat-divider class="main-divider"></mat-divider>
-          
-          <div class="pumps-section">
-            <h3 class="info-section-header">Pumps ({{ stationStore.station()?.pumps?.length }})</h3>
-            <div class="pumps-grid">
-              @for(pump of stationStore.station()?.pumps; track pump.id) {
-                <mat-chip [color]="getPumpProductBadgeColor(pump.dispensedProduct)" class="pump-chip">
-                  <mat-icon>local_gas_station</mat-icon>
-                  Pump #{{ pump.pumpNumber }} - {{ pump.dispensedProduct | titlecase }}
-                </mat-chip>
-              }
-            </div>
-          </div>
-        }
 
-      </mat-card>
+      @if(stationStore.station()?.pumps && stationStore.station()!.pumps.length > 0) {
+      <mat-divider class="main-divider"></mat-divider>
+
+      <div class="pumps-section">
+        <h3 class="info-section-header">Pumps ({{ stationStore.station()?.pumps?.length }})</h3>
+        <div class="pumps-grid">
+          @for(pump of stationStore.station()?.pumps; track pump.id) {
+          <mat-chip [color]="getPumpProductBadgeColor(pump.dispensedProduct)" class="pump-chip">
+            <mat-icon>local_gas_station</mat-icon>
+            Pump #{{ pump.pumpNumber }} - {{ pump.dispensedProduct | titlecase }}
+          </mat-chip>
+          }
+        </div>
+      </div>
+      }
+
+    </mat-card>
     }
 
     @else {
-      <mat-card class="empty-card">
-        <mat-card-content>
-          <mat-icon>info_outline</mat-icon>
-          <p>No station data available</p>
-        </mat-card-content>
-      </mat-card>
+    <mat-card class="empty-card">
+      <mat-card-content>
+        <mat-icon>info_outline</mat-icon>
+        <p>No station data available</p>
+      </mat-card-content>
+    </mat-card>
     }
   </div>
 </div>

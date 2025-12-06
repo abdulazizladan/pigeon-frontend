@@ -1,20 +1,122 @@
-<div class="page-container" fxLayout="column" fxLayoutGap="24px">
-
-  <div class="header" fxLayout="row" fxLayoutAlign="space-between center">
-    <h1 class="mat-h1 margin-none">Sales</h1>
-    <button mat-flat-button color="primary" (click)="openSalesDialog()">
-      <mat-icon>add</mat-icon>
-      Assign attendant
-    </button>
+<div class="dashboard-container">
+  <!-- Header Section -->
+  <div class="dashboard-header" fxLayout="row" fxLayoutAlign="space-between center" fxLayout.lt-md="column"
+    fxLayoutAlign.lt-md="start start" fxLayoutGap="16px">
+    <h1 class="dashboard-title">Sales Dashboard</h1>
+    <div fxLayout="row" fxLayoutGap="12px" fxLayout.lt-md="column" fxLayoutAlign.lt-md="stretch">
+      <button mat-flat-button color="accent" (click)="exportData()" [disabled]="loading()">
+        <mat-icon>cloud_download</mat-icon>
+        Export Data
+      </button>
+      <button mat-flat-button color="primary" (click)="openSalesDialog()">
+        <mat-icon>add</mat-icon>
+        Add Sale
+      </button>
+    </div>
   </div>
 
-  <div class="content">
-    <!-- Placeholder for future content, using a card or standard div to contain it -->
-    <mat-card class="dashboard-card">
-        <mat-card-content>
-            <p class="placeholder-text">Sales dashboard content will appear here.</p>
-        </mat-card-content>
+  <!-- Loading State -->
+  @if (loading()) {
+  <div class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Loading dashboard data...</p>
+  </div>
+  }
+
+  <!-- Error State -->
+  @if (error()) {
+  <mat-card class="error-card">
+    <mat-card-content>
+      <mat-icon color="warn">error</mat-icon>
+      <p>{{ error() }}</p>
+      <button mat-raised-button color="primary" (click)="loadDashboardData()">Retry</button>
+    </mat-card-content>
+  </mat-card>
+  }
+
+  <!-- Dashboard Content -->
+  @if (!loading() && !error()) {
+  <!-- Filter Section -->
+  <mat-card class="filter-card">
+    <mat-card-content>
+      <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="24px" fxLayout.lt-md="column"
+        fxLayoutAlign.lt-md="stretch start">
+        <mat-form-field appearance="outline" class="filter-field" fxFlex="300px" fxFlex.lt-md="100%">
+          <mat-label>Filter by Station</mat-label>
+          <mat-select [formControl]="filterForm.controls.stationId">
+            <mat-option value="all">All Stations</mat-option>
+            @for (station of allStations(); track station.id) {
+            <mat-option [value]="station.id">{{ station.name }}</mat-option>
+            }
+          </mat-select>
+          <mat-icon matPrefix>filter_list</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="filter-field" fxFlex="300px" fxFlex.lt-md="100%">
+          <mat-label>Time Period</mat-label>
+          <mat-select [formControl]="filterForm.controls.timePeriod">
+            <mat-option value="weekly">Weekly</mat-option>
+            <mat-option value="monthly">Monthly</mat-option>
+          </mat-select>
+          <mat-icon matPrefix>calendar_today</mat-icon>
+        </mat-form-field>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Summary Card -->
+  <mat-card class="summary-card">
+    <mat-card-content>
+      <div class="summary-content">
+        <div class="summary-icon">
+          <mat-icon>attach_money</mat-icon>
+        </div>
+        <div class="summary-details">
+          <span class="summary-label">Total Sales Revenue</span>
+          <span class="summary-value">{{ formatCurrency(totalSales()) }}</span>
+          <span class="summary-subtitle">Across all stations and periods</span>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Charts Grid -->
+  <div class="charts-grid">
+    <!-- Sales Trend Chart -->
+    <mat-card class="chart-card trend-chart">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>trending_up</mat-icon>
+          {{ currentTimePeriod() === 'weekly' ? 'Weekly' : 'Monthly' }} Sales Trend
+        </mat-card-title>
+        <mat-card-subtitle>
+          Revenue performance over {{ currentTimePeriod() === 'weekly' ? 'weeks' : 'months' }}
+        </mat-card-subtitle>
+      </mat-card-header>
+      <mat-divider></mat-divider>
+      <mat-card-content class="chart-content">
+        <canvas baseChart [data]="salesTrendChartData()" [options]="lineChartOptions" [type]="lineChartType">
+        </canvas>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Station Comparison Chart -->
+    <mat-card class="chart-card comparison-chart">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>bar_chart</mat-icon>
+          Station Performance Comparison
+        </mat-card-title>
+        <mat-card-subtitle>
+          Total sales by station
+        </mat-card-subtitle>
+      </mat-card-header>
+      <mat-divider></mat-divider>
+      <mat-card-content class="chart-content">
+        <canvas baseChart [data]="stationComparisonChartData()" [options]="barChartOptions" [type]="barChartType">
+        </canvas>
+      </mat-card-content>
     </mat-card>
   </div>
-
+  }
 </div>
