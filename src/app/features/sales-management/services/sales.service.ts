@@ -29,9 +29,9 @@ export class SalesService {
    * @param stationId 
    * @returns 
    */
-  loadStationSales(stationId: number): Promise<Sale[]>{
+  loadStationSales(stationId: number): Promise<Sale[]> {
     return firstValueFrom(
-      this.http.get<{success: Boolean, data: Sale[], error: string}>(`${this.baseUrl}/${stationId}`).pipe(
+      this.http.get<{ success: Boolean, data: Sale[], error: string }>(`${this.baseUrl}/${stationId}`).pipe(
         map(result => result.data)
       )
     )
@@ -44,9 +44,49 @@ export class SalesService {
    */
   addSale(sale: CreateStationDTO) {
     return firstValueFrom(
-      this.http.post<{success: Boolean, data: any, error: string}>(`${this.baseUrl}`, sale).pipe(
+      this.http.post<{ success: Boolean, data: any, error: string }>(`${this.baseUrl}`, sale).pipe(
       )
     )
+  }
+
+  /**
+   * Fetches the total sales revenue across all stations.
+   * Endpoint: GET /sales/report/total
+   */
+  async getTotalSales(): Promise<{ totalSale: number }> {
+    return firstValueFrom(
+      this.http.get<{ totalSale: number }>(`${this.baseUrl}/sales/report/total`)
+    );
+  }
+
+  /**
+   * Fetches weekly sales trends.
+   * Endpoint: GET /sales/report/weekly
+   */
+  async getWeeklySales(): Promise<{ week: number, totalSale: number }[]> {
+    return firstValueFrom(
+      this.http.get<{ week: number, totalSale: number }[]>(`${this.baseUrl}/sales/report/weekly`)
+    );
+  }
+
+  /**
+   * Fetches monthly sales trends.
+   * Endpoint: GET /sales/report/monthly
+   */
+  async getMonthlySales(): Promise<{ month: string, totalSale: number }[]> {
+    return firstValueFrom(
+      this.http.get<{ month: string, totalSale: number }[]>(`${this.baseUrl}/sales/report/monthly`)
+    );
+  }
+
+  /**
+   * Fetches detailed daily sales for a specific station.
+   * Endpoint: GET /sales/report/daily/station/:stationId
+   */
+  async getDailyStationSales(stationId: string): Promise<any[]> {
+    return firstValueFrom(
+      this.http.get<any[]>(`${this.baseUrl}/sales/report/daily/station/${stationId}`)
+    );
   }
 
   constructor() { }

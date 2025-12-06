@@ -1,9 +1,20 @@
-<h1 matDialogTitle>Unassign station's current manager</h1>
+<h1 matDialogTitle>Unassign Station Manager from {{ stationName }}</h1>
     <mat-dialog-content>
-       Are you sure you want to unassign current station manager?
+       <p>Are you sure you want to unassign the current manager?</p>
+       <div *ngIf="error()" class="error-message mat-error" style="padding: 10px 0;">
+        <p>Error: {{ error() }}</p>
+    </div>
     </mat-dialog-content>
     <mat-dialog-actions fxLayout="row" fxLayoutGap="25px">
         <span fxFlex="1 1 auto"></span>
-        <button mat-button matDialogClose>Cancel</button>
-        <button mat-flat-button color="primary">Unassign</button>
+        <button mat-button (click)="onCancel()" [disabled]="isSubmitting()">Cancel</button>
+        <button 
+            mat-flat-button 
+            color="primary" 
+            (click)="onUnassign()"
+            [disabled]="isSubmitting()"
+        >
+            <mat-progress-bar *ngIf="isSubmitting()" style="margin-right: 8px;"></mat-progress-bar>
+            <span *ngIf="!isSubmitting()">Unassign</span>
+        </button>
     </mat-dialog-actions>

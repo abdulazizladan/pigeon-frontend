@@ -49,20 +49,26 @@ const initialState: AdminState = {
 }
 
 export const AdminStore = signalStore(
-  {providedIn: 'root'},
+  { providedIn: 'root' },
   withState(initialState),
   withMethods((store, adminService = inject(AdminService)) => ({
     async loadSummary() {
-      patchState(store, {loading: true, error: null});
+      patchState(store, { loading: true, error: null });
       try {
-        const users = await adminService.getUserSummary();
-        patchState(store, {usersSummary: users, loading: false})
-        const tickets = await adminService.getTicketsSummary();
-        patchState(store, { ticketsSummary: tickets, loading: false})
-        const attendants = await adminService.getAttendantsSummary();
-        patchState(store, {attendantsSummary: attendants, loading: false})
-        const stations = await adminService.getStationsSummary();
-        patchState(store, {stationsSummary: stations, loading: false})
+        const [users, tickets, attendants, stations] = await Promise.all([
+          adminService.getUserSummary(),
+          adminService.getTicketsSummary(),
+          adminService.getAttendantsSummary(),
+          adminService.getStationsSummary()
+        ]);
+
+        patchState(store, {
+          usersSummary: users,
+          ticketsSummary: tickets,
+          attendantsSummary: attendants,
+          stationsSummary: stations,
+          loading: false
+        });
       } catch (error) {
         console.error('Error loading summary: ', error);
         patchState(store, {
@@ -72,11 +78,11 @@ export const AdminStore = signalStore(
       }
     },
     async loadProfile(email: string) {
-      patchState(store, {loading: true, error: null});
-      try{
+      patchState(store, { loading: true, error: null });
+      try {
         const userProfile = await adminService.getProfile(email);
-        patchState(store, {error: null, loading: false, profile: userProfile})
-      }catch (error) {
+        patchState(store, { error: null, loading: false, profile: userProfile })
+      } catch (error) {
         patchState(store, {
           error: 'Failed to load profile. Please check your connection and try again.',
           loading: false

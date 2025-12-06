@@ -1,13 +1,20 @@
+<div class="page-container" fxLayout="column" fxLayoutGap="24px">
 
-<div fxFlex fxLayout="column" fxLayoutGap="15px">
-
-  <h1>Sales</h1>
-
-  <div fxLayout="row">
-    <span fxFlex="1 1 auto"></span>
+  <div class="header" fxLayout="row" fxLayoutAlign="space-between center">
+    <h1 class="mat-h1 margin-none">Sales</h1>
     <button mat-flat-button color="primary" (click)="openSalesDialog()">
+      <mat-icon>add</mat-icon>
       Assign attendant
     </button>
+  </div>
+
+  <div class="content">
+    <!-- Placeholder for future content, using a card or standard div to contain it -->
+    <mat-card class="dashboard-card">
+        <mat-card-content>
+            <p class="placeholder-text">Sales dashboard content will appear here.</p>
+        </mat-card-content>
+    </mat-card>
   </div>
 
 </div>

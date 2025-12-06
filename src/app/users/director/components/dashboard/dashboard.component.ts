@@ -32,36 +32,27 @@ Chart.register(
   styleUrl: './dashboard.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DashboardComponent implements OnInit{
+export class DashboardComponent implements OnInit {
 
   public directorStore = inject(DirectorStore);
 
   // Reference to the Chart.js instance
   private chartInstance: Chart | null = null;
-  
+
   // Computed signal to transform store data into Chart.js format
   public chartData = computed(() => {
     const records = this.directorStore.salesRecords();
     const period = this.directorStore.currentSalesPeriod();
     const periodName = period.charAt(0).toUpperCase() + period.slice(1);
-    
+
     return {
       labels: records.map(r => r.label),
       datasets: [
         {
-          label: 'Petrol Sales',
-          data: records.map(r => r.petrolSales),
+          label: 'Total Revenue',
+          data: records.map(r => r.petrolSales), // Mapping 'petrolSales' field to Total Revenue
           borderColor: 'rgba(75, 192, 192, 1)', // Blue-green
           backgroundColor: 'rgba(75, 192, 192, 0.1)',
-          fill: true,
-          tension: 0.4,
-          pointRadius: 3,
-        },
-        {
-          label: 'Diesel Sales',
-          data: records.map(r => r.dieselSales),
-          borderColor: 'rgba(255, 159, 64, 1)', // Orange
-          backgroundColor: 'rgba(255, 159, 64, 0.1)',
           fill: true,
           tension: 0.4,
           pointRadius: 3,
@@ -78,7 +69,7 @@ export class DashboardComponent implements OnInit{
       if (!this.directorStore.salesLoading() && this.directorStore.salesRecords().length > 0) {
         // Use setTimeout to ensure the canvas element has been rendered 
         // by the change detection cycle before Chart.js tries to find it.
-        setTimeout(() => this.renderChart(), 50); 
+        setTimeout(() => this.renderChart(), 50);
       }
     });
   }
@@ -86,10 +77,10 @@ export class DashboardComponent implements OnInit{
   ngOnInit() {
     // 1. Load Station Summary Data
     this.directorStore.loadSummary();
-    
+
     // 2. Load Sales Data for the default 'daily' period
     this.directorStore.loadSalesRecords('daily');
-    
+
     // Note: Chart rendering is handled by the effect in the constructor
   }
   /**
@@ -108,7 +99,7 @@ export class DashboardComponent implements OnInit{
   private renderChart() {
     const data = this.chartData();
     const ctx = document.getElementById('salesChart') as HTMLCanvasElement;
-    
+
     if (!ctx) return;
 
     // Destroy existing chart instance if it exists
@@ -142,7 +133,7 @@ export class DashboardComponent implements OnInit{
             }
           },
           x: {
-             // Ensures labels for dates/periods are displayed clearly
+            // Ensures labels for dates/periods are displayed clearly
           }
         }
       }

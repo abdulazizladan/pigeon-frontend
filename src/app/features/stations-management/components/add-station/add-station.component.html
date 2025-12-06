@@ -1,92 +1,184 @@
-<mat-card class="station-form-container">
-  <mat-card-header>
-    <mat-card-title>Add New Station</mat-card-title>
-  </mat-card-header>
+<h2 mat-dialog-title>Add New Station</h2>
 
-  <form [formGroup]="stationForm" (ngSubmit)="onSubmit()">
-    <mat-card-content>
-      <div class="form-row">
-        <mat-form-field appearance="outline">
-          <mat-label>Station Name</mat-label>
-          <input matInput formControlName="name" placeholder="Enter station name">
-          <mat-error *ngIf="stationForm.get('name')?.hasError('required')">
-            Station name is required
-          </mat-error>
-        </mat-form-field>
+<!-- Dialog Content (Scrollable) -->
+<mat-dialog-content class="mat-typography">
+  <form [formGroup]="stationForm">
+    
+    <!-- --- Core Location Details --- -->
+    <mat-card-subtitle>Location & Pricing</mat-card-subtitle>
+    
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Station Name</mat-label>
+        <input matInput formControlName="name" placeholder="Enter station name">
+        <mat-error *ngIf="stationForm.get('name')?.hasError('required')">
+          Station name is required
+        </mat-error>
+      </mat-form-field>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Address</mat-label>
-          <input matInput formControlName="address" placeholder="Enter full address">
-          <mat-error *ngIf="stationForm.get('address')?.hasError('required')">
-            Address is required
+      <mat-form-field appearance="outline">
+        <mat-label>Address</mat-label>
+        <input matInput formControlName="address" placeholder="Enter full address">
+        <mat-error *ngIf="stationForm.get('address')?.hasError('required')">
+          Address is required
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Ward</mat-label>
+        <input matInput formControlName="ward" placeholder="Enter ward">
+        <mat-error *ngIf="stationForm.get('ward')?.hasError('required')">
+          Ward is required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>LGA</mat-label>
+        <input matInput formControlName="lga" placeholder="Enter local government area">
+        <mat-error *ngIf="stationForm.get('lga')?.hasError('required')">
+          LGA is required
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>State</mat-label>
+        <input matInput formControlName="state" placeholder="Enter state">
+        <mat-error *ngIf="stationForm.get('state')?.hasError('required')">
+          State is required
+        </mat-error>
+      </mat-form-field>
+
+      <!--<mat-form-field appearance="outline">
+        <mat-label>Price per Liter (Default ₦)</mat-label>
+        <input matInput type="number" formControlName="pricePerLiter" placeholder="Enter default price">
+        <mat-error *ngIf="stationForm.get('pricePerLiter')?.hasError('required')">
+          Price is required
+        </mat-error>
+        <mat-error *ngIf="stationForm.get('pricePerLiter')?.hasError('min')">
+          Price must be positive
+        </mat-error>
+      </mat-form-field>-->
+    </div>
+
+    <!--<div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Latitude</mat-label>
+        <input matInput type="number" formControlName="latitude" placeholder="Enter latitude">
+        <mat-error *ngIf="stationForm.get('latitude')?.hasError('required')">
+          Latitude is required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Longitude</mat-label>
+        <input matInput type="number" formControlName="longitude" placeholder="Enter longitude">
+        <mat-error *ngIf="stationForm.get('longitude')?.hasError('required')">
+          Longitude is required
+        </mat-error>
+      </mat-form-field>
+    </div>-->
+    
+    <!-- --- Manager Assignment --- 
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+          <mat-label>Manager ID (UUID)</mat-label>
+          <input matInput formControlName="managerId" placeholder="Enter manager user ID">
+          <mat-error *ngIf="stationForm.get('managerId')?.hasError('required')">
+              Manager ID is required
           </mat-error>
-        </mat-form-field>
+      </mat-form-field>
+    </div>-->
+
+   <!-- <div class="form-row">
+      <mat-form-field appearance="outline">
+          <mat-label>Manager</mat-label>
+          @if(stationStore.managers()){
+            <mat-select>
+            @for(manager of stationStore.managers(); track manager) {
+              <mat-option [value]="manager.id">
+                {{manager.info.firstName | titlecase}} {{manager.info.lastName | titlecase}}
+              </mat-option>
+            }
+          </mat-select>
+        }
+      </mat-form-field>
+    </div>-->
+
+    <!-- --- Stock Management Details --- -->
+    <!--<mat-card-subtitle style="margin-top: 1.5rem;">Initial Stock Details</mat-card-subtitle>-->
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Initial Petrol Volume (L)</mat-label>
+        <!--<span matSuffix>Litres</span>-->
+        <input matInput formControlName="petrolVolume" placeholder="Enter initial petrol volume">
+        <mat-error *ngIf="stationForm.get('petrolVolume')?.hasError('required')">Volume is required</mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Petrol Price/L (₦)</mat-label>
+        <!--<span matPrefix>&#8358;</span>-->
+        <input matInput formControlName="petrolPricePerLiter">
+        <mat-error *ngIf="stationForm.get('petrolPricePerLiter')?.hasError('required')">Price is required</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Initial Diesel Volume (L)</mat-label>
+        <!--<span matSuffix>Litres</span>-->
+        <input matInput formControlName="dieselVolume" placeholder="Enter initial diesel volume">
+        <mat-error *ngIf="stationForm.get('dieselVolume')?.hasError('required')">Volume is required</mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Diesel Price/L (₦)</mat-label>
+        <!--<span matSuffix>per Litre</span>-->
+        <input matInput formControlName="dieselPricePerLiter" placeholder="Enter current diesel price">
+        <mat-error *ngIf="stationForm.get('dieselPricePerLiter')?.hasError('required')">Price is required</mat-error>
+      </mat-form-field>
+    </div>
+
+
+    <!-- --- Dynamic Pumps Section --- -->
+    <mat-card-subtitle style="margin-top: 1.5rem;">Pumps Configuration</mat-card-subtitle>
+    
+    <div formArrayName="pumps" class="pumps-section">
+      <div *ngFor="let pumpGroup of pumps.controls; let i = index" [formGroupName]="i" class="form-row" style="align-items: center;">
+          <mat-form-field appearance="outline" style="max-width: 150px;">
+              <mat-label>Pump #</mat-label>
+              <input matInput type="number" formControlName="pumpNumber" placeholder="Number">
+              <mat-error *ngIf="pumpGroup.get('pumpNumber')?.hasError('required')">Required</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+              <mat-label>Product Dispensed</mat-label>
+              <mat-select formControlName="dispensedProduct" placeholder="Select Product">
+                  <mat-option *ngFor="let product of productOptions" [value]="product">
+                      {{ product }}
+                  </mat-option>
+              </mat-select>
+              <mat-error *ngIf="pumpGroup.get('dispensedProduct')?.hasError('required')">Required</mat-error>
+          </mat-form-field>
+
+          <button mat-icon-button color="warn" type="button" (click)="removePump(i)" [disabled]="pumps.length === 1" title="Remove Pump">
+              <mat-icon>delete</mat-icon>
+          </button>
       </div>
-
-      <div class="form-row">
-        <mat-form-field appearance="outline">
-          <mat-label>Ward</mat-label>
-          <input matInput formControlName="ward" placeholder="Enter ward">
-          <mat-error *ngIf="stationForm.get('ward')?.hasError('required')">
-            Ward is required
-          </mat-error>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>LGA</mat-label>
-          <input matInput formControlName="lga" placeholder="Enter local government area">
-          <mat-error *ngIf="stationForm.get('lga')?.hasError('required')">
-            LGA is required
-          </mat-error>
-        </mat-form-field>
-      </div>
-
-      <div class="form-row">
-        <mat-form-field appearance="outline">
-          <mat-label>State</mat-label>
-          <input matInput formControlName="state" placeholder="Enter state">
-          <mat-error *ngIf="stationForm.get('state')?.hasError('required')">
-            State is required
-          </mat-error>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Price per Liter (₦)</mat-label>
-          <input matInput type="number" formControlName="pricePerLiter" placeholder="Enter price">
-          <mat-error *ngIf="stationForm.get('pricePerLiter')?.hasError('required')">
-            Price is required
-          </mat-error>
-          <mat-error *ngIf="stationForm.get('pricePerLiter')?.hasError('min')">
-            Price must be positive
-          </mat-error>
-        </mat-form-field>
-      </div>
-
-      <div class="form-row">
-        <mat-form-field appearance="outline">
-          <mat-label>Latitude</mat-label>
-          <input matInput type="number" formControlName="latitude" placeholder="Enter latitude">
-          <mat-error *ngIf="stationForm.get('latitude')?.hasError('required')">
-            Latitude is required
-          </mat-error>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Longitude</mat-label>
-          <input matInput type="number" formControlName="longitude" placeholder="Enter longitude">
-          <mat-error *ngIf="stationForm.get('longitude')?.hasError('required')">
-            Longitude is required
-          </mat-error>
-        </mat-form-field>
-      </div>
-    </mat-card-content>
-
-    <mat-card-actions fxLayout="row" fxLayoutGap="25px">
-      <span fxFlex="1 1 auto"></span>
-      <button mat-button type="button" matDialogClose>Cancel</button>
-      <button mat-flat-button color="primary" type="submit" [disabled]="!stationForm.valid">
-        <mat-icon>save</mat-icon> Submit
-      </button>
-    </mat-card-actions>
+    </div>
+    
+    <button mat-stroked-button color="accent" type="button" (click)="addPump()" style="margin-bottom: 1.5rem;">
+      <mat-icon>add</mat-icon> Add Pump
+    </button>
+    
   </form>
-</mat-card>
+</mat-dialog-content>
+
+<!-- Dialog Actions (Sticky Footer) -->
+<mat-dialog-actions align="end">
+  <button mat-button type="button" (click)="onCancel()">Cancel</button>
+  <button mat-flat-button color="primary" type="submit" [disabled]="!stationForm.valid" (click)="onSubmit()">
+    <mat-icon>save</mat-icon> Submit Station
+  </button>
+</mat-dialog-actions>

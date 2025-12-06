@@ -26,19 +26,15 @@ export class StationDetailsComponent implements OnInit { // Implemented OnInit
   constructor(
     private route: ActivatedRoute,
     private dialog: MatDialog
-  ) {}
+  ) { }
 
   public stationStore = inject(StationStore);
   // public id: number = 0; // No longer needed as a property
 
-  // Dummy Sales Data for Line Graph
-  public salesData: SalesDataPoint[] = [
-    { date: '2025-01-01', petrolSales: 800000, dieselSales: 500000 },
-    { date: '2025-01-02', petrolSales: 950000, dieselSales: 620000 },
-    { date: '2025-01-03', petrolSales: 1100000, dieselSales: 700000 },
-    { date: '2025-01-04', petrolSales: 750000, dieselSales: 480000 },
-    { date: '2025-01-05', petrolSales: 880000, dieselSales: 550000 },
-  ];
+  // Use the store's sales data signal
+  public get salesData() { // Accessor to make template migration easier
+    return this.stationStore.stationSales();
+  }
 
   // Simple SVG chart config
   public chartWidth: number = 640;
@@ -62,10 +58,11 @@ export class StationDetailsComponent implements OnInit { // Implemented OnInit
 
   /** Collect all numeric values for y-domain computation */
   private get allValues(): number[] {
-    if (!this.salesData || this.salesData.length === 0) {
+    const data = this.stationStore.stationSales();
+    if (!data || data.length === 0) {
       return [];
     }
-    return this.salesData.flatMap((point: SalesDataPoint) => [point.petrolSales, point.dieselSales]);
+    return data.flatMap((point) => [point.petrolSales, point.dieselSales]);
   }
 
   /** Minimum y value, safe default when data is empty */
@@ -80,10 +77,11 @@ export class StationDetailsComponent implements OnInit { // Implemented OnInit
 
   /** Map a data index to an x coordinate within the inner chart area */
   public indexToX(index: number): number {
-    if (this.salesData.length <= 1) {
+    const data = this.stationStore.stationSales();
+    if (data.length <= 1) {
       return this.chartMargin.left;
     }
-    const t = index / (this.salesData.length - 1);
+    const t = index / (data.length - 1);
     return this.chartMargin.left + t * this.innerWidth;
   }
 
@@ -97,20 +95,22 @@ export class StationDetailsComponent implements OnInit { // Implemented OnInit
 
   /** Points string for the petrol series polyline */
   public get petrolPoints(): string {
-    if (!this.salesData || this.salesData.length === 0) {
+    const data = this.stationStore.stationSales();
+    if (!data || data.length === 0) {
       return '';
     }
-    return this.salesData
+    return data
       .map((d, i) => `${this.indexToX(i)},${this.valueToY(d.petrolSales)}`)
       .join(' ');
   }
 
   /** Points string for the diesel series polyline */
   public get dieselPoints(): string {
-    if (!this.salesData || this.salesData.length === 0) {
+    const data = this.stationStore.stationSales();
+    if (!data || data.length === 0) {
       return '';
     }
-    return this.salesData
+    return data
       .map((d, i) => `${this.indexToX(i)},${this.valueToY(d.dieselSales)}`)
       .join(' ');
   }
@@ -124,20 +124,50 @@ export class StationDetailsComponent implements OnInit { // Implemented OnInit
       const idParam = params.get('id'); // Get the 'id' parameter as a string
       if (idParam) {
         this.stationStore.loadSelectedStation(idParam)
-      } 
+      }
     });
   }
 
   openAssignManagerDialog() {
-    const dialogRaf = this.dialog.open(AssignManager, {
-      width: '400px'
-    })
+    const stationId = this.stationStore.selectedStation()?.id;
+    if (!stationId) {
+      console.error("Cannot open assign dialog: Station ID is missing.");
+      return;
+    }
+
+    const dialogRef = this.dialog.open(AssignManager, {
+      width: '400px',
+      // Pass the stationId to the dialog
+      data: { stationId: stationId }
+    });
+
+    // Reload station details if assignment was successful
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === true && stationId) {
+        this.stationStore.loadSelectedStation(stationId);
+      }
+    });
   }
 
   openUnassignManagerDialog() {
-    const dialogRaf = this.dialog.open(UnassignManager, {
-      width: '400px'
-    })
+    const stationId = this.stationStore.selectedStation()?.id;
+    if (!stationId) {
+      console.error("Cannot open unassign dialog: Station ID is missing.");
+      return;
+    }
+
+    const dialogRef = this.dialog.open(UnassignManager, {
+      width: '400px',
+      // Pass the stationId to the dialog
+      data: { stationId: stationId }
+    });
+
+    // Reload station details if unassignment was successful
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === true && stationId) {
+        this.stationStore.loadSelectedStation(stationId);
+      }
+    });
   }
 
 }

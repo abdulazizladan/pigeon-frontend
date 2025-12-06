@@ -1,0 +1,442 @@
+/* --- Global Variables and Base Styles (UPDATED) --- */
+:root {
+    /* Define color palette */
+    --color-indigo-600: #4f46e5;
+    --color-indigo-700: #4338ca;
+    --color-teal-50: #f0fdfa;
+    --color-teal-100: #ccfbf1;
+    --color-teal-600: #0d9488;
+    --color-teal-700: #0f766e;
+    --color-rose-50: #fff1f2;
+    --color-rose-100: #ffe4e6;
+    --color-rose-600: #e11d48;
+    --color-rose-700: #be123c;
+    /* Updated Gray Palette for Dark Theme Contrast */
+    --color-bg-dark: #1e293b;
+    /* New: Dark background for contrast */
+    --color-surface-dark: #334155;
+    /* New: Dark surface for secondary elements */
+    --color-gray-100: #f3f4f6;
+    /* Used for light text/separators */
+    --color-gray-500: #94a3b8;
+    /* Lightened for better contrast on dark bg */
+    --color-gray-600: #cbd5e1;
+    /* Lightened for better contrast on dark bg */
+    --color-gray-800: #e2e8f0;
+    /* Light text color */
+    --color-gray-900: #ffffff;
+    /* Pure White */
+}
+
+.dashboard-container {
+    padding: 32px;
+    /* Increased padding for desktop */
+    background-color: var(--color-bg-dark);
+    /* Dark base for high contrast */
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
+    color: var(--color-gray-800);
+    /* Light text color */
+}
+
+/* --- Header and Actions --- */
+
+.dashboard-header {
+    margin-bottom: 40px;
+    /* Increased margin */
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.header-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--color-gray-900);
+    margin-bottom: 0;
+    padding-bottom: 4px;
+    border-bottom: 6px solid var(--color-indigo-600);
+    display: inline-block;
+}
+
+.header-actions {
+    gap: 16px;
+    width: auto;
+    min-width: 300px;
+}
+
+.station-filter {
+    width: 100%;
+    /* Must override MatFormField styles if not using a theme mixin */
+    background-color: var(--color-surface-dark);
+    border-radius: 8px;
+    color: var(--color-gray-100);
+}
+
+.export-button {
+    height: 56px;
+    width: 100%;
+    background-color: var(--color-indigo-600) !important;
+    color: white !important;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px -3px rgba(79, 70, 229, 0.4);
+    /* Cleaner shadow */
+    transition: background-color 0.15s ease-in-out, transform 0.15s ease-in-out;
+}
+
+.export-button:hover {
+    background-color: var(--color-indigo-700) !important;
+    transform: translateY(-2px);
+    /* More pronounced lift */
+}
+
+.icon-spacing {
+    margin-right: 8px;
+    /* Increased icon spacing */
+}
+
+/* --- Card Base Styles (UPDATED) --- */
+
+.card-style {
+    border-radius: 16px !important;
+    /* Slightly more rounded */
+    /* Cleaner, modern shadow */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1) !important;
+    transition: transform 0.2s ease-out;
+    background-color: var(--color-gray-900) !important;
+    /* White surface on dark background */
+    color: var(--color-gray-800);
+}
+
+.card-style:hover {
+    transform: translateY(-4px);
+    /* More noticeable lift on hover */
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1) !important;
+}
+
+.card-header-style {
+    padding: 20px;
+    /* Increased padding */
+    border-bottom: 1px solid var(--color-gray-100);
+}
+
+.card-title {
+    font-size: 1.5rem;
+    /* Larger title */
+    font-weight: 700;
+    color: var(--color-gray-800);
+}
+
+.card-subtitle {
+    font-size: 0.95rem;
+    /* Slightly larger subtitle */
+    color: var(--color-gray-500);
+    margin-top: 4px;
+}
+
+.card-chart-content {
+    padding: 32px 24px;
+    /* Increased vertical padding */
+    height: 450px;
+    /* Slightly taller chart */
+    position: relative;
+}
+
+/* Ensure the chart canvas container respects the specified height */
+.card-chart-content canvas {
+    height: 100% !important;
+    width: 100% !important;
+}
+
+/* --- Main Grid Layout --- */
+
+.main-grid {
+    gap: 32px;
+    margin-bottom: 32px;
+}
+
+.trend-card {
+    margin-bottom: 32px;
+}
+
+/* --- Revenue Summary Card (Special Styling - FIXED) --- */
+
+.revenue-card {
+    background-color: var(--color-indigo-700) !important;
+    color: #323232 !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 24px 16px;
+    box-shadow: 0 10px 30px -5px rgba(79, 70, 229, 0.6) !important;
+    text-align: center;
+    order: -1;
+    overflow: hidden;
+}
+
+.revenue-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    opacity: 1;
+    word-wrap: break-word;
+    max-width: 100%;
+}
+
+.revenue-value-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: nowrap;
+    max-width: 100%;
+}
+
+.revenue-icon {
+    font-size: 2.5rem;
+    margin-right: 6px;
+    flex-shrink: 0;
+}
+
+.revenue-value {
+    font-size: 1.75rem;
+    font-weight: bold;
+    margin: 0;
+    line-height: 1.2;
+    word-break: break-all;
+}
+
+.revenue-subtitle {
+    margin-top: 12px;
+    font-size: 0.75rem;
+    opacity: 0.9;
+    word-wrap: break-word;
+    max-width: 100%;
+}
+
+/* Media Query Adjustment for Larger Screens */
+@media (min-width: 768px) {
+    .header-title {
+        font-size: 2.5rem;
+        margin-bottom: 0;
+    }
+
+    .revenue-card {
+        padding: 28px 20px;
+    }
+
+    .revenue-icon {
+        font-size: 3.5rem;
+        margin-right: 12px;
+    }
+
+    .revenue-value {
+        font-size: 2.75rem;
+    }
+
+    .revenue-title {
+        font-size: 1.25rem;
+    }
+
+    .revenue-subtitle {
+        font-size: 0.875rem;
+    }
+}
+
+/* --- Ranking Grid Layout (Handled by flex-layout, keeping class for styling) --- */
+
+.ranking-grid {
+    gap: 32px;
+    /* Increased gap */
+}
+
+/* --- Ranking Card Styles (UPDATED) --- */
+
+.card-header-ranking {
+    padding: 20px;
+    border-bottom: 1px solid;
+    border-radius: 16px 16px 0 0;
+}
+
+.top-header {
+    background-color: var(--color-teal-600);
+    /* Saturated color for visual punch */
+    border-bottom-color: var(--color-teal-700);
+}
+
+.least-header {
+    background-color: var(--color-rose-600);
+    /* Saturated color for visual punch */
+    border-bottom-color: var(--color-rose-700);
+}
+
+.ranking-title {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: white;
+    /* White text on saturated header background */
+}
+
+/* Remove separate title color for contrast */
+.top-performers .ranking-title,
+.least-performers .ranking-title {
+    color: white;
+}
+
+.card-content-ranking {
+    padding: 20px;
+    overflow-x: auto;
+}
+
+/* --- Ranking Table Styles (mat-table overrides - UPDATED) --- */
+
+.ranking-table {
+    min-width: 500px;
+    /* Increased min-width for better desktop look */
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.ranking-header-row {
+    background-color: var(--color-gray-100);
+    height: 56px;
+    /* Taller row */
+    text-transform: uppercase;
+}
+
+.ranking-table th {
+    font-weight: 700;
+    color: var(--color-gray-600);
+    text-align: left;
+    padding: 12px 16px;
+}
+
+.ranking-table td {
+    padding: 16px 16px;
+    /* Increased padding for readability */
+    border-bottom: 1px solid var(--color-gray-100);
+    /* Subtle row separator */
+}
+
+.ranking-row {
+    transition: background-color 0.1s ease-in-out;
+}
+
+/* Use different hover colors to maintain contrast */
+.ranking-row-top:hover {
+    background-color: rgba(13, 148, 136, 0.05);
+    /* Light teal hover */
+}
+
+.ranking-row-least:hover {
+    background-color: rgba(225, 29, 72, 0.05);
+    /* Light rose hover */
+}
+
+.rank-cell {
+    width: 15%;
+    font-family: monospace;
+}
+
+.revenue-cell {
+    width: 40%;
+    text-align: right;
+    font-weight: 800;
+    /* Bolder revenue number */
+    font-size: 1.1rem;
+}
+
+.revenue-cell-top {
+    color: var(--color-teal-700);
+}
+
+.revenue-cell-least {
+    color: var(--color-rose-700);
+}
+
+.rank-badge {
+    width: 32px;
+    height: 32px;
+    font-weight: 800;
+    font-size: 1rem;
+}
+
+.rank-badge-top {
+    background-color: var(--color-teal-100);
+    color: var(--color-teal-700);
+}
+
+.rank-badge-least {
+    background-color: var(--color-rose-100);
+    color: var(--color-rose-700);
+}
+
+/* --- Media Queries (Desktop Layout - 768px and up) --- */
+
+@media (min-width: 768px) {
+    .dashboard-container {
+        padding: 40px;
+        /* Increased desktop padding */
+    }
+
+    .dashboard-header {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .header-actions {
+        flex-direction: row;
+        width: auto;
+        min-width: auto;
+    }
+
+    .station-filter {
+        width: 256px;
+        /* Slightly wider filter */
+    }
+
+    .export-button {
+        width: auto;
+    }
+
+    .revenue-card {
+        order: 0;
+    }
+}
+
+/* Additional responsive improvements for mobile */
+@media (max-width: 767px) {
+    .dashboard-container {
+        padding: 16px;
+    }
+
+    .header-title {
+        font-size: 1.75rem;
+        width: 100%;
+        margin-bottom: 16px;
+    }
+
+    .header-actions {
+        width: 100%;
+    }
+
+    .card-chart-content {
+        padding: 16px;
+        height: 350px;
+    }
+
+    .revenue-card {
+        padding: 24px 16px;
+    }
+
+    .revenue-subtitle {
+        font-size: 0.8rem;
+    }
+
+    .ranking-table {
+        min-width: 100%;
+    }
+
+    .card-content-ranking {
+        padding: 12px;
+    }
+}

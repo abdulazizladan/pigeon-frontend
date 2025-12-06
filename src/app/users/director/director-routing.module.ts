@@ -32,6 +32,10 @@ const routes: Routes = [
         loadChildren: () => import('../../features/stations-management/stations-management.module').then(module => module.StationsManagementModule)
       },
       {
+        path: 'sales',
+        loadChildren: () => import('../../features/sales-records-manaement/sales-records-manaement-module').then(module => module.SalesRecordsManaementModule)
+      },
+      {
         path: 'managers',
         loadChildren: () => import('../../features/managers-management/managers-management.module').then(module => module.ManagersManagementModule)
       },

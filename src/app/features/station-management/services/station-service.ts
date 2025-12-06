@@ -18,8 +18,7 @@ export class StationService {
    */
   async getStationById(id: string): Promise<Station> {
     return firstValueFrom(
-      this.http.get<{success: boolean, data: Station, message: string}>(`${this.baseUrl}/station/${id}`).pipe(
-        map(response => response.data)
+      this.http.get<Station>(`${this.baseUrl}/station/${id}`).pipe(
       )
     );
   }

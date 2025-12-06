@@ -1,0 +1,21 @@
+.page-container {
+  padding: 24px;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.margin-none {
+  margin: 0;
+}
+
+.dashboard-card {
+    min-height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.placeholder-text {
+    color: #777;
+    font-style: italic;
+}

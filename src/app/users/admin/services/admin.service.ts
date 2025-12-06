@@ -19,56 +19,51 @@ export class AdminService {
 
   async getUserSummary(): Promise<usersSummary> {
     return firstValueFrom(
-      this.http.get<{success: boolean, data: usersSummary, messsage: string}>(`${this.baseUrl}/user/stats`).pipe(
-        map(response => response.data)
+      this.http.get<usersSummary>(`${this.baseUrl}/user/stats`).pipe(
+
       )
     )
   }
 
   async getTicketsSummary(): Promise<TicketsSummary> {
     return firstValueFrom(
-      this.http.get<{success: boolean, data: TicketsSummary, messsage: string}>(`${this.baseUrl}/ticket/stats`).pipe(
-        map(response => response.data)
+      this.http.get<TicketsSummary>(`${this.baseUrl}/ticket/stats`).pipe(
       )
     )
   }
 
-  async getAttendantsSummary(): Promise<{total: number, active: number, suspended: number}> {
+  async getAttendantsSummary(): Promise<{ total: number, active: number, suspended: number }> {
     return firstValueFrom(
-      this.http.get<{success: boolean, data: {total: number, active: number, suspended: number}, messsage: string}>(`${this.baseUrl}/dispenser/stats`).pipe(
-        map(response => response.data)
+      this.http.get<{ total: number, active: number, suspended: number }>(`${this.baseUrl}/dispenser/stats`).pipe(
       )
     )
   }
 
-  async getStationsSummary(): Promise<{total: number, active: number, inactive: number}> {
+  async getStationsSummary(): Promise<{ total: number, active: number, inactive: number }> {
     return firstValueFrom(
-      this.http.get<{success: boolean, data: {total: number, active: number, inactive: number}, messsage: string}>(`${this.baseUrl}/station/stats`).pipe(
-        map(response => response.data)
+      this.http.get<{ total: number, active: number, inactive: number }>(`${this.baseUrl}/station/stats`).pipe(
+
       )
     )
   }
 
   getProfile(email: string): Promise<User> {
     return firstValueFrom(
-      this.http.get<{success: boolean, data: User, message: string}>(`${this.baseUrl}/user/${email}`).pipe(
-        map(response => response.data)
+      this.http.get<User>(`${this.baseUrl}/user/${email}`).pipe(
       )
     )
   }
 
-  changePassword(newPassword: string): Promise<{success: boolean, message: string, data: {access_token: string}}> {
+  changePassword(newPassword: string): Promise<{ success: boolean, message: string, data: { access_token: string } }> {
     // FIX: Wrap the password string in a JSON object with the expected key (e.g., 'newPassword')
-    const body = { 
-      newPassword: newPassword 
+    const body = {
+      newPassword: newPassword
     };
-    
+
     return firstValueFrom(
-      this.http.patch<{success: boolean, message: string, data: {access_token: string}}>(
-        `${this.baseUrl}/auth/change-password`, 
+      this.http.patch<{ success: boolean, message: string, data: { access_token: string } }>(
+        `${this.baseUrl}/auth/change-password`,
         body // 👈 Send the JSON object
-      ).pipe(
-        
       )
     )
   }

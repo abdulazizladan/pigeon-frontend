@@ -55,6 +55,7 @@ export class StationsListComponent implements OnInit {
   ngOnInit(): void {
     // 1. Load the list of stations
     this.stationStore.loadStations();
+    this.stationStore.loadManagers();
   }
 
   /**

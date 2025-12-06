@@ -43,19 +43,19 @@ const initialState: DirectorState = {
 }
 
 export const DirectorStore = signalStore(
-  {providedIn: 'root'},
+  { providedIn: 'root' },
   withState(initialState),
   // Inject AdminService to fetch the station statistics
-  withMethods((store, directorService = inject(DirectorService)) => ({ 
+  withMethods((store, directorService = inject(DirectorService)) => ({
     /**
      * Fetches station statistics from the service and updates the store state.
      */
     async loadSummary() {
-      patchState(store, {loading: true, error: null})
+      patchState(store, { loading: true, error: null })
       try {
         // Use firstValueFrom to convert the Observable<StationStats> into a Promise<StationStats>
         const stationStats = await firstValueFrom(directorService.getStationStats());
-        
+
         // Update the stationStats and set loading to false
         patchState(store, { stationStats, loading: false });
       } catch (error) {
@@ -70,15 +70,15 @@ export const DirectorStore = signalStore(
     async loadSalesRecords(period: string) {
       // 1. Set loading and update the requested period
       patchState(store, {
-        salesLoading: true, 
-        error: null, 
+        salesLoading: true,
+        error: null,
         currentSalesPeriod: period
       });
 
       try {
-        // 2. Fetch the data using firstValueFrom
-        const sales = await firstValueFrom(directorService.getSalesRecords(period));
-        
+        // 2. Fetch the data directly (it returns a Promise now)
+        const sales = await directorService.getSalesRecords(period);
+
         // 3. Patch the state with the new data
         patchState(store, {
           salesRecords: sales,
@@ -93,14 +93,14 @@ export const DirectorStore = signalStore(
         });
       }
     },
-    
+
     // NOTE: This assumes another service (or AdminService has getProfile) is handling user data
     async loadProfile(email: string) {
-      patchState(store, {loading: true, error: null});
-      try{
-        const userProfile = await directorService.getProfile(email); 
-        patchState(store, {error: null, profile: userProfile, loading: false});
-      }catch (error) {
+      patchState(store, { loading: true, error: null });
+      try {
+        const userProfile = await directorService.getProfile(email);
+        patchState(store, { error: null, profile: userProfile, loading: false });
+      } catch (error) {
         patchState(store, {
           error: 'Failed to load profile. Please check your connection and try again.',
           loading: false

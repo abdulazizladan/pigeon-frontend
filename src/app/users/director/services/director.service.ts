@@ -23,13 +23,9 @@ export type SalesPeriod = 'daily' | 'weekly' | 'monthly';
 
 
 export interface StationStatsResponse {
-  success: boolean;
-  data: {
-    total: number;
-    active: number;
-    inactive: number;
-  };
-  message: string;
+  total: number;
+  active: number;
+  inactive: number;
 }
 
 export interface StationStats {
@@ -54,11 +50,10 @@ export class DirectorService {
   }
 
   getProfile(email: string): Promise<User> {
-      return firstValueFrom(
-        this.http.get<{success: boolean, data: User, message: string}>(`${this.baseUrl}/user/${email}`).pipe(
-          map(response => response.data)
-        )
+    return firstValueFrom(
+      this.http.get<User>(`${this.baseUrl}/user/${email}`).pipe(
       )
+    )
   }
 
   /**
@@ -69,20 +64,20 @@ export class DirectorService {
   getStationStats(): Observable<StationStats> {
     // 1. Use HttpClient.get with the specific response type
     return this.http.get<StationStatsResponse>(`${this.baseUrl}/station/stats`).pipe(
-      
+
       // 2. Map the full API response object to the simplified domain model (StationStats)
       map(response => {
-        if (response.success && response.data) {
-          return response.data;
+        if (response) {
+          return response
         }
         // If the API returns a non-success response, throw an error
-        throw new Error(response.message || 'Failed to fetch station stats with status OK.');
+        throw new Error('Failed to fetch station stats with status OK.');
       }),
-      
+
       // 3. Handle potential HTTP errors (e.g., 404, 500, network issues)
       catchError(error => {
         console.error('Error fetching station statistics:', error);
-        
+
         // Return a default safe/empty object to prevent the application from crashing
         // This is crucial for keeping the dashboard functional even with API issues.
         return of({ total: 0, active: 0, inactive: 0 } as StationStats);
@@ -90,66 +85,77 @@ export class DirectorService {
     );
   }
 
-  getSalesRecords(period: string): Observable<SalesDataPoint[]> {
-    // In a real application, you would pass 'period' as a query parameter:
-    // const salesUrl = `${this.apiUrl}/sales?period=${period}`;
-    // return this.http.get<{ data: SalesDataPoint[] }>(salesUrl).pipe( ... );
+  async getSalesRecords(period: string): Promise<SalesDataPoint[]> {
+    let salesData: SalesDataPoint[] = [];
 
-    // --- SIMULATION LOGIC ---
-    // Since we are in a canvas environment, we simulate the different API responses.
-    
-    let numDataPoints: number;
-    let labelPrefix: string;
+    if (period === 'weekly') {
+      const response = await firstValueFrom(
+        this.http.get<{ week: number, totalSale: number }[]>(`${this.baseUrl}/sales/report/weekly`)
+      );
+      salesData = response.map(item => ({
+        label: `Week ${item.week}`,
+        petrolSales: item.totalSale, // Using petrolSales as 'Total' for now
+        dieselSales: 0
+      }));
+    } else if (period === 'monthly') {
+      const response = await firstValueFrom(
+        this.http.get<{ month: string, totalSale: number }[]>(`${this.baseUrl}/sales/report/monthly`)
+      );
+      salesData = response.map(item => ({
+        label: item.month, // "YYYY-MM"
+        petrolSales: item.totalSale,
+        dieselSales: 0
+      }));
+    } else {
+      // 'daily' - Fetch aggregated daily report and group by date
+      try {
+        const response = await firstValueFrom(
+          this.http.get<{ success: boolean, data: any[], message: string }>(`${this.baseUrl}/station/report/daily`)
+        );
 
-    switch (period) {
-      case 'daily':
-        numDataPoints = 30;
-        labelPrefix = 'Day';
-        break;
-      case 'weekly':
-        numDataPoints = 10;
-        labelPrefix = 'Week';
-        break;
-      case 'monthly':
-        numDataPoints = 12;
-        labelPrefix = 'Month';
-        break;
-      default:
-        numDataPoints = 0;
-        labelPrefix = 'Data';
+        if (response.success && response.data) {
+          // Aggregate by date
+          const dateMap = new Map<string, number>();
+
+          response.data.forEach(item => {
+            const date = item.date; // "YYYY-MM-DD"
+            const currentTotal = dateMap.get(date) || 0;
+            dateMap.set(date, currentTotal + (item.totalDailyRevenue || 0));
+          });
+
+          // Convert to array and sort by date
+          salesData = Array.from(dateMap.entries())
+            .map(([date, total]) => ({
+              label: date,
+              petrolSales: total,
+              dieselSales: 0
+            }))
+            .sort((a, b) => new Date(a.label).getTime() - new Date(b.label).getTime());
+
+          // Limit to last 30 days if needed? 
+          // The backend endpoint might return all history, dealing with it for now.
+        }
+      } catch (e) {
+        console.error("Failed to fetch daily report", e);
+        salesData = [];
+      }
     }
 
-    const mockData: SalesDataPoint[] = [];
-    for (let i = 1; i <= numDataPoints; i++) {
-      mockData.push({
-        label: `${labelPrefix} ${i}`,
-        // Generate mock sales data that trends slightly up
-        petrolSales: 1000 + (i * 50) + Math.floor(Math.random() * 200),
-        dieselSales: 800 + (i * 40) + Math.floor(Math.random() * 150),
-      });
-    }
-
-    // Wrap the mock data in an Observable to match HttpClient return type
-    return of(mockData).pipe(
-        // Simulate a slight delay for better UX demonstration
-        // delay(500),
-        // No external API call, so no need to catchError here.
-    );
-    // --- END SIMULATION LOGIC ---
+    return salesData;
   }
 
-  changePassword(newPassword: string): Promise<{success: boolean, message: string, data: {access_token: string}}> {
+  changePassword(newPassword: string): Promise<{ success: boolean, message: string, data: { access_token: string } }> {
     // FIX: Wrap the password string in a JSON object with the expected key (e.g., 'newPassword')
-    const body = { 
-      newPassword: newPassword 
+    const body = {
+      newPassword: newPassword
     };
-    
+
     return firstValueFrom(
-      this.http.patch<{success: boolean, message: string, data: {access_token: string}}>(
-        `${this.baseUrl}/auth/change-password`, 
+      this.http.patch<{ success: boolean, message: string, data: { access_token: string } }>(
+        `${this.baseUrl}/auth/change-password`,
         body // 👈 Send the JSON object
       ).pipe(
-        
+
       )
     )
   }

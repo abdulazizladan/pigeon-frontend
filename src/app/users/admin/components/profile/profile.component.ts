@@ -38,8 +38,6 @@ export class ProfileComponent implements OnInit{
           }
         );
       }
-      //console.log(result)
-      //this.authStore.changeToken(result)
     })
   }
 
