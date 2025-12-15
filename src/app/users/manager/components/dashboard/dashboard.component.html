@@ -7,12 +7,9 @@
       <mat-card class="stat-card sales-card-theme">
         <mat-card-content class="stat-card-content">
           <div class="stat-text-group">
-            <span class="stat-title">Today's Sale</span>
+            <span class="stat-title">Total Revenue</span>
             <span class="stat-main-value color-indigo">
-              &#8358;0.00
-            </span>
-            <span class="stat-trend-text color-success">
-              +0.0% from yesterday
+              &#8358;{{ totalRevenue() | number:'1.2-2' }}
             </span>
           </div>
           <mat-icon class="stat-icon color-indigo">
@@ -21,57 +18,25 @@
         </mat-card-content>
       </mat-card>
 
-      <mat-card class="stat-card pumps-card-theme">
-        <mat-card-content class="stat-card-content">
-          <div class="stat-text-group">
-            <span class="stat-title">Fuel Pumps</span>
-            <span class="stat-main-value color-green">
-              
-            </span>
-            <span class="stat-trend-text color-info">
-              active today
-            </span>
-          </div>
-          <mat-icon class="stat-icon color-green">
-            local_gas_station
-          </mat-icon>
-        </mat-card-content>
-      </mat-card>
-
-      <mat-card class="stat-card stock-card-theme">
-        <mat-card-content class="stat-card-content">
-          <div class="stat-text-group">
-            <span class="stat-title">Fuel Stock</span>
-            <span class="stat-main-value color-orange">
-              0%
-            </span>
-            <span class="stat-trend-text color-warning">
-              -0.0% from yesterday
-            </span>
-          </div>
-          <mat-icon class="stat-icon color-orange">
-            bar_chart
-          </mat-icon>
-        </mat-card-content>
-      </mat-card>
-
-      <mat-card class="stat-card attendants-card-theme">
-        <mat-card-content class="stat-card-content">
-          <div class="stat-text-group">
-            <span class="stat-title">Attendants</span>
-            <span class="stat-main-value color-teal">
-              0
-            </span>
-            <span class="stat-trend-text color-info">
-              active today
-            </span>
-          </div>
-          <mat-icon class="stat-icon color-teal">
-            person_pin
-          </mat-icon>
-        </mat-card-content>
-      </mat-card>
+      <!-- Other cards kept as placeholders or removed if not needed based on new requirements. 
+            Keeping them but maybe updating if data available in future. 
+            For now, user just asked for Total Revenue and Charts using REPORT endpoints. 
+            The other cards (Fuel Pumps, Stock, Attendants) are not covered by the new endpoints explicitly 
+            unless 'station/report/daily' covers them. Assuming we keep them as is or hide them.
+            I will keep them as is but maybe they will be static 0 for now until those features are connected.
+       -->
 
     </div>
+  </section>
+
+  <section class="charts-section" style="margin-top: 20px;">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Weekly Performance</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <app-chart [chartData]="chartData" [chartType]="'bar'" title="Weekly Sales"></app-chart>
+      </mat-card-content>
+    </mat-card>
   </section>
 </div>

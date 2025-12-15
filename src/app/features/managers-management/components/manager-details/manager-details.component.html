@@ -3,125 +3,128 @@
 
   <div class="manager-details-container">
     @if(managersStore.loading()) {
-      <mat-progress-bar mode="query" class="loading-bar"></mat-progress-bar>
-    } 
-    
+    <mat-progress-bar mode="query" class="loading-bar"></mat-progress-bar>
+    }
+
     @else {
-      <mat-card class="manager-main-card">
-        
-        <div class="manager-header-section">
-          <div class="manager-title-group">
-            <h2 class="manager-name">
-              {{ managersStore.selectedManager()?.info?.firstName | titlecase}} 
-              {{ managersStore.selectedManager()?.info?.lastName | titlecase}}
-            </h2>
-            <p class="station-assignment-subtitle">
-              <!--{{ managersStore.selectedManager()?.assignedStation || 'Not assigned to a station'}}-->
-            </p>
-          </div>
-          
-          <div class="status-indicator-wrapper">
-            @switch (managersStore.selectedManager()?.status?.toLowerCase()) {
-              @case ('active') {
-                <span class="status-pill status-active">
-                  {{ managersStore.selectedManager()?.status || 'Active' }}
-                </span>
-              }
-              @case ('suspended') {
-                <span class="status-pill status-suspended">
-                  {{ managersStore.selectedManager()?.status || 'Suspended' }}
-                </span>
-              }
-              @default {
-                <span class="status-pill status-pending">
-                  {{ managersStore.selectedManager()?.status || 'Pending' }}
-                </span>
-              }
-            }
-          </div>
+    <mat-card class="manager-main-card">
+
+      <div class="manager-header-section">
+        <div class="manager-title-group">
+          <h2 class="manager-name">
+            {{ managersStore.selectedManager()?.info?.firstName | titlecase}}
+            {{ managersStore.selectedManager()?.info?.lastName | titlecase}}
+          </h2>
+          <p class="station-assignment-subtitle">
+            <!--{{ managersStore.selectedManager()?.assignedStation || 'Not assigned to a station'}}-->
+          </p>
         </div>
 
-        <mat-divider class="main-divider"></mat-divider>
+        <div class="status-indicator-wrapper">
+          @switch (managersStore.selectedManager()?.status?.toLowerCase()) {
+          @case ('active') {
+          <span class="status-pill status-active">
+            {{ managersStore.selectedManager()?.status || 'Active' }}
+          </span>
+          }
+          @case ('suspended') {
+          <span class="status-pill status-suspended">
+            {{ managersStore.selectedManager()?.status || 'Suspended' }}
+          </span>
+          }
+          @default {
+          <span class="status-pill status-pending">
+            {{ managersStore.selectedManager()?.status || 'Pending' }}
+          </span>
+          }
+          }
+        </div>
+      </div>
 
-        <div class="details-section-grid">
-          
-          <div class="detail-column">
-            <h3 class="info-section-header">Basic Information</h3>
-            <div class="info-details-grid single-column-details">
-              
-              <!--<div class="detail-item">
+      <mat-divider class="main-divider"></mat-divider>
+
+      <div class="details-section-grid">
+
+        <div class="detail-column">
+          <h3 class="info-section-header">Basic Information</h3>
+          <div class="info-details-grid single-column-details">
+
+            <!--<div class="detail-item">
                 <mat-icon class="detail-icon">badge</mat-icon>
                 <span class="detail-label">Manager ID</span>
                 <span class="detail-value">{{ managersStore.selectedManager()?.id }}</span>
               </div>-->
-              
-              <div class="detail-item">
-                <mat-icon class="detail-icon">email</mat-icon>
-                <span class="detail-label">Email</span>
-                <span class="detail-value">{{ managersStore.selectedManager()?.email }}</span>
-              </div>
 
-              <div class="detail-item">
-                <mat-icon class="detail-icon">phone</mat-icon>
-                <span class="detail-label">Phone Number</span>
-                <span class="detail-value">{{ managersStore.selectedManager()?.contact?.phone || 'N/A' }}</span>
-              </div>
-              
-              <div class="detail-item">
-                <mat-icon class="detail-icon">calendar_today</mat-icon>
-                <span class="detail-label">Last updated</span>
-                <span class="detail-value">
-                  {{ managersStore.selectedManager()?.lastUpdated | date}}
-                </span>
-              </div>
+            <div class="detail-item">
+              <mat-icon class="detail-icon">email</mat-icon>
+              <span class="detail-label">Email</span>
+              <span class="detail-value">{{ managersStore.selectedManager()?.email }}</span>
+            </div>
+
+            <div class="detail-item">
+              <mat-icon class="detail-icon">phone</mat-icon>
+              <span class="detail-label">Phone Number</span>
+              <span class="detail-value">{{ managersStore.selectedManager()?.contact?.phone || 'N/A' }}</span>
+            </div>
+
+            <div class="detail-item">
+              <mat-icon class="detail-icon">calendar_today</mat-icon>
+              <span class="detail-label">Last updated</span>
+              <span class="detail-value">
+                {{ managersStore.selectedManager()?.lastUpdated | date}}
+              </span>
             </div>
           </div>
         </div>
-        
-        <mat-divider class="main-divider"></mat-divider>
-        
-        <div class="details-section-grid">
-           <div class="detail-column">
-            <h3 class="info-section-header">Station Assignment</h3>
-            <div class="info-details-grid single-column-details">
-              
-              <div class="detail-item">
-                <mat-icon class="detail-icon">local_gas_station</mat-icon>
-                <span class="detail-label">Assigned Station</span>
-                <span class="detail-value assignment-value">
-                  {{ managersStore.selectedManager()?.station?.name || 'Not Assigned' }}
-                </span>
-              </div>
+      </div>
 
-              <div class="detail-item">
-                <mat-icon class="detail-icon">map</mat-icon>
-                <span class="detail-label">Location</span>
-                <span class="detail-value">
-                  @if(managersStore.selectedManager()?.station?.address) {
-                    {{ managersStore.selectedManager()?.station?.address }}, {{ managersStore.selectedManager()?.station?.ward | titlecase}}, {{ managersStore.selectedManager()?.station?.lga | titlecase }}, {{ managersStore.selectedManager()?.station?.state | titlecase}} 
-                  }@else {
-                    N/A
-                  }
-                </span>
-              </div>
+      <mat-divider class="main-divider"></mat-divider>
+
+      <div class="details-section-grid">
+        <div class="detail-column">
+          <h3 class="info-section-header">Station Assignment</h3>
+          <div class="info-details-grid single-column-details">
+
+            <div class="detail-item">
+              <mat-icon class="detail-icon">local_gas_station</mat-icon>
+              <span class="detail-label">Assigned Station</span>
+              <span class="detail-value assignment-value">
+                {{ managersStore.selectedManager()?.station?.name || 'Not Assigned' }}
+              </span>
             </div>
-            <div fxLayout="row" fxLayoutGap="25px" style="padding: 12px 0px">
-              <span fxFlex="1 1 auto"></span>
-              @if(managersStore.selectedManager()?.station) {
-                <button mat-flat-button color="primary">Unassign station</button>
-              } @else {
-                <button mat-flat-button color="accent">Assign to station</button>
-              }
+
+            <div class="detail-item">
+              <mat-icon class="detail-icon">map</mat-icon>
+              <span class="detail-label">Location</span>
+              <span class="detail-value">
+                @if(managersStore.selectedManager()?.station?.address) {
+                {{ managersStore.selectedManager()?.station?.address }}, {{
+                managersStore.selectedManager()?.station?.ward | titlecase}}, {{
+                managersStore.selectedManager()?.station?.lga | titlecase }}, {{
+                managersStore.selectedManager()?.station?.state | titlecase}}
+                }@else {
+                N/A
+                }
+              </span>
             </div>
           </div>
+          <div fxLayout="row" fxLayoutGap="25px" style="padding: 12px 0px">
+            <span fxFlex="1 1 auto"></span>
+            @if(managersStore.selectedManager()?.station) {
+            <button mat-flat-button color="primary">Unassign station</button>
+            } @else {
+            <button mat-flat-button color="accent" (click)="openAssignStationDialog()">Assign to station</button>
+            }
+          </div>
         </div>
+      </div>
 
 
-        <!--<mat-card-actions class="card-footer-actions">
+      <!--<mat-card-actions class="card-footer-actions">
           <button mat-stroked-button color="primary">MORE INFO</button>
           <button mat-flat-button color="accent">EDIT DETAILS</button>
         </mat-card-actions>-->
-      </mat-card>
+    </mat-card>
     }
   </div>
 </div>

@@ -24,6 +24,7 @@ import { ManagersManagementRoutingModule } from './managers-management-routing.m
 import { ManagersListComponent } from './components/managers-list/managers-list.component';
 import { ManagerDetailsComponent } from './components/manager-details/manager-details.component';
 import { AddManagerComponent } from './components/add-manager/add-manager.component';
+import { AssignStationDialogComponent } from './components/assign-station-dialog/assign-station-dialog.component';
 import { MatListModule } from '@angular/material/list';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 
@@ -35,7 +36,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
   declarations: [
     ManagersListComponent,
     ManagerDetailsComponent,
-    AddManagerComponent
+    AddManagerComponent,
+    AssignStationDialogComponent
   ],
   imports: [
     CommonModule,

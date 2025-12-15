@@ -1,7 +1,7 @@
 import { Sale } from "../../sales-management/models/sale.model";
 
 export class Dispenser {
-  "id": string;
+  "id"?: string;
   "firsName": string; // Note: typo in original - should be firstName
   "middleName": string;
   "lastName": string;

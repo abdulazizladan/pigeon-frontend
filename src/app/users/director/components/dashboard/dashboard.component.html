@@ -9,44 +9,44 @@
 
       <mat-card-content>
         @if (directorStore.loading()) {
-          <div class="loading-state-summary">
-            <mat-progress-bar mode="indeterminate" color="primary"></mat-progress-bar>
-            <p>Loading station statistics...</p>
-          </div>
+        <div class="loading-state-summary">
+          <mat-progress-bar mode="indeterminate" color="primary"></mat-progress-bar>
+          <p>Loading station statistics...</p>
+        </div>
         } @else {
-          <div class="stats-grid-container">
-            
-            <div class="stat-item total-stats-theme">
-              <mat-icon class="stat-icon" color="primary">storage</mat-icon>
-              <div class="stat-content">
-                <div class="stat-label">Total Stations</div>
-                <div class="stat-value">
-                  {{ directorStore.stationStats()?.total ?? 0 }}
-                </div>
-              </div>
-            </div>
+        <div class="stats-grid-container">
 
-            <div class="stat-item active-stats-theme">
-              <mat-icon class="stat-icon color-green">check_circle_outline</mat-icon>
-              <div class="stat-content">
-                <div class="stat-label">Active (Operational)</div>
-                <div class="stat-value color-green">
-                  {{ directorStore.stationStats()?.active ?? 0 }}
-                </div>
-              </div>
-            </div>
-            
-            <div class="stat-item inactive-stats-theme">
-              <mat-icon class="stat-icon color-red">report_problem</mat-icon>
-              <div class="stat-content">
-                <div class="stat-label">Inactive (Needs Service)</div>
-                <div class="stat-value color-red">
-                  {{ directorStore.stationStats()?.inactive ?? 0 }}
-                </div>
+          <div class="stat-item total-stats-theme">
+            <mat-icon class="stat-icon" color="primary">storage</mat-icon>
+            <div class="stat-content">
+              <div class="stat-label">Total Stations</div>
+              <div class="stat-value">
+                {{ directorStore.stationStats()?.total ?? 0 }}
               </div>
             </div>
           </div>
-          }
+
+          <div class="stat-item active-stats-theme">
+            <mat-icon class="stat-icon color-green">check_circle_outline</mat-icon>
+            <div class="stat-content">
+              <div class="stat-label">Active (Operational)</div>
+              <div class="stat-value color-green">
+                {{ directorStore.stationStats()?.active ?? 0 }}
+              </div>
+            </div>
+          </div>
+
+          <div class="stat-item inactive-stats-theme">
+            <mat-icon class="stat-icon color-red">report_problem</mat-icon>
+            <div class="stat-content">
+              <div class="stat-label">Inactive (Needs Service)</div>
+              <div class="stat-value color-red">
+                {{ directorStore.stationStats()?.inactive ?? 0 }}
+              </div>
+            </div>
+          </div>
+        </div>
+        }
       </mat-card-content>
     </mat-card>
 
@@ -57,112 +57,67 @@
 
       <mat-card-content>
         @if (directorStore.loading()) {
-          <div class="loading-state-summary">
-            <mat-progress-bar mode="indeterminate" color="primary"></mat-progress-bar>
-            <p>Loading sales statistics...</p>
-          </div>
+        <div class="loading-state-summary">
+          <mat-progress-bar mode="indeterminate" color="primary"></mat-progress-bar>
+          <p>Loading sales statistics...</p>
+        </div>
         } @else {
-          <div class="stats-grid-container">
-            
-            <div class="stat-item total-stats-theme">
-              <mat-icon class="stat-icon" color="primary">storage</mat-icon>
-              <div class="stat-content">
-                <div class="stat-label">Today's sales</div>
-                <div class="stat-value">
-                  &#8358;0.00
-                </div>
-              </div>
-            </div>
+        <div class="stats-grid-container">
 
-            <div class="stat-item active-stats-theme">
-              <mat-icon class="stat-icon color-green">check_circle_outline</mat-icon>
-              <div class="stat-content">
-                <div class="stat-label">Today's expenditure</div>
-                <div class="stat-value color-green">
-                  &#8358;0.00
-                </div>
-              </div>
-            </div>
-            
-            <div class="stat-item inactive-stats-theme">
-              <mat-icon class="stat-icon color-red">report_problem</mat-icon>
-              <div class="stat-content">
-                <div class="stat-label">Litres sold</div>
-                <div class="stat-value color-red">
-                  0.00 L
-                </div>
+          <div class="stat-item total-stats-theme">
+            <mat-icon class="stat-icon" color="primary">storage</mat-icon>
+            <div class="stat-content">
+              <div class="stat-label">Total Revenue</div>
+              <div class="stat-value">
+                &#8358;{{ totalRevenue() | number:'1.2-2' }}
               </div>
             </div>
           </div>
-          }
+
+          <div class="stat-item active-stats-theme">
+            <mat-icon class="stat-icon color-green">check_circle_outline</mat-icon>
+            <div class="stat-content">
+              <div class="stat-label">Today's expenditure</div>
+              <div class="stat-value color-green">
+                &#8358;0.00
+              </div>
+            </div>
+          </div>
+
+          <div class="stat-item inactive-stats-theme">
+            <mat-icon class="stat-icon color-red">report_problem</mat-icon>
+            <div class="stat-content">
+              <div class="stat-label">Litres sold</div>
+              <div class="stat-value color-red">
+                0.00 L
+              </div>
+            </div>
+          </div>
+        </div>
+        }
       </mat-card-content>
     </mat-card>
   </section>
 
   <section class="sales-section">
     <mat-card class="sales-performance-card">
-      <mat-card-header class="card-header-with-controls">
-        <mat-card-title class="card-section-title">Fuel Sales Performance</mat-card-title>
-        
-        <div class="filter-controls">
-          @for (period of ['daily', 'weekly', 'monthly']; track period) {
-            <button 
-              mat-button
-              (click)="loadSales(period)"
-              [class.active-filter]="directorStore.currentSalesPeriod() === period"
-              class="period-filter-button"
-              [disabled]="directorStore.salesLoading()"
-            >
-              {{ period | uppercase }}
-            </button>
-          }
-        </div>
+      <mat-card-header>
+        <mat-card-title>Revenue Trend</mat-card-title>
       </mat-card-header>
+      <mat-card-content>
+        <app-chart [chartData]="revenueTrendData" [chartType]="'line'" title="Monthly Revenue Trend"></app-chart>
+      </mat-card-content>
+    </mat-card>
 
-      <mat-card-content class="sales-content-wrapper">
-        
-        <div class="chart-panel">
-          @if (directorStore.salesLoading()) {
-            <div class="loading-state-chart">
-              <mat-progress-spinner mode="indeterminate" diameter="50"></mat-progress-spinner>
-              <p>Generating chart data...</p>
-            </div>
-          } @else if (directorStore.salesRecords().length > 0) {
-            <div class="chart-wrapper">
-              <canvas id="salesChart" width="400" height="200"></canvas>
-            </div>
-          } @else {
-            <p class="no-data-message">No sales data available for this period.</p>
-          }
-        </div>
-        
-        <div class="recent-sales-panel">
-          <h3 class="recent-sales-header">Recent Transactions</h3>
-          
-          <!--@if (directorStore.recentSales()?.length) {
-            <mat-list class="recent-sales-list" dense>
-              @for (sale of directorStore.recentSales() | slice:0:5; track sale) {
-                <mat-list-item class="sales-list-item">
-                  <mat-icon matListItemIcon class="sale-icon">receipt_long</mat-icon>
-                  <div matListItemTitle class="sale-title">
-                    {{ sale.stationName }}
-                  </div>
-                  <div matListItemLine class="sale-subtitle">
-                    Manager: {{ sale.managerName }}
-                  </div>
-                  <div matListItemLine class="sale-amount color-indigo">
-                    ₦{{ sale.amount | number:'1.2-2' }}
-                  </div>
-
-              }
-            </mat-list>
-          } @else {
-            <p class="no-recent-data">No recent transactions recorded.</p>
-          } -->
-
-        </div>
-        
+    <mat-card class="sales-performance-card" style="margin-top: 20px;">
+      <mat-card-header>
+        <mat-card-title>Weekly Performance</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <app-chart [chartData]="weeklyPerformanceData" [chartType]="'bar'" title="Weekly Performance"></app-chart>
       </mat-card-content>
     </mat-card>
   </section>
+
+
 </main>

@@ -31,10 +31,16 @@ export class ManagersService {
 
   async add(manager: Omit<User, 'id'>): Promise<User> {
     return firstValueFrom(
-      this.http.post<{data: User, success: boolean, message: string}>(`${this.baseUrl}/user`, manager).pipe(
-        map(response => response.data)
+      this.http.post<User>(`${this.baseUrl}/user`, manager).pipe(
       )
-    ) 
+    )
+  }
+
+  async assignStation(managerId: string, stationId: string): Promise<Manager> {
+    return firstValueFrom(
+      this.http.post<Manager>(`${this.baseUrl}/user/manager/${managerId}/station/${stationId}`, {}).pipe(
+      )
+    )
   }
 
   constructor() { }

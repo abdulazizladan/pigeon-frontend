@@ -1,0 +1,46 @@
+ontext: You are working on the "Pigeon" fuel station management app. The backend now exposes several new analytics and reporting endpoints to visualize sales data (trends, totals, breaking down by station).
+
+Task: Update the ManagerDashboard and DirectorDashboard components to include visual charts and summary cards using the data from these new endpoints.
+
+Backend Endpoints Available: Refer to 
+endpoints_for_infographics.txt
+ for full details. Key endpoints:
+
+GET /sales/report/total -> { totalSale: number }
+GET /sales/report/weekly -> [ { week: number, totalSale: number } ]
+GET /sales/report/monthly -> [ { month: string, totalSale: number } ]
+GET /station/report/daily -> Daily aggregations per station.
+Requirements:
+
+Service Integration:
+
+Update SalesService (or create 
+ReportService
+) to consume the above endpoints.
+Create TypeScript interfaces for the responses (see 
+endpoints_for_infographics.txt
+ section 4).
+Dashboard UI Updates:
+
+Summary Cards: Add cards at the top of the dashboard showing:
+Total Revenue (All Time)
+Total Revenue (This Month - calculate on frontend if needed or request backend endpoint)
+Charts (Use chart.js or ng2-charts):
+Revenue Trend (Line Chart): Use the data from /sales/report/monthly to show sales over time.
+Weekly Performance (Bar Chart): Use /sales/report/weekly.
+Component Structure:
+
+Create a reusable ChartComponent or similar to handle the rendering of chart.js canvases to avoid code duplication.
+Ensure charts are responsive.
+Error Handling:
+
+If the API returns an error or empty data, show a user-friendly "No Data Available" message instead of a broken chart.
+Example Code Snippet (Service):
+
+getWeeklySales(): Observable<{week: number, totalSale: number}[]> {
+  return this.http.get<any[]>(`${this.apiUrl}/sales/report/weekly`);
+}
+Styling:
+
+Use the existing application theme (Angular Material or Tailwind).
+Ensure high contrast for chart elements.

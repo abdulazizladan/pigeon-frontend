@@ -1,0 +1,31 @@
+<h2 mat-dialog-title>Assign Manager to Station</h2>
+
+<mat-dialog-content>
+    @if (loading) {
+    <div class="loading-container">
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        <p>Loading stations...</p>
+    </div>
+    } @else {
+    <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Select Station</mat-label>
+        <mat-select [formControl]="stationControl" placeholder="Choose a station">
+            @for (station of stations; track station.id) {
+            <mat-option [value]="station.id">
+                {{ station.name }} - {{ station.lga | titlecase }}, {{ station.state | titlecase }}
+            </mat-option>
+            }
+        </mat-select>
+        @if (stationControl.hasError('required')) {
+        <mat-error>Please select a station</mat-error>
+        }
+    </mat-form-field>
+    }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()">Cancel</button>
+    <button mat-flat-button color="accent" (click)="onAssign()" [disabled]="!stationControl.valid || loading">
+        Assign
+    </button>
+</mat-dialog-actions>

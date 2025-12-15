@@ -1,29 +1,10 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, OnInit, signal } from '@angular/core';
 import { DirectorStore } from '../../store/director.store';
 import { SalesPeriod } from '../../services/director.service';
-import {
-  Chart,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  LineController,
-  Legend,
-  Title,
-  Tooltip
-} from 'chart.js';
+import { ReportService } from '../../../../features/sales-management/services/report.service';
+import { ChartData } from 'chart.js';
 
-// Register Chart.js components
-Chart.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  LineController,
-  Legend,
-  Title,
-  Tooltip
-);
+
 
 @Component({
   selector: 'app-dashboard',
@@ -36,108 +17,65 @@ export class DashboardComponent implements OnInit {
 
   public directorStore = inject(DirectorStore);
 
-  // Reference to the Chart.js instance
-  private chartInstance: Chart | null = null;
+  public reportService = inject(ReportService);
 
-  // Computed signal to transform store data into Chart.js format
-  public chartData = computed(() => {
-    const records = this.directorStore.salesRecords();
-    const period = this.directorStore.currentSalesPeriod();
-    const periodName = period.charAt(0).toUpperCase() + period.slice(1);
+  public totalRevenue = signal<number>(0);
+  public revenueTrendData: ChartData<'line'> = { labels: [], datasets: [] };
+  public weeklyPerformanceData: ChartData<'bar'> = { labels: [], datasets: [] };
 
-    return {
-      labels: records.map(r => r.label),
-      datasets: [
-        {
-          label: 'Total Revenue',
-          data: records.map(r => r.petrolSales), // Mapping 'petrolSales' field to Total Revenue
-          borderColor: 'rgba(75, 192, 192, 1)', // Blue-green
-          backgroundColor: 'rgba(75, 192, 192, 0.1)',
-          fill: true,
-          tension: 0.4,
-          pointRadius: 3,
-        }
-      ]
-    };
-  });
+  constructor() { }
 
-  // Use constructor to set up the effect to react to signal changes
-  constructor() {
-    // The effect runs whenever any of its dependencies (salesRecords, salesLoading) change.
-    effect(() => {
-      // We only attempt to render the chart when loading is false and data is available.
-      if (!this.directorStore.salesLoading() && this.directorStore.salesRecords().length > 0) {
-        // Use setTimeout to ensure the canvas element has been rendered 
-        // by the change detection cycle before Chart.js tries to find it.
-        setTimeout(() => this.renderChart(), 50);
-      }
+  ngOnInit() {
+    this.directorStore.loadSummary();
+    this.loadDirectorDashboardData();
+  }
+
+  loadDirectorDashboardData() {
+    // Total Revenue
+    this.reportService.getTotalRevenue().subscribe({
+      next: (data) => this.totalRevenue.set(data.totalSale),
+      error: (err) => console.error('Error fetching total revenue', err)
+    });
+
+    // Monthly Sales (Trend)
+    this.reportService.getMonthlySales().subscribe({
+      next: (data) => {
+        this.revenueTrendData = {
+          labels: data.map(d => d.month),
+          datasets: [
+            {
+              data: data.map(d => d.totalSale),
+              label: 'Revenue Trend',
+              fill: true,
+              tension: 0.4,
+              borderColor: 'rgba(75, 192, 192, 1)',
+              backgroundColor: 'rgba(75, 192, 192, 0.2)'
+            }
+          ]
+        };
+      },
+      error: (err) => console.error('Error fetching monthly sales', err)
+    });
+
+    // Weekly Sales
+    this.reportService.getWeeklySales().subscribe({
+      next: (data) => {
+        this.weeklyPerformanceData = {
+          labels: data.map(d => `Week ${d.week}`),
+          datasets: [
+            { data: data.map(d => d.totalSale), label: 'Weekly Performance' }
+          ]
+        };
+      },
+      error: (err) => console.error('Error fetching weekly sales', err)
     });
   }
 
-  ngOnInit() {
-    // 1. Load Station Summary Data
-    this.directorStore.loadSummary();
-
-    // 2. Load Sales Data for the default 'daily' period
-    this.directorStore.loadSalesRecords('daily');
-
-    // Note: Chart rendering is handled by the effect in the constructor
-  }
-  /**
-   * Calls the store method to fetch sales data for a specific period.
-   * @param period The aggregation period ('daily', 'weekly', or 'monthly').
-   */
+  // loadSales method kept for compatibility if needed, but we are using new endpoints now.
   loadSales(period: string) {
     if (!this.directorStore.salesLoading()) {
       this.directorStore.loadSalesRecords(period);
     }
-  }
-
-  /**
-   * Renders or updates the Chart.js instance.
-   */
-  private renderChart() {
-    const data = this.chartData();
-    const ctx = document.getElementById('salesChart') as HTMLCanvasElement;
-
-    if (!ctx) return;
-
-    // Destroy existing chart instance if it exists
-    if (this.chartInstance) {
-      this.chartInstance.destroy();
-    }
-
-    // Chart.js configuration
-    // Use the Chart constructor imported from 'chart.js' package
-    this.chartInstance = new Chart(ctx, {
-      type: 'line',
-      data: data,
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            position: 'top',
-          },
-          title: {
-            display: true,
-            text: 'Sales Trend (' + this.directorStore.currentSalesPeriod().toUpperCase() + ' View)'
-          }
-        },
-        scales: {
-          y: {
-            beginAtZero: true,
-            title: {
-              display: true,
-              text: 'Volume Sold'
-            }
-          },
-          x: {
-            // Ensures labels for dates/periods are displayed clearly
-          }
-        }
-      }
-    });
   }
 
   // Utility function for formatting the date

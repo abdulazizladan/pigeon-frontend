@@ -26,6 +26,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { MatInputModule } from '@angular/material/input';
 import { ChangePassword } from './components/change-password/change-password';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { ChartComponent } from '../../shared/components/chart/chart.component';
 
 
 @NgModule({
@@ -59,7 +60,9 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     FormsModule,
     ReactiveFormsModule,
     MatInputModule,
-    ManagerRoutingModule
+    MatInputModule,
+    ManagerRoutingModule,
+    ChartComponent
   ]
 })
 export class ManagerModule { }
