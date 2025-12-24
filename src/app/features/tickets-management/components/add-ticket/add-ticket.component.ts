@@ -1,6 +1,7 @@
 import { Component, OnInit, inject, Inject, Optional } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { AuthStore } from '../../../../auth/store/auth.store';
 
 export interface DialogData {
   title?: string;
@@ -17,6 +18,7 @@ export interface DialogData {
 export class AddTicketComponent implements OnInit {
 
   dialogForm: FormGroup = new FormGroup({});
+  private authStore = inject(AuthStore);
 
   constructor(
     public dialogRef: MatDialogRef<AddTicketComponent>,
@@ -39,7 +41,12 @@ export class AddTicketComponent implements OnInit {
 
   onSubmit(): void {
     if (this.dialogForm.valid) {
-      this.dialogRef.close(this.dialogForm.value);
+      const ticketData = {
+        title: this.dialogForm.value.title,
+        description: this.dialogForm.value.description,
+        email: this.authStore.userEmail()
+      };
+      this.dialogRef.close(ticketData);
     }
   }
 

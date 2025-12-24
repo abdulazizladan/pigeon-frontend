@@ -10,11 +10,17 @@ export interface Station {
   state: string;
   longitude: number;
   latitude: number;
-  pricePerLiter: number;
-  status: string;
+
+  petrolVolume: number;
+  dieselVolume: number;
+  petrolPricePerLitre: number;
+  dieselPricePerLitre: number;
+
+  status: 'active' | 'inactive';
   createdAt: number;
   manager: Manager;
   pumps: Pump[];
+  sales: any[];
   lastUpdated: Date;
 }
 

@@ -1,46 +1,135 @@
-ontext: You are working on the "Pigeon" fuel station management app. The backend now exposes several new analytics and reporting endpoints to visualize sales data (trends, totals, breaking down by station).
+Here is the detailed summary of the endpoints and data structures for Stations, Pumps, and Sales.
 
-Task: Update the ManagerDashboard and DirectorDashboard components to include visual charts and summary cards using the data from these new endpoints.
+Note regarding "Pumps" vs "Dispensers":
 
-Backend Endpoints Available: Refer to 
-endpoints_for_infographics.txt
- for full details. Key endpoints:
+Station & Default Pump Creation: The system allows creating a Station with an initial set of Pumps (machines) via the POST /station endpoint. There is no dedicated API controller for managing "Pumps" individually (they are managed as part of the Station aggregate or daily records).
+"Dispensers" Module: The dispenser endpoints actually refer to Staff/Attendants (based on fields like firstName, phone, sales relations), NOT the physical fuel pumps.
+1. Station Management
+Base URL: /station
 
-GET /sales/report/total -> { totalSale: number }
-GET /sales/report/weekly -> [ { week: number, totalSale: number } ]
-GET /sales/report/monthly -> [ { month: string, totalSale: number } ]
-GET /station/report/daily -> Daily aggregations per station.
-Requirements:
-
-Service Integration:
-
-Update SalesService (or create 
-ReportService
-) to consume the above endpoints.
-Create TypeScript interfaces for the responses (see 
-endpoints_for_infographics.txt
- section 4).
-Dashboard UI Updates:
-
-Summary Cards: Add cards at the top of the dashboard showing:
-Total Revenue (All Time)
-Total Revenue (This Month - calculate on frontend if needed or request backend endpoint)
-Charts (Use chart.js or ng2-charts):
-Revenue Trend (Line Chart): Use the data from /sales/report/monthly to show sales over time.
-Weekly Performance (Bar Chart): Use /sales/report/weekly.
-Component Structure:
-
-Create a reusable ChartComponent or similar to handle the rendering of chart.js canvases to avoid code duplication.
-Ensure charts are responsive.
-Error Handling:
-
-If the API returns an error or empty data, show a user-friendly "No Data Available" message instead of a broken chart.
-Example Code Snippet (Service):
-
-getWeeklySales(): Observable<{week: number, totalSale: number}[]> {
-  return this.http.get<any[]>(`${this.apiUrl}/sales/report/weekly`);
+Add New Station (and options Pumps)
+Method: POST
+Path: /
+Roles: Admin, Director
+Description: Creates a new station and optionally creates its initial set of pumps.
+Body CreateStationDto:
+typescript
+{
+  name: string;
+  address: string;
+  ward: string;
+  lga: string;
+  state: string;
+  longitude: number;
+  latitude: number;
+  managerId: string; // UUID of an existing User
+  // Initial Prices & Volumes
+  petrolVolume: number;
+  petrolPricePerLiter: number;
+  dieselVolume: number;
+  dieselPricePerLiter: number;
+  // Optional: Create pumps immediately
+  pumps: [
+    { pumpNumber: 1, dispensedProduct: "PETROL" },
+    { pumpNumber: 2, dispensedProduct: "DIESEL" }
+  ]
 }
-Styling:
+Returns: Station object.
+Get Station Summary (Stats)
+Method: GET
+Path: /:id/summary
+Roles: Director, Manager, Admin
+Returns: Real-time summary of the station.
+typescript
+{
+   // ... Station details
+   pumps: Pump[]; // List of pumps
+   // sales stats might be included here depending on implementation
+}
+Record Daily Pump Sales
+Method: POST
+Path: /record
+Roles: Manager
+Description: Records the daily aggregate sales for a specific Pump. This is separate from individual transaction receipts.
+Body RecordSalesDto:
+typescript
+{
+  pumpId: string;       // UUID of the Pump
+  recordDate: string;   // YYYY-MM-DD
+  volumeSold: number;   // Total liters sold today
+  totalRevenue: number; // Total cash earned today
+}
+Assign/Unassign Manager
+Method: POST /station/:id/manager/assign (Body: { managerId: string })
+Method: DELETE /station/:id/manager/unassign
+2. Sales (Transactions)
+Base URL: /sales
 
-Use the existing application theme (Angular Material or Tailwind).
-Ensure high contrast for chart elements.
+These endpoints handle individual sales transactions (e.g., one car filling up).
+
+Create New Sale
+Method: POST
+Path: /
+Roles: Manager (or Attendant via Manager account)
+Body CreateSaleDto:
+typescript
+{
+  pumpId: string; // UUID of the physical Pump used
+  product: 'PETROL' | 'DIESEL' | 'GAS' | 'KEROSENE';
+  pricePerLitre: number;
+  openingMeterReading: number;
+  closingMeterReading: number;
+}
+Returns: Sale object (including calculated totalPrice).
+Get Sales Reports
+Total Revenue: GET /sales/report/total
+Revenue by Station: GET /sales/report/station/:stationId/total
+Weekly Trends: GET /sales/report/weekly
+Monthly Trends: GET /sales/report/monthly
+Daily History (30 Days): GET /sales/report/daily/history
+3. Dispensers (Staff/Attendants)
+Base URL: /dispenser
+
+Create Dispenser (Staff): POST /dispenser (Manager only)
+Body: firstName, lastName, phone, stationId etc.
+Get All: GET /dispenser (List all attendants)
+Get Stats: GET /dispenser/stats (Active vs Inactive count)
+Data Structures
+Station
+typescript
+interface Station {
+  id: string;
+  name: string;
+  address: string;
+  manager: User;      // Linked Manager account
+  pumps: Pump[];      // List of physical pumps
+  sales: Sale[];      // History of sales
+  petrolVolume: number;
+  dieselVolume: number;
+  petrolPricePerLitre: number;
+  dieselPricePerLitre: number;
+  status: 'active' | 'inactive';
+}
+Pump (Physical Machine)
+typescript
+interface Pump {
+  id: string;
+  pumpNumber: number; // e.g., 1, 2, 3
+  dispensedProduct: 'PETROL' | 'DIESEL' | 'GAS' | 'KEROSENE';
+  station: Station;
+  sales: Sale[];      // Transaction history for this pump
+}
+Sale (Transaction)
+typescript
+interface Sale {
+  id: string;
+  product: string;
+  pricePerLitre: number;
+  openingMeterReading: number;
+  closingMeterReading: number;
+  totalPrice: number; // Calculated (Volume * Price)
+  createdAt: Date;
+  station: Station;
+  pump: Pump;
+  recordedBy: User;   // User who entered the record
+}

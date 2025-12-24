@@ -47,7 +47,7 @@ export class TicketsService {
     )
   }
 
-  addTicket(ticket: Ticket): Promise<Ticket> {
+  addTicket(ticket: any): Promise<Ticket> {
     return firstValueFrom(
       this.http.post<any>(`${this.baseUrl}/ticket`, ticket).pipe(
         map(t => ({ ...t, id: t.id || t._id }))

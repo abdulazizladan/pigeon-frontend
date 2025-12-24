@@ -13,7 +13,7 @@ export class StationService {
 
   // --- Core Station Management ---
 
-  async createStation(data: any): Promise<Station> {
+  async createStation(data: CreateStationDto): Promise<Station> {
     return firstValueFrom(this.http.post<Station>(`${this.baseUrl}/station`, data));
   }
 
@@ -62,4 +62,20 @@ export class StationService {
   async recordDailySales(data: { pumpId: string, recordDate: string, volumeSold: number, totalRevenue: number }): Promise<void> {
     return firstValueFrom(this.http.post<void>(`${this.baseUrl}/station/record`, data));
   }
+}
+
+export interface CreateStationDto {
+  name: string;
+  address: string;
+  ward: string;
+  lga: string;
+  state: string;
+  longitude: number;
+  latitude: number;
+  managerId: string;
+  petrolVolume: number;
+  petrolPricePerLiter: number;
+  dieselVolume: number;
+  dieselPricePerLiter: number;
+  pumps?: { pumpNumber: number; dispensedProduct: 'PETROL' | 'DIESEL' | 'GAS' | 'KEROSENE' }[];
 }
