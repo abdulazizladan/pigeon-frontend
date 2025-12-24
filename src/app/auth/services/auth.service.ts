@@ -13,13 +13,17 @@ export class AuthService {
 
   login(data: LoginData) {
     const loginUrl = `${environment.baseUrl}/auth/login`;
-    //return this.http.post<{ access_token: string }>(loginUrl, data).pipe(
-    //  map(response => response.access_token)
-    //);
     return firstValueFrom(
       this.http.post<{ access_token: string }>(loginUrl, data).pipe(
         map(response => response.access_token)
       )
-    )
+    );
+  }
+
+  changePassword(data: { oldPassword: string, newPassword: string }) {
+    const url = `${environment.baseUrl}/auth/change-password`;
+    return firstValueFrom(
+      this.http.patch<void>(url, data)
+    );
   }
 }

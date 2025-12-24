@@ -1,11 +1,6 @@
 <div id="body" class="app-container">
   <mat-toolbar color="primary" class="app-toolbar">
-    <button
-      mat-icon-button
-      (click)="drawer.toggle()"
-      class="menu-button"
-      [class.hidden-on-large]="!isHandset"
-      >
+    <button mat-icon-button (click)="drawer.toggle()" class="menu-button" [class.hidden-on-large]="!isHandset">
       <mat-icon>menu</mat-icon>
     </button>
 
@@ -30,12 +25,7 @@
   </mat-toolbar>
 
   <mat-drawer-container class="app-drawer-container">
-    <mat-drawer
-      #drawer
-      class="app-sidenav"
-      [mode]="(isHandset) ? 'over' : 'side'"
-      [opened]="!isHandset"
-    >
+    <mat-drawer #drawer class="app-sidenav" [mode]="(isHandset) ? 'over' : 'side'" [opened]="!isHandset">
       <div class="profile-section">
         <div id="profile" class="profile-avatar">
           <mat-icon>account_circle</mat-icon>
@@ -62,10 +52,10 @@
           <mat-icon matListItemIcon>people</mat-icon>
           <span matListItemTitle>Managers</span>
         </a>
-        <!--<a mat-list-item routerLink="issues" routerLinkActive="active">
+        <a mat-list-item routerLink="issues" routerLinkActive="active">
           <mat-icon matListItemIcon>bug_report</mat-icon>
           <span matListItemTitle>Issues</span>
-        </a>-->
+        </a>
       </mat-nav-list>
     </mat-drawer>
 

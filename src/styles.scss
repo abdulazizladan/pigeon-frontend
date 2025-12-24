@@ -1,137 +1,153 @@
-
 // Custom Theming for Angular Material
-// For more information: https://material.angular.io/guide/theming
 @use '@angular/material' as mat;
+
 html {
-  @include mat.theme((
-    color: (
-      primary: mat.$azure-palette,
-      tertiary: mat.$green-palette,
-    ),
-    typography: Helvetica,
-    density: -2,
-  ));
+  @include mat.theme((color: (primary: mat.$azure-palette,
+        tertiary: mat.$green-palette,
+      ),
+      typography: Roboto,
+      density: 0,
+    ));
 }
 
-body {
-  // Default the application to a light color theme. This can be changed to
-  // `dark` to enable the dark color theme, or to `light dark` to defer to the
-  // user's system settings.
-  color-scheme: light;
+/* --- Global Design System --- */
+:root {
+  /* Color Palette */
+  --primary-50: #eff6ff;
+  --primary-100: #dbeafe;
+  --primary-500: #3b82f6;
+  --primary-600: #2563eb;
+  --primary-700: #1d4ed8;
 
-  // Set a default background, font and text colors for the application using
-  // Angular Material's system-level CSS variables. Learn more about these
-  // variables at https://material.angular.dev/guide/system-variables
-  background-color: var(--mat-sys-surface);
-  color: var(--mat-sys-on-surface);
-  font: var(--mat-sys-body-medium);
+  --secondary-50: #ecfdf5;
+  --secondary-100: #d1fae5;
+  --secondary-500: #10b981;
+  --secondary-600: #059669;
 
-  // Reset the user agent margin.
-  margin: 0;
+  --accent-50: #f5f3ff;
+  --accent-500: #8b5cf6;
+
+  --surface-ground: #f3f4f6;
+  /* Page background */
+  --surface-card: #ffffff;
+  --surface-border: #e5e7eb;
+
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-tertiary: #9ca3af;
+
+  /* Shadows (Tailwind-like) */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+
+  /* Spacing */
+  --radius-md: 0.5rem;
+  /* 8px */
+  --radius-lg: 0.75rem;
+  /* 12px */
+  --radius-xl: 1rem;
+  /* 16px */
 }
 
 :root {
-  @include mat.card-overrides((
-    elevated-container-color: #ffffff,
-    elevated-container-elevation: red,
-    subtitle-text-size: 10px,
-    filled-container-shape: 5px,
-    elevated-container-shape: 5px,
-    outlined-container-shape: 5px,
-  ));
-}
-
-:root {
-  @include mat.button-overrides(
-    (
-      filled-container-shape:3px,
+  @include mat.button-overrides((filled-container-shape:3px,
       outlined-container-shape: 3px,
       text-container-shape: 3px,
       protected-container-shape: 3px,
-      tonal-container-shape: 3px
-    )
-  )
+      tonal-container-shape: 3px))
 }
 
-:root {
-  @include mat.expansion-overrides((
-    header-collapsed-state-height: 1,
-    header-expanded-state-height: 1
-  ));
-}
-
-:root {
-  @include mat.toolbar-overrides((
-    container-text-color: rgb(27, 71, 45),
-    container-background-color: white,
-  ));
-}
-
-html, body { height: 100%; }
+/* Base Resets & Typography */
 body {
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
-  font-size: 12px;
+  font-family: 'Roboto', "Helvetica Neue", sans-serif;
+  background-color: var(--surface-ground);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-:host {
-  background: var(--mat-sys-primary-container);
-  color: var(--mat-sys-on-primary-container);
-  border: 1px solid var(--mat-sys-outline-variant);
-  font: var(--mat-sys-body-small);
-}
-/**
-:root {
-  @include mat.button-overrides((
-    filled-container-color: rgb(42, 42, 188),
-    filled-label-text-color: red,
-  ));
-
-}**/
-
-.mat-mdc-button-base {
-  border-radius: 0px !important; // Adjust the radius value as needed
+/* Standard Layout Utilities */
+.page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
 }
 
-.mat-mdc-button {
-  border-radius: 5px !important; // Adjust the radius value as needed
+.page-header {
+  margin-bottom: 2rem;
+
+  h1 {
+    font-size: 1.875rem;
+    /* 30px */
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+  }
+
+  p {
+    color: var(--text-secondary);
+    margin-top: 0.5rem;
+  }
 }
 
-.mat-mdc-text-field-wrapper {
-  border-radius: 5px !important; // Adjust the radius value as needed
+/* Card Utility */
+.card-base {
+  background-color: var(--surface-card);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--surface-border);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    box-shadow: var(--shadow-md);
+  }
 }
 
-.mdc-text-field--outlined .mdc-notched-outline {
-  border-radius: 5px !important; // Adjust the radius value as needed
-}
-:root {
-  @include mat.dialog-overrides((
-    container-color: white,
-    container-shape: rectangle
-  ));
-
+/* Material Overrides for Consistency */
+.mat-mdc-card {
+  background-color: var(--surface-card) !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--shadow-sm) !important;
+  border: 1px solid var(--surface-border) !important;
 }
 
-:root {
-  @include mat.sidenav-overrides((
-    container-background-color: white,
-    container-shape: rectangle,
-    //container-elevation-shadow: 5px 5px 5px 5px
-  ));
+.mat-mdc-button,
+.mat-mdc-raised-button,
+.mat-mdc-flat-button,
+.mat-mdc-stroked-button {
+  border-radius: 3px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.025em !important;
+  text-transform: none !important;
+  /* Move away from uppercase buttons */
 }
 
-:root {
-  @include mat.card-overrides((
-    elevated-container-color: white,
-    elevated-container-shape: rectangle,
-  ));
-}
+/* Status Chips */
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
 
-:root {
-  @Include mat.button-overrides((
-    filled-container-color: white,
-    filled-label-text-color: black,
-    filled-text-tracking: 0.5px,
-    filled-text-transform: uppercase,
-  ));
+  &.active {
+    background-color: var(--secondary-100);
+    color: var(--secondary-600);
+  }
+
+  &.pending {
+    background-color: #fef9c3;
+    color: #b45309;
+  }
+
+  &.suspended,
+  &.inactive {
+    background-color: #fee2e2;
+    color: #b91c1c;
+  }
 }

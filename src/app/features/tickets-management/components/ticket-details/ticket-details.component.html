@@ -1,7 +1,7 @@
 <h1>Support Ticket: #{{ticketStore.selectedTicket()?.id}}</h1>
 
 @if(ticketStore.loading()) {
-  <mat-progress-bar mode="query"></mat-progress-bar>
+<mat-progress-bar mode="query"></mat-progress-bar>
 }@else{
 <div class="ticket-details">
   <mat-card>
@@ -12,47 +12,47 @@
     <mat-card-content>
       <p>{{ticketStore.selectedTicket()?.description}}</p>
       <p>Status:
-          @if(ticketStore.selectedTicket()?.status === 'active') {
-            <span class="status-active">Active</span>
-          } @else if(ticketStore.selectedTicket()?.status === 'resolved') {
-            <span class="status-resolved">Resolved</span>
-          }
+        @if(ticketStore.selectedTicket()?.status === 'active') {
+        <span class="status-active">Active</span>
+        } @else if(ticketStore.selectedTicket()?.status === 'resolved') {
+        <span class="status-resolved">Resolved</span>
+        }
 
       </p>
       <!--<p>Assigned to: {{ticketStore.selectedTicket()?.assignedTo?.name}}</p>-->
     </mat-card-content>
   </mat-card>
-  </div>
+</div>
 }
-  <h2>Comments</h2>
-  @if(ticketStore.loading()) {
-    <mat-progress-bar mode="query"></mat-progress-bar>
-  }@else{
-  <div>
-    @for(reply of ticketStore.selectedTicket()?.replies; track reply) {
-      <mat-card>
-        <mat-card-header>
-          <mat-card-subtitle>{{reply.date | date:'shortDate'}}</mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-content>
-          <p>{{reply.message}}</p>
-        </mat-card-content>
-      </mat-card>
-    }
-  </div>
+<h2>Comments</h2>
+@if(ticketStore.loading()) {
+<mat-progress-bar mode="query"></mat-progress-bar>
+}@else{
+<div>
+  @for(reply of ticketStore.selectedTicket()?.replies; track reply) {
+  <mat-card>
+    <mat-card-header>
+      <mat-card-subtitle>{{reply.date | date:'shortDate'}}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <p>{{reply.message}}</p>
+    </mat-card-content>
+  </mat-card>
+  }
+</div>
 }
 
-  @if( ticketStore.loading()) {
-    <mat-progress-bar mode="query"></mat-progress-bar>
-  }@else if(ticketStore.selectedTicket()?.status === 'active'){
-    <h2>Add a Comment</h2>
-    <div>
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Comment</mat-label>
-        <textarea matInput></textarea>
-      </mat-form-field>
-    </div>
-    <div>
-      <button mat-flat-button color="primary">Submit</button>
-    </div>
-  }
+@if( ticketStore.loading()) {
+<mat-progress-bar mode="query"></mat-progress-bar>
+}@else if((authStore.userRole() === 'admin' || ticketStore.selectedTicket()?.status === 'active')){
+<h2>Add a Comment</h2>
+<div>
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Comment</mat-label>
+    <textarea matInput [formControl]="replyControl"></textarea>
+  </mat-form-field>
+</div>
+<div>
+  <button mat-flat-button color="primary" (click)="submitReply()" [disabled]="replyControl.invalid">Submit</button>
+</div>
+}

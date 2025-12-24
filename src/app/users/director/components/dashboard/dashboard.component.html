@@ -1,123 +1,136 @@
-<main class="director-dashboard-main">
-  <h1 class="page-title">Station Status Overview</h1>
+<div class="page-container">
 
-  <section class="summary-section" fxLayout="column" fxLayoutGap="25px">
-    <mat-card class="status-summary-card">
-      <mat-card-header>
-        <mat-card-title class="card-section-title">Stations Summary</mat-card-title>
-      </mat-card-header>
+  <div class="page-header">
+    <h1>Station Status Overview</h1>
+    <p>Real-time metrics and performance insights</p>
+  </div>
 
-      <mat-card-content>
+  <div class="dashboard-grid">
+
+    <!-- Station Summary Section -->
+    <section class="card-base dashboard-section">
+      <div class="section-header">
+        <h2>Stations Summary</h2>
+      </div>
+
+      <div class="section-body">
         @if (directorStore.loading()) {
-        <div class="loading-state-summary">
-          <mat-progress-bar mode="indeterminate" color="primary"></mat-progress-bar>
+        <div class="loading-state">
+          <mat-progress-bar mode="indeterminate"></mat-progress-bar>
           <p>Loading station statistics...</p>
         </div>
         } @else {
-        <div class="stats-grid-container">
+        <div class="stats-grid">
 
-          <div class="stat-item total-stats-theme">
-            <mat-icon class="stat-icon" color="primary">storage</mat-icon>
-            <div class="stat-content">
-              <div class="stat-label">Total Stations</div>
-              <div class="stat-value">
-                {{ directorStore.stationStats()?.total ?? 0 }}
-              </div>
+          <div class="stat-card primary">
+            <div class="icon-wrapper">
+              <mat-icon>storage</mat-icon>
+            </div>
+            <div class="stat-info">
+              <span class="label">Total Stations</span>
+              <span class="value">{{ directorStore.stationStats()?.total ?? 0 }}</span>
             </div>
           </div>
 
-          <div class="stat-item active-stats-theme">
-            <mat-icon class="stat-icon color-green">check_circle_outline</mat-icon>
-            <div class="stat-content">
-              <div class="stat-label">Active (Operational)</div>
-              <div class="stat-value color-green">
-                {{ directorStore.stationStats()?.active ?? 0 }}
-              </div>
+          <div class="stat-card success">
+            <div class="icon-wrapper">
+              <mat-icon>check_circle_outline</mat-icon>
+            </div>
+            <div class="stat-info">
+              <span class="label">Operational</span>
+              <span class="value">{{ directorStore.stationStats()?.active ?? 0 }}</span>
             </div>
           </div>
 
-          <div class="stat-item inactive-stats-theme">
-            <mat-icon class="stat-icon color-red">report_problem</mat-icon>
-            <div class="stat-content">
-              <div class="stat-label">Inactive (Needs Service)</div>
-              <div class="stat-value color-red">
-                {{ directorStore.stationStats()?.inactive ?? 0 }}
-              </div>
+          <div class="stat-card warning">
+            <div class="icon-wrapper">
+              <mat-icon>report_problem</mat-icon>
+            </div>
+            <div class="stat-info">
+              <span class="label">Inactive</span>
+              <span class="value">{{ directorStore.stationStats()?.inactive ?? 0 }}</span>
             </div>
           </div>
+
         </div>
         }
-      </mat-card-content>
-    </mat-card>
+      </div>
+    </section>
 
-    <mat-card class="status-summary-card">
-      <mat-card-header>
-        <mat-card-title class="card-section-title">Sales Summary</mat-card-title>
-      </mat-card-header>
+    <!-- Sales Summary Section -->
+    <section class="card-base dashboard-section">
+      <div class="section-header">
+        <h2>Sales Summary</h2>
+      </div>
 
-      <mat-card-content>
+      <div class="section-body">
         @if (directorStore.loading()) {
-        <div class="loading-state-summary">
-          <mat-progress-bar mode="indeterminate" color="primary"></mat-progress-bar>
+        <div class="loading-state">
+          <mat-progress-bar mode="indeterminate"></mat-progress-bar>
           <p>Loading sales statistics...</p>
         </div>
         } @else {
-        <div class="stats-grid-container">
+        <div class="stats-grid">
 
-          <div class="stat-item total-stats-theme">
-            <mat-icon class="stat-icon" color="primary">storage</mat-icon>
-            <div class="stat-content">
-              <div class="stat-label">Total Revenue</div>
-              <div class="stat-value">
-                &#8358;{{ totalRevenue() | number:'1.2-2' }}
-              </div>
+          <div class="stat-card primary">
+            <div class="icon-wrapper">
+              <mat-icon>payments</mat-icon>
+            </div>
+            <div class="stat-info">
+              <span class="label">Total Revenue</span>
+              <span class="value">&#8358;{{ totalRevenue() | number:'1.2-2' }}</span>
             </div>
           </div>
 
-          <div class="stat-item active-stats-theme">
-            <mat-icon class="stat-icon color-green">check_circle_outline</mat-icon>
-            <div class="stat-content">
-              <div class="stat-label">Today's expenditure</div>
-              <div class="stat-value color-green">
-                &#8358;0.00
-              </div>
+          <div class="stat-card success">
+            <div class="icon-wrapper">
+              <mat-icon>trending_up</mat-icon>
+            </div>
+            <div class="stat-info">
+              <span class="label">Today's Revenue</span>
+              <span class="value">&#8358;0.00</span>
             </div>
           </div>
 
-          <div class="stat-item inactive-stats-theme">
-            <mat-icon class="stat-icon color-red">report_problem</mat-icon>
-            <div class="stat-content">
-              <div class="stat-label">Litres sold</div>
-              <div class="stat-value color-red">
-                0.00 L
-              </div>
+          <div class="stat-card info">
+            <div class="icon-wrapper">
+              <mat-icon>water_drop</mat-icon>
+            </div>
+            <div class="stat-info">
+              <span class="label">Volume Sold</span>
+              <span class="value">0.00 L</span>
             </div>
           </div>
+
         </div>
         }
-      </mat-card-content>
-    </mat-card>
-  </section>
+      </div>
+    </section>
 
-  <section class="sales-section">
-    <mat-card class="sales-performance-card">
-      <mat-card-header>
-        <mat-card-title>Revenue Trend</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <app-chart [chartData]="revenueTrendData" [chartType]="'line'" title="Monthly Revenue Trend"></app-chart>
-      </mat-card-content>
-    </mat-card>
+    <!-- Charts Section -->
+    <section class="charts-container">
 
-    <mat-card class="sales-performance-card" style="margin-top: 20px;">
-      <mat-card-header>
-        <mat-card-title>Weekly Performance</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <app-chart [chartData]="weeklyPerformanceData" [chartType]="'bar'" title="Weekly Performance"></app-chart>
-      </mat-card-content>
-    </mat-card>
-  </section>
+      <!-- Revenue Trend -->
+      <div class="card-base chart-card">
+        <div class="card-header">
+          <h3>Revenue Trend</h3>
+        </div>
+        <div class="card-body">
+          <app-chart [chartData]="revenueTrendData" [chartType]="'line'"></app-chart>
+        </div>
+      </div>
 
+      <!-- Weekly Performance -->
+      <div class="card-base chart-card">
+        <div class="card-header">
+          <h3>Weekly Performance</h3>
+        </div>
+        <div class="card-body">
+          <app-chart [chartData]="weeklyPerformanceData" [chartType]="'bar'"></app-chart>
+        </div>
+      </div>
 
-</main>
+    </section>
+
+  </div>
+</div>

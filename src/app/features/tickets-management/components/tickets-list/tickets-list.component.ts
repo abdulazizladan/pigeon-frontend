@@ -10,7 +10,7 @@ import { AuthStore } from '../../../../auth/store/auth.store';
   templateUrl: './tickets-list.component.html',
   styleUrl: './tickets-list.component.scss'
 })
-export class TicketsListComponent implements OnInit{
+export class TicketsListComponent implements OnInit {
 
   public ticketsStore = inject(TicketsStore);
   public authStore = inject(AuthStore);
@@ -18,7 +18,15 @@ export class TicketsListComponent implements OnInit{
   public displayedColumns: string[] = ['title', 'description', 'sender', 'status', 'dateCreated'];
 
   ngOnInit(): void {
-    this.ticketsStore.loadTickets();
+    const role = this.authStore.userRole();
+    if (role === 'admin') {
+      this.ticketsStore.loadTickets();
+    } else {
+      const email = this.authStore.userEmail();
+      if (email) {
+        this.ticketsStore.loadTicketsByEmail(email);
+      }
+    }
   }
 
   openAddTicketDialog() {
@@ -26,15 +34,9 @@ export class TicketsListComponent implements OnInit{
       width: '480px'
     });
     dialogRef.afterClosed().subscribe(result => {
-      if(result) {
+      if (result) {
         this.ticketsStore.addTicket(result)
       }
     })
   }
-
-  //a function that returns a filtered tickets list based on ticket status
-  getFilteredTickets(status: string) {
-    return this.ticketsStore.tickets().filter(ticket => ticket.status === status);
-  }
-
 }

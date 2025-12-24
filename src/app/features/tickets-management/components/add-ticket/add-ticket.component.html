@@ -1,4 +1,4 @@
-<h1 mat-dialog-title>{{ data.title ? 'Edit' : 'Create' }}</h1>
+<h1 mat-dialog-title>{{ data?.title ? 'Edit Ticket' : 'Create Ticket' }}</h1>
 <div mat-dialog-content>
   <form [formGroup]="dialogForm" (ngSubmit)="onSubmit()">
     <mat-form-field appearance="outline" class="full-width">
@@ -15,7 +15,9 @@
     </mat-form-field>
   </form>
 </div>
-<div mat-dialog-actions>
+<div mat-dialog-actions align="end">
   <button mat-button (click)="onNoClick()">Cancel</button>
-  <button mat-primary [disabled]="dialogForm.invalid" (click)="onSubmit()">{{ data.title ? 'Save' : 'Create' }}</button>
+  <button mat-flat-button color="primary" [disabled]="dialogForm.invalid" (click)="onSubmit()">
+    {{ data?.title ? 'Save' : 'Create' }}
+  </button>
 </div>

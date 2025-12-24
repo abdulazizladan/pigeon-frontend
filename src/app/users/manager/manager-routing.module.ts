@@ -39,10 +39,10 @@ const routes: Routes = [
         path: 'sales',
         loadChildren: () => import('../../features/sales-management/sales-management.module').then(module => module.SalesManagementModule)
       },
-      //{
-      //  path: 'issues',
-      //  loadChildren: () => import('../../features/tickets-management/tickets-management.module').then(module => module.TicketsManagementModule)
-      //}
+      {
+        path: 'issues',
+        loadChildren: () => import('../../features/tickets-management/tickets-management.module').then(module => module.TicketsManagementModule)
+      }
     ]
   }
 ];

@@ -1,160 +1,307 @@
 :host {
   display: block;
-  font-family: 'Roboto', sans-serif;
-  background-color: #f3f4f6;
-  padding: 32px 24px;
   min-height: 100vh;
 }
 
-.station-page-wrapper {
-  max-width: 960px;
-  margin: 0 auto;
+.page-header {
+  .header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .status-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.875rem;
+    background-color: var(--surface-bg);
+    color: var(--text-tertiary);
+
+    &.active {
+      background-color: var(--secondary-100);
+      color: var(--secondary-600);
+    }
+  }
 }
 
-.page-title {
-  font-size: 32px;
-  font-weight: 800;
-  margin-bottom: 24px;
-  color: #1f2937;
-}
-
-.station-main-card {
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  background-color: white;
-  padding-bottom: 25px;
-}
-
-.loading-bar {
-  margin-bottom: 16px;
-  --mdc-linear-progress-track-color: #e5e7eb;
-  --mdc-linear-progress-active-indicator-color: #4f46e5;
-}
-
-.main-divider {
-  margin: 24px 0;
-  width: calc(100% - 48px);
-  margin-left: 24px;
-  margin-right: 24px;
-}
-
-.station-header-section {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  padding: 24px 24px 0;
-}
-
-.station-name {
-  font-size: 28px;
-  font-weight: 600;
-  color: #1f2937;
-  margin: 0 0 4px 0;
-}
-
-.station-id-subtitle {
-  font-size: 14px;
-  color: #6b7280;
-  margin: 0;
-}
-
-.details-section-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 32px;
-  padding: 0 24px;
-}
-
-.info-section-header {
-  font-size: 18px;
-  font-weight: 600;
-  color: #374151;
-  margin-bottom: 16px;
-}
-
-.info-details-grid {
+.dashboard-grid {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 2rem;
 }
 
-.detail-item {
+/* --- Inventory Section (Tanks) --- */
+.tanks-grid {
   display: grid;
-  grid-template-columns: 24px 120px 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  padding: 2rem 1.5rem;
+}
+
+.tank-card {
+  display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 8px 0;
-  border-bottom: 1px dashed #f3f4f6;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  border-radius: var(--radius-lg);
+  background-color: var(--surface-bg);
+  border: 1px solid var(--surface-border);
+
+  .tank-visual {
+    width: 60px;
+    height: 100px;
+    background-color: #e5e7eb;
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #d1d5db;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .liquid {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      transition: height 0.5s ease-in-out;
+      opacity: 0.8;
+
+      &.petrol {
+        background-color: var(--primary-500);
+      }
+
+      &.diesel {
+        background-color: var(--color-rose-600, #e11d48);
+      }
+
+      /* Fallback rose */
+    }
+
+    .percentage-label {
+      position: relative;
+      z-index: 10;
+      font-weight: 700;
+      font-size: 0.875rem;
+      color: #111827;
+      text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+    }
+  }
+
+  .tank-info {
+    h4 {
+      margin: 0 0 0.5rem;
+      font-size: 1.125rem;
+      font-weight: 600;
+    }
+
+    .metric {
+      display: flex;
+      align-items: baseline;
+      gap: 0.25rem;
+
+      .value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text-primary);
+      }
+
+      .unit {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+      }
+    }
+
+    .capacity {
+      margin-top: 0.25rem;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+  }
 }
 
-.detail-icon {
-  font-size: 20px;
-  color: #4f46e5;
-}
+/* --- Pump Management --- */
+.header-with-stats {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
-.detail-label {
-  font-weight: 500;
-  color: #4b5563;
-  font-size: 14px;
-}
+  .stats-pills {
+    display: flex;
+    gap: 0.5rem;
 
-.detail-value {
-  color: #1f2937;
-  font-size: 16px;
-  word-break: break-word;
-}
+    .pill {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
 
-.manager-section,
-.pumps-section {
-  padding: 0 24px;
+      &.active-pill {
+        background-color: var(--secondary-50);
+        color: var(--secondary-600);
+      }
+
+      &.maintenance-pill {
+        background-color: #fff1f2;
+        color: #e11d48;
+      }
+    }
+  }
 }
 
 .pumps-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 8px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
 }
 
-.pump-chip {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 8px;
-}
+.pump-card {
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background-color: var(--surface-card);
+  transition: all 0.2s ease;
 
-.error-card,
-.empty-card {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  background-color: white;
-}
-
-mat-card-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-  padding: 32px !important;
-}
-
-.error-message {
-  text-align: center;
-  color: #dc2626;
-  font-weight: 500;
-}
-
-@media (max-width: 768px) {
-  .details-section-grid {
-    grid-template-columns: 1fr;
-    gap: 24px;
+  &.active {
+    border-left: 4px solid var(--secondary-500);
   }
-  
-  .station-header-section {
-    flex-direction: column;
-    align-items: flex-start;
+
+  &.idle {
+    border-left: 4px solid var(--text-tertiary);
+    opacity: 0.8;
+  }
+
+  &.maintenance {
+    border-left: 4px solid #e11d48;
+  }
+
+  .pump-header {
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f9fafb;
+    border-bottom: 1px solid #f3f4f6;
+
+    .pump-number {
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .pump-status {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+  }
+
+  .pump-product {
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .pump-body {
+    padding: 1rem;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .active-state {
+      width: 100%;
+    }
+
+    .idle-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-tertiary);
+
+      mat-icon {
+        font-size: 2rem;
+        width: 2rem;
+        height: 2rem;
+      }
+    }
+
+    .session-info {
+      width: 100%;
+
+      .vehicle {
+        font-weight: 600;
+        font-size: 0.875rem;
+        margin-bottom: 0.25rem;
+      }
+
+      .dispensing {
+        font-family: monospace;
+        color: var(--primary-600);
+        margin-bottom: 0.5rem;
+      }
+    }
   }
 }
 
+/* --- Activity Table --- */
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th {
+    text-align: left;
+    padding: 1rem;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    font-weight: 600;
+    border-bottom: 1px solid var(--surface-border);
+  }
+
+  td {
+    padding: 1rem;
+    font-size: 0.875rem;
+    border-bottom: 1px solid var(--surface-border);
+    color: var(--text-primary);
+
+    &.mono {
+      font-family: monospace;
+      color: var(--text-secondary);
+    }
+
+    &.numeric {
+      font-family: monospace;
+    }
+
+    &.bold {
+      font-weight: 600;
+    }
+  }
+
+  .product-badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+
+    &.petrol {
+      background-color: var(--primary-50);
+      color: var(--primary-600);
+    }
+
+    &.diesel {
+      background-color: #fff1f2;
+      color: #e11d48;
+    }
+  }
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
