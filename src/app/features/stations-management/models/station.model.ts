@@ -16,7 +16,7 @@ export interface Station {
   petrolPricePerLitre: number;
   dieselPricePerLitre: number;
 
-  status: 'active' | 'inactive';
+  status: 'active' | 'suspended';
 
   // Fields needed for the component's stats/lists
   manager: Manager;

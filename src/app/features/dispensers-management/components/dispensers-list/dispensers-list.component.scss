@@ -5,48 +5,64 @@
   flex-direction: column;
   align-items: center;
 }
+
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 25px; /* Added gap */
+  gap: 25px;
+  /* Added gap */
   margin-bottom: 20px;
   width: 100%;
 }
+
 .search-field {
-  flex-grow: 1; /* Allow search input to take available space */
-  max-width: 400px; /* Limit search input width */
+  flex-grow: 1;
+  /* Allow search input to take available space */
+  max-width: 400px;
+  /* Limit search input width */
 }
+
 .error-message {
   margin: 16px 0;
   padding: 16px;
   border-radius: 4px;
 }
+
 .full-width-table {
   width: 100%;
-  min-width: 600px; /* Ensure table doesn't get too narrow */
+  min-width: 600px;
+  /* Ensure table doesn't get too narrow */
 }
+
 .table-responsive {
-  overflow-x: auto; /* Enable horizontal scrolling on small screens */
+  overflow-x: auto;
+  /* Enable horizontal scrolling on small screens */
   width: 100%;
 }
+
 table {
   background-color: white;
 }
+
 .mat-mdc-row .mat-mdc-cell {
   border-bottom: 1px solid transparent;
   border-top: 1px solid transparent;
 }
+
 .mat-mdc-row:hover .mat-mdc-cell {
   background-color: rgba(0, 0, 0, 0.04);
 }
+
 .mat-mdc-no-data-row {
   text-align: center;
   padding: 16px;
 }
+
 /* Status text styling */
 .status-active {
-  background-color: #4CAF50; /* Green for active */
+  background-color: #4CAF50;
+  /* Green for active */
   color: white;
   padding: 4px 8px;
   border-radius: 4px;
@@ -54,7 +70,8 @@ table {
 }
 
 .status-inactive {
-  background-color: #F44336; /* Red for inactive */
+  background-color: #F44336;
+  /* Red for inactive */
   color: white;
   padding: 4px 8px;
   border-radius: 4px;
@@ -62,7 +79,8 @@ table {
 }
 
 .clickable-row {
-  cursor: pointer; /* Changes mouse cursor to a pointer */
+  cursor: pointer;
+  /* Changes mouse cursor to a pointer */
 }
 
 .clickable-row:hover {
@@ -78,10 +96,24 @@ table {
   }
 
   .search-field {
-    max-width: 100%; /* Full width on small screens */
+    max-width: 100%;
+    /* Full width on small screens */
   }
 
   .users-list-container {
     padding: 10px;
   }
+}
+
+// Status Colors for Toggle Text
+.active-text {
+  color: #10b981; // Green
+  font-weight: 500;
+  margin-left: 8px;
+}
+
+.suspended-text {
+  color: #ef4444; // Red
+  font-weight: 500;
+  margin-left: 8px;
 }

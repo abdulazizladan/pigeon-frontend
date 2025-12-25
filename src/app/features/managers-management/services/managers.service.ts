@@ -37,8 +37,9 @@ export class ManagersService {
   }
 
   async assignStation(managerId: string, stationId: string): Promise<Manager> {
+    const body = { managerId };
     return firstValueFrom(
-      this.http.post<Manager>(`${this.baseUrl}/user/manager/${managerId}/station/${stationId}`, {}).pipe(
+      this.http.post<Manager>(`${this.baseUrl}/station/${stationId}/manager/assign`, body).pipe(
       )
     )
   }

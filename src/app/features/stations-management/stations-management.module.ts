@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { provideHttpClient } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
+import { BaseChartDirective } from 'ng2-charts';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
 
@@ -32,7 +34,8 @@ import { UnassignManager } from './components/unassign-manager/unassign-manager'
 
 @NgModule({
   providers: [
-    provideHttpClient()
+    provideHttpClient(),
+    provideCharts(withDefaultRegisterables())
   ],
   declarations: [
     StationsListComponent,
@@ -62,7 +65,8 @@ import { UnassignManager } from './components/unassign-manager/unassign-manager'
     MatPaginatorModule,
     MatSnackBarModule,
     MatDialogModule,
-    StationsManagementRoutingModule
+    StationsManagementRoutingModule,
+    BaseChartDirective
   ]
 })
 export class StationsManagementModule { }

@@ -5,14 +5,10 @@
     <div class="header-content">
       <div class="title-group">
         <h1>Sales Dashboard</h1>
-        <p>Monitor revenue trends and station performance</p>
+        <p>Real-time insights and performance metrics</p>
       </div>
 
       <div class="action-group">
-        <button mat-stroked-button color="primary" (click)="exportData()" [disabled]="loading()">
-          <mat-icon>cloud_download</mat-icon>
-          Export Data
-        </button>
         <button mat-flat-button color="primary" (click)="openSalesDialog()">
           <mat-icon>add</mat-icon>
           Add Sale
@@ -25,7 +21,7 @@
   @if (loading()) {
   <div class="loading-state">
     <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-    <p>Loading dashboard data...</p>
+    <p>Loading analytics...</p>
   </div>
   }
 

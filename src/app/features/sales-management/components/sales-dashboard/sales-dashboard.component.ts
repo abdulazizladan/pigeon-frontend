@@ -1,12 +1,90 @@
-import { Component, inject, signal, computed, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal, computed, OnInit, ChangeDetectionStrategy, effect } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AddSaleComponent } from '../add-sale/add-sale.component';
 import { SalesService } from '../../services/sales.service';
-import { Chart, registerables, ChartData, ChartType, ChartOptions } from 'chart.js';
+import { Chart, registerables, ChartData, ChartType, ChartOptions, ChartConfiguration } from 'chart.js';
+import { StationsService } from '../../../stations-management/services/stations.service'; // Import StationsService
+import { Station } from '../../../stations-management/models/station.model'; // Import Station model
 
 Chart.register(...registerables);
+
+/**
+ * --- API ENDPOINTS DOCUMENTATION FOR BACKEND DEVELOPER ---
+ * 
+ * 1. Monthly Sales Comparison
+ *    Endpoint: GET /analytics/sales/monthly-comparison
+ *    Description: Returns sales totals for the current month and the previous month to calculate performance.
+ *    Response Format:
+ *    {
+ *      "currentMonthTotal": number, // e.g. 5500000
+ *      "lastMonthTotal": number,    // e.g. 4800000
+ *      "percentageChange": number   // e.g. 14.5 (positive for increase, negative for decrease)
+ *    }
+ * 
+ * 2. 30-Day Sales Trend (Diesel vs Petrol)
+ *    Endpoint: GET /analytics/sales/trend/30-days
+ *    Description: Returns returns daily sales volume or value breakdown for the last 30 days.
+ *    Response Format:
+ *    [
+ *      { 
+ *        "date": "2024-10-01", 
+ *        "petrolSales": number, 
+ *        "dieselSales": number 
+ *      },
+ *      ...
+ *    ]
+ * 
+ * 3. Product Comparison (Cumulative)
+ *    Endpoint: GET /analytics/sales/product-comparison
+ *    Description: Returns cumulative sales volume for Petrol vs Diesel for the current period (e.g., this month).
+ *    Response Format:
+ *    {
+ *      "petrolTotalVolume": number,
+ *      "dieselTotalVolume": number
+ *    }
+ * 
+ * 4. Station Performance Rankings (Yesterday)
+ *    Endpoint: GET /analytics/stations/performance/yesterday
+ *    Description: Returns the top 3 best selling and bottom 3 least selling stations based on yesterday's sales.
+ *    Response Format:
+ *    {
+ *      "top3": [
+ *         { "stationId": "uuid", "stationName": "Station A", "totalSales": number },
+ *         ...
+ *      ],
+ *      "bottom3": [
+ *         { "stationId": "uuid", "stationName": "Station B", "totalSales": number },
+ *         ...
+ *      ]
+ *    }
+ */
+
+// --- Interfaces ---
+
+interface MonthlyComparison {
+  currentMonthTotal: number;
+  lastMonthTotal: number;
+  percentageChange: number;
+}
+
+interface DailySales {
+  date: string;
+  petrolSales: number;
+  dieselSales: number;
+}
+
+interface ProductComparison {
+  petrolTotalVolume: number;
+  dieselTotalVolume: number;
+}
+
+interface StationRanking {
+  stationId: string;
+  stationName: string;
+  totalSales: number;
+}
 
 interface WeeklySalesTrend {
   week: number;
@@ -35,6 +113,7 @@ export class SalesDashboardComponent implements OnInit {
 
   private dialog = inject(MatDialog);
   private salesService = inject(SalesService);
+  private stationsService = inject(StationsService); // Inject StationsService
   private snackBar = inject(MatSnackBar);
   private fb = inject(FormBuilder);
 
@@ -42,6 +121,7 @@ export class SalesDashboardComponent implements OnInit {
   totalSales = signal<number>(0);
   weeklySales = signal<WeeklySalesTrend[]>([]);
   monthlySales = signal<MonthlySalesTrend[]>([]);
+  stations = signal<Station[]>([]); // Signal for real stations
   loading = signal<boolean>(false);
   error = signal<string | null>(null);
 
@@ -85,6 +165,10 @@ export class SalesDashboardComponent implements OnInit {
 
   // Available stations for filter
   allStations = computed(() => {
+    // Map real stations to dropdown options. Check if stations exist, otherwise fallback to mock (or just empty)
+    if (this.stations().length > 0) {
+      return this.stations().map(s => ({ id: s.id || '', name: s.name }));
+    }
     return this.mockStationSales.map(s => ({ id: s.stationId, name: s.stationName }));
   });
 
@@ -262,6 +346,10 @@ export class SalesDashboardComponent implements OnInit {
       this.totalSales.set(5500000);
       this.weeklySales.set(this.mockWeeklySales);
       this.monthlySales.set(this.mockMonthlySales);
+
+      // Fetch real stations
+      const realStations = await this.stationsService.getAll();
+      this.stations.set(realStations);
 
     } catch (err) {
       console.error('Error loading dashboard data:', err);

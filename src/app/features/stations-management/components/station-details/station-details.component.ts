@@ -1,10 +1,11 @@
-import { Component, inject, OnInit } from '@angular/core'; // Added OnInit
+import { Component, inject, OnInit, effect } from '@angular/core';
 import { StationStore } from '../../store/stations.store';
 import { ActivatedRoute } from '@angular/router';
-import { take } from 'rxjs/operators'; // Optional: for good practice with router params
+import { take } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { AssignManager } from '../assign-manager/assign-manager';
 import { UnassignManager } from '../unassign-manager/unassign-manager';
+import { ChartConfiguration, ChartOptions } from 'chart.js';
 
 export interface SalesDataPoint {
   date: string;
@@ -16,103 +17,83 @@ export interface SalesDataPoint {
   selector: 'app-station-details',
   standalone: false,
   templateUrl: './station-details.component.html',
-  // NOTE: Angular expects `styleUrls` (plural) with an array
   styleUrls: ['./station-details.component.scss']
 })
-export class StationDetailsComponent implements OnInit { // Implemented OnInit
+export class StationDetailsComponent implements OnInit {
 
-  // Injecting ActivatedRoute via constructor for compatibility, 
-  // though it could be injected via the 'inject' function as well.
+  public stationStore = inject(StationStore);
+
+  // Chart Configuration
+  public lineChartData: ChartConfiguration<'line'>['data'] = {
+    labels: [],
+    datasets: [
+      {
+        data: [],
+        label: 'Petrol',
+        fill: false,
+        tension: 0.1,
+        borderColor: '#6366f1',
+        backgroundColor: '#6366f1',
+        pointBackgroundColor: '#6366f1',
+      },
+      {
+        data: [],
+        label: 'Diesel',
+        fill: false,
+        tension: 0.1,
+        borderColor: '#f97316',
+        backgroundColor: '#f97316',
+        pointBackgroundColor: '#f97316',
+      }
+    ]
+  };
+
+  public lineChartOptions: ChartOptions<'line'> = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: true, position: 'top' },
+      tooltip: { mode: 'index', intersect: false }
+    },
+    scales: {
+      x: { grid: { display: false } }, // using display: false instead of drawOnChartArea for simplified type safety if chart.js types are strict
+      y: { beginAtZero: true, grid: { color: '#f1f5f9' } }
+    }
+  };
+  public lineChartLegend = true;
+
   constructor(
     private route: ActivatedRoute,
     private dialog: MatDialog
-  ) { }
+  ) {
+    // Reactive effect to update chart data when store data changes
+    effect(() => {
+      const sales = this.stationStore.stationSales();
+      this.updateChartData(sales);
+    });
+  }
 
-  public stationStore = inject(StationStore);
-  // public id: number = 0; // No longer needed as a property
-
-  // Use the store's sales data signal
-  public get salesData() { // Accessor to make template migration easier
+  // Helper accessor for template compatibility with table
+  public get salesData() {
     return this.stationStore.stationSales();
   }
 
-  // Simple SVG chart config
-  public chartWidth: number = 640;
-  public chartHeight: number = 300;
-  public chartMargin: { top: number; right: number; bottom: number; left: number } = {
-    top: 16,
-    right: 16,
-    bottom: 28,
-    left: 56,
-  };
+  private updateChartData(sales: any[]) {
+    if (!sales) return;
 
-  /** Inner drawable width excluding margins */
-  public get innerWidth(): number {
-    return Math.max(0, this.chartWidth - this.chartMargin.left - this.chartMargin.right);
-  }
-
-  /** Inner drawable height excluding margins */
-  public get innerHeight(): number {
-    return Math.max(0, this.chartHeight - this.chartMargin.top - this.chartMargin.bottom);
-  }
-
-  /** Collect all numeric values for y-domain computation */
-  private get allValues(): number[] {
-    const data = this.stationStore.stationSales();
-    if (!data || data.length === 0) {
-      return [];
-    }
-    return data.flatMap((point) => [point.petrolSales, point.dieselSales]);
-  }
-
-  /** Minimum y value, safe default when data is empty */
-  public get yMin(): number {
-    return this.allValues.length > 0 ? Math.min(...this.allValues) : 0;
-  }
-
-  /** Maximum y value, safe default when data is empty */
-  public get yMax(): number {
-    return this.allValues.length > 0 ? Math.max(...this.allValues) : 1;
-  }
-
-  /** Map a data index to an x coordinate within the inner chart area */
-  public indexToX(index: number): number {
-    const data = this.stationStore.stationSales();
-    if (data.length <= 1) {
-      return this.chartMargin.left;
-    }
-    const t = index / (data.length - 1);
-    return this.chartMargin.left + t * this.innerWidth;
-  }
-
-  /** Map a data value to a y coordinate within the inner chart area */
-  public valueToY(value: number): number {
-    const range = this.yMax - this.yMin || 1; // avoid division by zero
-    const t = (value - this.yMin) / range; // 0..1
-    // Invert for SVG (0 at top)
-    return this.chartMargin.top + (1 - t) * this.innerHeight;
-  }
-
-  /** Points string for the petrol series polyline */
-  public get petrolPoints(): string {
-    const data = this.stationStore.stationSales();
-    if (!data || data.length === 0) {
-      return '';
-    }
-    return data
-      .map((d, i) => `${this.indexToX(i)},${this.valueToY(d.petrolSales)}`)
-      .join(' ');
-  }
-
-  /** Points string for the diesel series polyline */
-  public get dieselPoints(): string {
-    const data = this.stationStore.stationSales();
-    if (!data || data.length === 0) {
-      return '';
-    }
-    return data
-      .map((d, i) => `${this.indexToX(i)},${this.valueToY(d.dieselSales)}`)
-      .join(' ');
+    this.lineChartData = {
+      labels: sales.map(s => new Date(s.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })),
+      datasets: [
+        {
+          ...this.lineChartData.datasets[0],
+          data: sales.map(s => s.petrolSales)
+        },
+        {
+          ...this.lineChartData.datasets[1],
+          data: sales.map(s => s.dieselSales)
+        }
+      ]
+    };
   }
 
   ngOnInit(): void {

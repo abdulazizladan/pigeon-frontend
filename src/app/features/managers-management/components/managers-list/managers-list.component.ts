@@ -1,4 +1,4 @@
-import { Component, effect, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, effect, inject, OnInit, ViewChild, computed } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -15,7 +15,7 @@ import { Manager } from '../../models/manager.model';
   templateUrl: './managers-list.component.html',
   styleUrl: './managers-list.component.scss'
 })
-export class ManagersListComponent implements OnInit{
+export class ManagersListComponent implements OnInit {
 
   public managersStore = inject(ManagersStore);
   private dialog = inject(MatDialog);
@@ -24,15 +24,49 @@ export class ManagersListComponent implements OnInit{
     private route: ActivatedRoute,
     private snackBar: MatSnackBar, // 👈 Inject MatSnackBar
     private router: Router,
-  ) {
-
+  ) { // constructor end
   }
-  
+
+  // --- Computed Statistics ---
+  public totalManagers = computed(() => this.managersStore.managers()?.length || 0);
+
+  public activeManagers = computed(() => {
+    const managers = this.managersStore.managers();
+    return managers ? managers.filter(m => m.status === 'active').length : 0;
+  });
+
+  public unassignedManagers = computed(() => {
+    const managers = this.managersStore.managers();
+    return managers ? managers.filter(m => !m.station).length : 0;
+  });
+
+  public inactiveManagers = computed(() => {
+    const managers = this.managersStore.managers();
+    return managers ? managers.filter(m => m.status !== 'active').length : 0;
+  });
+
+  // --- Computed Percentages ---
+  public activePercentage = computed(() => {
+    const total = this.totalManagers();
+    return total > 0 ? Math.round((this.activeManagers() / total) * 100) : 0;
+  });
+
+  public unassignedPercentage = computed(() => {
+    const total = this.totalManagers();
+    return total > 0 ? Math.round((this.unassignedManagers() / total) * 100) : 0;
+  });
+
+  public inactivePercentage = computed(() => {
+    const total = this.totalManagers();
+    return total > 0 ? Math.round((this.inactiveManagers() / total) * 100) : 0;
+  });
+
   public dataSource = new MatTableDataSource<Manager>([])
-  
+
+
   public displayedColumns: string[] = ["name", "email", "station", "status"]
 
-    // ViewChilds for MatTable features
+  // ViewChilds for MatTable features
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
@@ -46,12 +80,12 @@ export class ManagersListComponent implements OnInit{
       this.dataSource.sort = this.sort;
     }
     this.dataSource.filterPredicate = (data: Manager, filter: string): boolean => {
-      const dataStr = (data.info.firstName + data.info.lastName + data.email ).toLowerCase();
+      const dataStr = (data.info.firstName + data.info.lastName + data.email).toLowerCase();
       return dataStr.indexOf(filter) !== -1;
     };
   });
 
-  
+
 
   ngOnInit(): void {
     this.managersStore.loadManagers()
@@ -71,29 +105,29 @@ export class ManagersListComponent implements OnInit{
       width: '400px'
     });
     dialogRef.afterClosed().subscribe(result => {
-        if(result) {
-          this.managersStore.addManager(result);
-          const snackBarRef = this.snackBar.open(
-            `Manager successfully added!`,
-            'Open Details', // The action button text
-            {
-              duration: 5000, // Duration in milliseconds (e.g., 5 seconds)
-            }
-          );
-  
-          // 3. Subscribe to the action button click
-          snackBarRef.onAction().subscribe(() => {
-            // Assuming the added user object has an 'id' property
-            if (result.id) {
-              // Navigate to the user details page, using the user's ID
-              this.router.navigate([`./${result.id}`], {relativeTo: this.route}); 
-            } else {
-              // Handle case where user ID might be missing after creation
-              console.error('Added user is missing an ID for navigation.');
-            }
-          });
-        }
+      if (result) {
+        this.managersStore.addManager(result);
+        const snackBarRef = this.snackBar.open(
+          `Manager successfully added!`,
+          'Open Details', // The action button text
+          {
+            duration: 5000, // Duration in milliseconds (e.g., 5 seconds)
+          }
+        );
+
+        // 3. Subscribe to the action button click
+        snackBarRef.onAction().subscribe(() => {
+          // Assuming the added user object has an 'id' property
+          if (result.id) {
+            // Navigate to the user details page, using the user's ID
+            this.router.navigate([`./${result.id}`], { relativeTo: this.route });
+          } else {
+            // Handle case where user ID might be missing after creation
+            console.error('Added user is missing an ID for navigation.');
+          }
+        });
       }
+    }
     )
   }
 

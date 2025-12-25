@@ -36,7 +36,9 @@ export class DispenserService {
     )
   }
 
-  async update(id: string) {
-
+  async updateStatus(id: string, status: 'active' | 'suspended'): Promise<Dispenser> {
+    return firstValueFrom(
+      this.http.patch<Dispenser>(`${this.baseUrl}/dispenser/${id}`, { status }).pipe()
+    );
   }
 }

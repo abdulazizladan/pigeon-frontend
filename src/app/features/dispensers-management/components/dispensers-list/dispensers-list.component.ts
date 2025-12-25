@@ -8,6 +8,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators'; // 👈 New Import
 import { PageEvent } from '@angular/material/paginator'; // 👈 New Import
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'app-dispensers-list',
@@ -15,14 +16,14 @@ import { PageEvent } from '@angular/material/paginator'; // 👈 New Import
   templateUrl: './dispensers-list.component.html',
   styleUrl: './dispensers-list.component.scss'
 })
-export class DispensersListComponent implements OnInit, OnDestroy{
+export class DispensersListComponent implements OnInit, OnDestroy {
 
-  private destroy$ = new Subject<void>(); 
+  private destroy$ = new Subject<void>();
   public dispenserStore = inject(DispenserStore)
   displayedColumns: string[] = ['name', 'phone', 'status']
 
   // Search and Pagination State
-  searchControl = new FormControl<string>(''); 
+  searchControl = new FormControl<string>('');
   searchTerm = signal('');
   pageSizeOptions: number[] = [5, 10, 25, 50];
   pageSize = signal(10);
@@ -31,8 +32,8 @@ export class DispensersListComponent implements OnInit, OnDestroy{
 
   constructor(
     private dialog: MatDialog,
-    private snackBar: MatSnackBar, 
-    private router: Router, 
+    private snackBar: MatSnackBar,
+    private router: Router,
     private route: ActivatedRoute
   ) {
     // Search control logic
@@ -41,7 +42,7 @@ export class DispensersListComponent implements OnInit, OnDestroy{
         debounceTime(300),
         distinctUntilChanged(),
         takeUntil(this.destroy$)
-      ) 
+      )
       .subscribe(value => {
         this.searchTerm.set(value ?? '');
         // Reset to first page on new search
@@ -57,7 +58,7 @@ export class DispensersListComponent implements OnInit, OnDestroy{
     this.destroy$.next();
     this.destroy$.complete();
   }
-  
+
   // Filtering Logic
   filteredDispensers = computed(() => {
     const search = this.searchTerm().toLowerCase();
@@ -66,7 +67,7 @@ export class DispensersListComponent implements OnInit, OnDestroy{
       (dispenser.firsName || '').toLowerCase().includes(search) ||
       (dispenser.lastName || '').toLowerCase().includes(search) ||
       (dispenser.middleName || '').toLowerCase().includes(search) ||
-      (dispenser.phone || '').toLowerCase().includes(search) 
+      (dispenser.phone || '').toLowerCase().includes(search)
     );
   });
 
@@ -80,7 +81,7 @@ export class DispensersListComponent implements OnInit, OnDestroy{
     const start = index * size;
     return this.filteredDispensers().slice(start, start + size);
   });
-  
+
   // Handle paginator events
   onPage(event: PageEvent) {
     this.pageIndex.set(event.pageIndex);
@@ -93,7 +94,7 @@ export class DispensersListComponent implements OnInit, OnDestroy{
     });
 
     dialogRef.afterClosed().pipe(takeUntil(this.destroy$)).subscribe(result => {
-      if(result) {
+      if (result) {
         this.dispenserStore.addDispenser(result);
         const snackBarRef = this.snackBar.open(
           `Fuel attendant successfully added`,
@@ -105,13 +106,19 @@ export class DispensersListComponent implements OnInit, OnDestroy{
         // Navigate to details on action click
         snackBarRef.onAction().pipe(takeUntil(this.destroy$)).subscribe(() => {
           // Assuming the added dispenser object has an 'id' property
-          if(result.id) {
-            this.router.navigate([`./${result.id}`], {relativeTo: this.route});
+          if (result.id) {
+            this.router.navigate([`./${result.id}`], { relativeTo: this.route });
           } else {
             console.error('Added attendant is missing an ID for navigation.')
           }
         })
       }
     })
+  }
+
+  toggleStatus(dispenser: any, event: MatSlideToggleChange) {
+    if (!dispenser.id) return;
+    const newStatus = event.checked ? 'active' : 'suspended';
+    this.dispenserStore.updateStatus(dispenser.id, newStatus);
   }
 }

@@ -18,30 +18,48 @@ const initialState: DispenserState = {
 }
 
 export const DispenserStore = signalStore(
-  {providedIn: 'root'},
+  { providedIn: 'root' },
   withState(initialState),
   withMethods((store, dispenserService = inject(DispenserService)) => ({
     async loadDispensers() {
-      patchState(store, {loading: true, error: null});
+      patchState(store, { loading: true, error: null });
       try {
         const dispenserss = await dispenserService.get();
-        patchState(store, {dispensers: dispenserss, loading: false, error: null});
-      }catch (error) {
-        patchState(store, {loading: false, error: "Unable to fetch dispensers. Check your connection and try again later."})
+        patchState(store, { dispensers: dispenserss, loading: false, error: null });
+      } catch (error) {
+        patchState(store, { loading: false, error: "Unable to fetch dispensers. Check your connection and try again later." })
+      }
+    },
+    async updateStatus(id: string, status: 'active' | 'suspended') {
+      patchState(store, { loading: true, error: null });
+      try {
+        await dispenserService.updateStatus(id, status);
+        patchState(store, (state) => ({
+          dispensers: state.dispensers.map((d) =>
+            d.id === id ? { ...d, status } : d
+          ),
+          loading: false,
+          error: null,
+        }));
+      } catch (error) {
+        patchState(store, {
+          loading: false,
+          error: 'Unable to update status. Please try again.',
+        });
       }
     },
     async addDispenser(dispenser: Dispenser) {
       patchState(
         store, {
-          loading: true, 
-          error: null
-        }
+        loading: true,
+        error: null
+      }
       );
-      try{
+      try {
         const newDispenser = await dispenserService.create(dispenser);
         patchState(store, state => ({
           dispensers: [
-            ...state.dispensers, 
+            ...state.dispensers,
             newDispenser
           ],
           loading: false,
@@ -50,9 +68,9 @@ export const DispenserStore = signalStore(
       } catch (error) {
         patchState(
           store, {
-            loading: false,
-            error: "Unable to add dispenser. Check your connection and try again."
-          }
+          loading: false,
+          error: "Unable to add dispenser. Check your connection and try again."
+        }
         )
       }
     }

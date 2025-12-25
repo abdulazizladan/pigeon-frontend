@@ -4,6 +4,89 @@
   margin: 0 auto;
 }
 
+// --- Stats Grid & Cards ---
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: #ffffff;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: 1px solid #f1f5f9;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+
+  .stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    mat-icon {
+      font-size: 30px;
+      width: 30px;
+      height: 30px;
+    }
+
+    &.total {
+      background-color: #eff6ff; // Blue-50
+      color: #3b82f6; // Blue-500
+    }
+
+    &.active {
+      background-color: #ecfdf5; // Emerald-50
+      color: #10b981; // Emerald-500
+    }
+
+    &.suspended {
+      background-color: #fef2f2; // Red-50
+      color: #ef4444; // Red-500
+    }
+  }
+
+  .stat-content {
+    display: flex;
+    flex-direction: column;
+
+    .stat-label {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #64748b; // Slate-500
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-value {
+      font-size: 1.875rem;
+      font-weight: 800;
+      color: #1e293b; // Slate-800
+      line-height: 1.2;
+    }
+
+    .stat-subtitle {
+      font-size: 0.75rem;
+      color: #94a3b8; // Slate-400
+      margin-top: 0.25rem;
+    }
+  }
+}
+
 .header {
   display: flex;
   flex-direction: column;
@@ -17,6 +100,7 @@
     justify-content: space-between;
     align-items: flex-end;
   }
+
   .search-field {
     flex: 1 1 60%;
     margin-bottom: 0 !important;
@@ -38,15 +122,17 @@
 }
 
 .mat-mdc-header-cell {
-    font-weight: 600;
-    color: #374151; /* Gray-700 */
+  font-weight: 600;
+  color: #374151;
+  /* Gray-700 */
 }
 
 .clickable-row {
-    cursor: pointer;
-    font-weight: 500;
-    color: #1d4ed8; /* Blue-700 */
-    transition: color 0.1s;
+  cursor: pointer;
+  font-weight: 500;
+  color: #1d4ed8;
+  /* Blue-700 */
+  transition: color 0.1s;
 }
 
 .mat-mdc-row .mat-mdc-cell {
@@ -65,26 +151,52 @@
 
 /* Fuel Level Status Chips */
 .fuel-level-chip {
-    display: inline-block;
-    padding: 4px 10px;
-    border-radius: 9999px; /* Fully rounded corners */
-    font-size: 0.8rem;
-    font-weight: 700;
-    text-align: center;
-    min-width: 60px;
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  /* Fully rounded corners */
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-align: center;
+  min-width: 60px;
 }
 
 .fuel-level-low {
-    background-color: #fee2e2; /* Red-100 */
-    color: #ef4444; /* Red-500 */
+  background-color: #fee2e2;
+  /* Red-100 */
+  color: #ef4444;
+  /* Red-500 */
 }
 
 .fuel-level-medium {
-    background-color: #fef3c7; /* Amber-100 */
-    color: #f59e0b; /* Amber-500 */
+  background-color: #fef3c7;
+  /* Amber-100 */
+  color: #f59e0b;
+  /* Amber-500 */
 }
 
 .fuel-level-high {
-    background-color: #d1fae5; /* Emerald-100 */
-    color: #10b981; /* Emerald-500 */
+  background-color: #d1fae5;
+  /* Emerald-100 */
+  color: #10b981;
+  /* Emerald-500 */
+}
+
+// Custom Toggle Colors
+.status-active-toggle {
+  // Using ::ng-deep to override Material internal styles if needed, 
+  // or relying on standard color mapping.
+  // For precise control over the track/thumb color:
+  --mdc-switch-selected-track-color: #10b981;
+  --mdc-switch-selected-handle-color: #059669;
+}
+
+.status-suspended-toggle {
+  --mdc-switch-selected-track-color: #ef4444;
+  --mdc-switch-selected-handle-color: #b91c1c;
+
+  // We also need to override the "unselected" state if 'suspended' is the unchecked state
+  // But since we are using a checked toggle for active, unchecked for suspended:
+  --mdc-switch-unselected-track-color: #fee2e2;
+  --mdc-switch-unselected-handle-color: #ef4444;
 }

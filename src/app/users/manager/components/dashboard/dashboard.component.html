@@ -1,38 +1,35 @@
 <div class="dashboard-page-wrapper">
-  <h1 class="page-title">Manager Dashboard</h1>
+
+  <div class="page-header">
+    <div class="title-group">
+      <h1 class="page-title">Manager Dashboard</h1>
+      <p>Overview of station performance</p>
+    </div>
+  </div>
 
   <section class="summary-cards-section">
     <div class="dashboard-grid-container">
 
-      <mat-card class="stat-card sales-card-theme">
-        <mat-card-content class="stat-card-content">
+      <!-- Total Revenue Card -->
+      <div class="stat-card">
+        <div class="stat-card-content">
           <div class="stat-text-group">
             <span class="stat-title">Total Revenue</span>
             <span class="stat-main-value color-indigo">
               &#8358;{{ totalRevenue() | number:'1.2-2' }}
             </span>
           </div>
-          <mat-icon class="stat-icon color-indigo">
-            attach_money
-          </mat-icon>
-        </mat-card-content>
-      </mat-card>
-
-      <!-- Other cards kept as placeholders or removed if not needed based on new requirements. 
-            Keeping them but maybe updating if data available in future. 
-            For now, user just asked for Total Revenue and Charts using REPORT endpoints. 
-            The other cards (Fuel Pumps, Stock, Attendants) are not covered by the new endpoints explicitly 
-            unless 'station/report/daily' covers them. Assuming we keep them as is or hide them.
-            I will keep them as is but maybe they will be static 0 for now until those features are connected.
-       -->
+          <mat-icon class="stat-icon color-indigo">payments</mat-icon>
+        </div>
+      </div>
 
     </div>
   </section>
 
-  <section class="charts-section" style="margin-top: 20px;">
+  <section class="charts-section">
     <mat-card>
       <mat-card-header>
-        <mat-card-title>Weekly Performance</mat-card-title>
+        <mat-card-title>Weekly Estimated Sales</mat-card-title>
       </mat-card-header>
       <mat-card-content>
         <app-chart [chartData]="chartData" [chartType]="'bar'" title="Weekly Sales"></app-chart>

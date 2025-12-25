@@ -10,6 +10,19 @@ import { Manager } from '../../managers-management/models/manager.model';
 })
 export class StationsService implements OnInit {
 
+  // Updated status method
+  async updateStationStatus(id: string, status: 'active' | 'suspended'): Promise<Station> {
+    const body = { status };
+    return firstValueFrom(
+      this.http.patch<{ success: boolean, data: Station, message: string }>(
+        `${this.baseUrl}/station/${id}/status`,
+        body
+      ).pipe(
+        map(response => response.data)
+      )
+    );
+  }
+
   ngOnInit(): void { }
 
   private readonly http = inject(HttpClient);
@@ -73,6 +86,15 @@ export class StationsService implements OnInit {
   async getDailySalesAggregated(): Promise<{ stationName: string, date: string, totalVolumeSold: number, totalDailyRevenue: number }[]> {
     return firstValueFrom(
       this.http.get<{ success: boolean, data: any[], message: string }>(`${this.baseUrl}/station/report/daily`).pipe(
+        map(response => response.data)
+      )
+    );
+  }
+
+  // 🚀 New Method: Fetches sales graph data for a specific station
+  async getStationSalesGraph(stationId: string): Promise<any[]> {
+    return firstValueFrom(
+      this.http.get<{ success: boolean, data: any[], message: string }>(`${this.baseUrl}/station/${stationId}/sales-graph`).pipe(
         map(response => response.data)
       )
     );

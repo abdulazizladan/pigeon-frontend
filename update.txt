@@ -132,4 +132,4 @@ interface Sale {
   station: Station;
   pump: Pump;
   recordedBy: User;   // User who entered the record
-}
+} 

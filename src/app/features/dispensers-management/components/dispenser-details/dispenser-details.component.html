@@ -76,7 +76,7 @@
                     <div class="info-row">
                         <span class="info-label">Status:</span>
                         <span class="info-value status-badge"
-                            [style.background-color]="getStatusColor(dispenser()!.status)">
+                            [ngClass]="{'active': dispenser()!.status === 'active', 'suspended': dispenser()!.status !== 'active'}">
                             <mat-icon [inline]="true">{{ getStatusIcon(dispenser()!.status) }}</mat-icon>
                             {{ dispenser()!.status | titlecase }}
                         </span>

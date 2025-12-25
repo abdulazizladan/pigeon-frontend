@@ -1,247 +1,381 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
 :host {
-    display: block;
-    font-family: 'Roboto', sans-serif;
-    background-color: #f3f4f6; /* Consistent Page Background */
-    padding: 32px 24px;
-    min-height: 100vh;
-  }
-  
-  .station-page-wrapper {
-    max-width: 960px; /* Consistent Max Width */
-    margin: 0 auto;
-  }
-  
-  .page-title {
-    font-size: 32px;
-    font-weight: 800;
-    margin-bottom: 24px;
-    color: #1f2937;
-  }
-  
-  /* --- Main Card Styling (Consistent with others) --- */
-  .station-main-card {
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05), 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    background-color: white;
-    transition: all 0.3s ease;
-  }
-  
-  .loading-bar {
-    margin-bottom: 16px;
-    --mdc-linear-progress-track-color: #e5e7eb;
-    --mdc-linear-progress-active-indicator-color: #4f46e5;
-  }
-  
-  .main-divider {
-    margin: 24px 0;
-    width: calc(100% - 48px); /* Full width minus card padding */
-    margin-left: 24px;
-    margin-right: 24px;
-  }
-  
-  /* --- 1. Header Section --- */
+  display: block;
+  font-family: 'Inter', sans-serif;
+  background-color: #f8fafc;
+  /* Slate 50 */
+  padding: 32px 24px;
+  min-height: 100vh;
+  color: #334155;
+  /* Slate 700 */
+}
+
+.station-page-wrapper {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: #1e293b;
+  /* Slate 800 */
+  letter-spacing: -0.02em;
+}
+
+/* --- Main Card Styling --- */
+.station-main-card {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  border: 1px solid #e2e8f0;
+  /* Slate 200 */
+  border-radius: 16px;
+  background-color: white;
+  overflow: hidden;
+}
+
+.loading-bar {
+  height: 4px;
+  --mdc-linear-progress-track-color: #f1f5f9;
+  --mdc-linear-progress-active-indicator-color: #6366f1;
+  /* Indigo 500 */
+}
+
+.main-divider {
+  height: 1px;
+  background-color: #f1f5f9;
+  /* Slate 100 */
+  margin: 0;
+}
+
+/* --- Header Section --- */
+.station-header-section {
+  padding: 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+.station-name {
+  font-size: 24px;
+  font-weight: 700;
+  color: #0f172a;
+  /* Slate 900 */
+  margin: 0 0 8px 0;
+  line-height: 1.2;
+}
+
+.station-address {
+  font-size: 15px;
+  color: #64748b;
+  /* Slate 500 */
+  margin: 0;
+  line-height: 1.5;
+  max-width: 400px;
+}
+
+/* Manager Section */
+.manager-section {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background-color: #f8fafc;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+}
+
+.manager-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.manager-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #94a3b8;
+  /* Slate 400 */
+  font-weight: 600;
+}
+
+.manager-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #334155;
+}
+
+.manager-name.not-assigned {
+  color: #94a3b8;
+  font-style: italic;
+  font-weight: 400;
+}
+
+.manager-action-btn {
+  height: 32px;
+  font-size: 13px;
+  line-height: 32px;
+  border-radius: 8px;
+}
+
+/* --- Details Grid --- */
+.details-section-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  /* Gap for divider effect via background if needed, but here used for spacing */
+  background-color: #f1f5f9;
+  /* Color of the dividing line */
+  padding-top: 1px;
+  /* Top border */
+}
+
+.detail-column {
+  background-color: white;
+  padding: 32px;
+}
+
+.info-section-header {
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  color: #94a3b8;
+  margin-bottom: 24px;
+}
+
+.info-details-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.detail-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+/* Icon Wrapper */
+.icon-wrapper {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background-color: #eef2ff;
+  /* Indigo 50 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.detail-icon {
+  font-size: 20px;
+  color: #6366f1;
+  /* Indigo 500 */
+  width: 20px;
+  height: 20px;
+}
+
+.detail-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.detail-content.full-width {
+  width: 100%;
+}
+
+.detail-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #64748b;
+}
+
+.detail-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.detail-value-highlight {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.sub-text {
+  font-size: 13px;
+  font-weight: 400;
+  color: #94a3b8;
+  margin-left: 4px;
+}
+
+
+/* Fuel Level specific */
+.flex-row-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.fuel-level-bar {
+  height: 8px;
+  border-radius: 4px;
+  width: 100%;
+  --mdc-linear-progress-track-color: #f1f5f9;
+  --mdc-linear-progress-active-indicator-color: #10b981;
+  /* Emerald 500 */
+}
+
+
+/* --- Sales Section --- */
+.sales-performance-section {
+  padding: 32px;
+}
+
+.section-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.period-badge {
+  font-size: 12px;
+  font-weight: 600;
+  background-color: #f1f5f9;
+  color: #475569;
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+/* Chart */
+.chart-container {
+  background: #ffffff;
+  border: 1px solid #f1f5f9;
+  /* Subtle border */
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 32px;
+}
+
+.chart-wrapper {
+  height: 280px;
+  width: 100%;
+}
+
+.sales-chart-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+
+
+/* Modern Table */
+.sales-summary-container {
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.modern-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.modern-table th {
+  background-color: #f8fafc;
+  color: #64748b;
+  font-weight: 600;
+  text-align: left;
+  padding: 12px 24px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.modern-table td {
+  padding: 16px 24px;
+  color: #334155;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.modern-table tr:last-child td {
+  border-bottom: none;
+}
+
+.modern-table .text-right {
+  text-align: right;
+}
+
+.date-cell {
+  font-weight: 500;
+}
+
+.amount-cell {
+  font-family: 'Roboto Mono', monospace;
+  /* Monospace for numbers */
+  font-weight: 600;
+}
+
+.petrol-text {
+  color: #6366f1;
+}
+
+.diesel-text {
+  color: #f97316;
+}
+
+.empty-state {
+  text-align: center;
+  color: #94a3b8;
+  padding: 32px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
   .station-header-section {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    padding: 24px 24px 0;
-  }
-  
-  .station-name {
-    font-size: 28px;
-    font-weight: 600;
-    color: #1f2937;
-    margin: 0 0 4px 0;
-  }
-  
-  .station-id-subtitle {
-    font-size: 14px;
-    color: #6b7280;
-    margin: 0;
-  }
-  
-  /* Status Pill */
-  .status-indicator-wrapper {
-    flex-shrink: 0;
-    padding-top: 5px;
-  }
-  .status-pill {
-    padding: 6px 12px;
-    border-radius: 18px;
-    font-size: 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-    min-width: 100px;
-    text-align: center;
-  }
-  .status-operational {
-    background-color: #d1fae5; /* Green 100 */
-    color: #065f46; /* Green 700 */
-  }
-  .status-maintenance {
-    background-color: #fff7ed; /* Orange 100 */
-    color: #9a3412; /* Orange 700 */
-  }
-  .status-unknown {
-    background-color: #f3f4f6;
-    color: #4b5563;
-  }
-  
-  
-  /* --- 2. Details Section (Two-Column Grid) --- */
-  .details-section-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* Two equal columns for basic & operational */
-    gap: 32px;
-    padding: 0 24px;
-  }
-  
-  .info-section-header {
-    font-size: 18px;
-    font-weight: 600;
-    color: #374151;
-    margin-bottom: 16px;
-  }
-  
-  .info-details-grid {
-    display: flex;
     flex-direction: column;
-    gap: 8px; /* Vertical spacing between items */
+    padding: 24px;
   }
-  
-  .detail-item {
-    display: grid;
-    grid-template-columns: 24px 120px 1fr; /* Icon, Label, Value */
-    align-items: center;
-    gap: 12px;
-    padding: 8px 0;
-    border-bottom: 1px dashed #f3f4f6;
-  }
-  
-  .detail-icon {
-    font-size: 20px;
-    color: #4f46e5; /* Primary color for icons */
-  }
-  
-  .detail-label {
-    font-weight: 500;
-    color: #4b5563;
-    font-size: 14px;
-  }
-  
-  .detail-value {
-    color: #1f2937;
-    font-size: 16px;
-    word-break: break-word;
-  }
-  
-  /* Operational Value Styling */
-  .fuel-level-value {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-  .fuel-level-bar {
-    height: 8px;
-    border-radius: 4px;
-    --mdc-linear-progress-track-color: #e5e7eb;
-    --mdc-linear-progress-active-indicator-color: #10b981; /* Green for level */
-  }
-  .alert-value {
-    font-weight: 600;
-    color: #ef4444; /* Red for alerts */
-  }
-  
-  
-  /* --- 3. Sales Graph Section --- */
-  .sales-performance-section {
-    padding: 0 24px 24px;
-  }
-  .chart-header {
-    margin-top: 0;
-  }
-  
-  .chart-wrapper {
-    height: 300px;
-    margin-bottom: 24px;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  }
-  .sales-chart-svg {
+
+  .manager-section {
     width: 100%;
-    height: 100%;
-    display: block;
+    justify-content: space-between;
+    box-sizing: border-box;
   }
-  
-  /* Sales Summary Table (Redesigned from list) */
-  .sales-summary-subheader {
-    font-size: 16px;
-    font-weight: 500;
-    color: #374151;
-    margin-bottom: 12px;
-    border-bottom: 1px solid #e5e7eb;
-    padding-bottom: 8px;
+
+  .details-section-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
   }
-  
-  .summary-table-header, .summary-table-row {
-    display: grid;
-    grid-template-columns: 30px 1fr 1fr 1fr; /* Icon, Date, Petrol, Diesel */
-    align-items: center;
-    padding: 10px 0;
+
+  .detail-column {
+    padding: 24px;
+    border-bottom: 1px solid #f1f5f9;
   }
-  
-  .summary-table-header {
-    font-weight: 600;
-    font-size: 14px;
-    color: #4b5563;
-    border-bottom: 2px solid #e5e7eb;
+
+  .detail-column:last-child {
+    border-bottom: none;
   }
-  
-  .summary-table-row {
-    font-size: 16px;
-    color: #1f2937;
-    border-bottom: 1px solid #f3f4f6;
+
+  .sales-performance-section {
+    padding: 24px;
   }
-  
-  .table-column-icon {
-    font-size: 18px;
-    color: #4f46e5;
-    justify-self: center;
+
+  .chart-container {
+    padding: 16px;
+    margin-left: -16px;
+    margin-right: -16px;
+    border-left: none;
+    border-right: none;
+    border-radius: 0;
   }
-  .table-column-date, .table-column-petrol, .table-column-diesel {
-    padding-left: 8px;
-  }
-  .table-column-petrol { color: #4f46e5; font-weight: 500;} /* Petrol: Indigo */
-  .table-column-diesel { color: #f97316; font-weight: 500;} /* Diesel: Orange */
-  
-  
-  /* --- Footer Actions --- */
-  .card-footer-actions {
-    display: flex;
-    justify-content: flex-end;
-    padding: 16px 24px;
-    border-top: 1px solid #e5e7eb;
-  }
-  
-  
-  /* Responsive adjustments */
-  @media (max-width: 768px) {
-    .details-section-grid {
-      grid-template-columns: 1fr; /* Single column on tablets/mobile */
-      gap: 24px;
-    }
-    .station-header-section {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-    .status-indicator-wrapper {
-      margin-top: 12px;
-    }
-    .summary-table-header, .summary-table-row {
-      grid-template-columns: 30px 1fr 1fr 1fr;
-      font-size: 14px;
-    }
-  }
+}

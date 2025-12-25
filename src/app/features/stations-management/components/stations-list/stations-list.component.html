@@ -1,13 +1,53 @@
 <div class="stations-list-container">
   <h1>Stations Management</h1>
-  
+
+  <!-- Stats Grid -->
+  <div class="stats-grid">
+    <!-- Total Stations -->
+    <div class="stat-card">
+      <div class="stat-icon total">
+        <mat-icon>ev_station</mat-icon>
+      </div>
+      <div class="stat-content">
+        <div class="stat-label">Total Stations</div>
+        <div class="stat-value">{{ totalStations() }}</div>
+        <div class="stat-subtitle">All registered stations</div>
+      </div>
+    </div>
+
+    <!-- Active Stations -->
+    <div class="stat-card">
+      <div class="stat-icon active">
+        <mat-icon>check_circle</mat-icon>
+      </div>
+      <div class="stat-content">
+        <div class="stat-label">Active Stations</div>
+        <div class="stat-value">{{ activeStations() }}</div>
+        <div class="stat-subtitle">Operational stations</div>
+      </div>
+    </div>
+
+    <!-- Suspended Stations -->
+    <div class="stat-card">
+      <div class="stat-icon suspended">
+        <mat-icon>block</mat-icon>
+      </div>
+      <div class="stat-content">
+        <div class="stat-label">Suspended Stations</div>
+        <div class="stat-value">{{ suspendedStations() }}</div>
+        <div class="stat-subtitle">Temporarily inactive</div>
+      </div>
+    </div>
+  </div>
+
+
   <div class="header">
     <mat-form-field appearance="outline" class="search-field">
       <mat-label>Search Stations</mat-label>
       <input matInput (keyup)="applyFilter($event)" placeholder="" #input>
       <mat-icon matPrefix>search</mat-icon>
     </mat-form-field>
-    
+
     <button mat-flat-button color="primary" (click)="openAddStationDialog()">
       <mat-icon>add</mat-icon>
       Add Station
@@ -15,29 +55,29 @@
   </div>
 
   @if(stationStore.loading() && stationStore.stations().length === 0) {
-    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
   }
 
   @if(stationStore.error()) {
-    <mat-error class="error-message">{{ stationStore.error() }}</mat-error>
+  <mat-error class="error-message">{{ stationStore.error() }}</mat-error>
   }
-  
+
   <div class="mat-elevation-z8">
     <table mat-table [dataSource]="dataSource" matSort>
 
       <!-- Station Name Column -->
       <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Station Name </th>
-        <td mat-cell *matCellDef="let station" [routerLink]="[station.id]" class="clickable-row"> 
-          {{ station.name }} 
+        <td mat-cell *matCellDef="let station" [routerLink]="[station?.id]" class="clickable-row">
+          {{ station.name }}
         </td>
       </ng-container>
 
       <!-- Location Column -->
       <ng-container matColumnDef="location">
         <th mat-header-cell *matHeaderCellDef> Location </th>
-        <td mat-cell *matCellDef="let station"> 
-          {{ station.address }}, {{station.lga}}, {{station.state}} 
+        <td mat-cell *matCellDef="let station">
+          {{ station.address }}, {{station.lga}}, {{station.state}}
         </td>
       </ng-container>
 
@@ -51,15 +91,27 @@
       <!-- Fuel Status Column (New) -->
       <ng-container matColumnDef="status">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Reservoir Levels </th>
-        <td mat-cell *matCellDef="let station"> 
-            <span 
-                [class]="'fuel-level-chip fuel-level-' + (station.fuelLevelPercentage < 20 ? 'low' : station.fuelLevelPercentage < 50 ? 'medium' : 'high')">
-                Petrol: {{ station.fuelLevelPercentage || 0}}% 
-            </span>
-            <span 
-              [class]="'fuel-level-chip fuel-level-' + (station.fuelLevelPercentage < 20 ? 'low' : station.fuelLevelPercentage < 50 ? 'medium' : 'high')">
-              Diesel: {{ station.fuelLevelPercentage || 0}}% 
-        </span>
+        <td mat-cell *matCellDef="let station">
+          <span
+            [class]="'fuel-level-chip fuel-level-' + (station.fuelLevelPercentage < 20 ? 'low' : station.fuelLevelPercentage < 50 ? 'medium' : 'high')">
+            Petrol: {{ station.fuelLevelPercentage || 0}}%
+          </span>
+          <span
+            [class]="'fuel-level-chip fuel-level-' + (station.fuelLevelPercentage < 20 ? 'low' : station.fuelLevelPercentage < 50 ? 'medium' : 'high')">
+            Diesel: {{ station.fuelLevelPercentage || 0}}%
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Status Toggle Column -->
+      <ng-container matColumnDef="toggle">
+        <th mat-header-cell *matHeaderCellDef> Station Status </th>
+        <td mat-cell *matCellDef="let station">
+          <mat-slide-toggle [checked]="station.status === 'active'" (change)="toggleStatus(station, $event)"
+            [class.status-active-toggle]="station.status === 'active'"
+            [class.status-suspended-toggle]="station.status !== 'active'">
+            {{ station.status === 'active' ? 'Active' : 'Suspended' }}
+          </mat-slide-toggle>
         </td>
       </ng-container>
 
@@ -87,10 +139,6 @@
       </tr>
     </table>
     <!-- Paginator at the bottom -->
-    <mat-paginator
-      [length]="dataSource.filteredData.length || 0"
-      [pageSize]="10"
-      [pageSizeOptions]="[5, 10, 20]"
-      [showFirstLastButtons]="true"
-      aria-label="Select page">
+    <mat-paginator [length]="dataSource.filteredData.length || 0" [pageSize]="10" [pageSizeOptions]="[5, 10, 20]"
+      [showFirstLastButtons]="true" aria-label="Select page">
     </mat-paginator>

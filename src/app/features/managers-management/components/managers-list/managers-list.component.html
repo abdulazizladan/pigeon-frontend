@@ -1,5 +1,66 @@
 <h1>Managers</h1>
 <div class="users-list-container">
+
+  <!-- Summary Cards -->
+  <div class="stats-grid">
+    <!-- Total Managers -->
+    <div class="stat-card">
+      <div class="stat-icon total">
+        <mat-icon>group</mat-icon>
+      </div>
+      <div class="stat-content">
+        <div class="stat-label">Total Managers</div>
+        <div class="stat-value">{{ totalManagers() }}</div>
+        <div class="stat-subtitle">All registered managers</div>
+      </div>
+    </div>
+
+    <!-- Active Managers -->
+    <div class="stat-card">
+      <div class="stat-icon active">
+        <mat-icon>check_circle</mat-icon>
+      </div>
+      <div class="stat-content">
+        <div class="stat-label">Active Managers</div>
+        <div class="stat-value-group">
+          <div class="stat-value">{{ activeManagers() }}</div>
+          <div class="stat-percentage">{{ activePercentage() }}%</div>
+        </div>
+        <div class="stat-subtitle">Currently active accounts</div>
+      </div>
+    </div>
+
+    <!-- Unassigned Managers -->
+    <div class="stat-card">
+      <div class="stat-icon unassigned">
+        <mat-icon>assignment_late</mat-icon>
+      </div>
+      <div class="stat-content">
+        <div class="stat-label">Unassigned Managers</div>
+        <div class="stat-value-group">
+          <div class="stat-value">{{ unassignedManagers() }}</div>
+          <div class="stat-percentage">{{ unassignedPercentage() }}%</div>
+        </div>
+        <div class="stat-subtitle">No station assigned</div>
+      </div>
+    </div>
+
+    <!-- Inactive Managers -->
+    <div class="stat-card">
+      <div class="stat-icon inactive">
+        <mat-icon>person_off</mat-icon>
+      </div>
+      <div class="stat-content">
+        <div class="stat-label">Inactive Managers</div>
+        <div class="stat-value-group">
+          <div class="stat-value">{{ inactiveManagers() }}</div>
+          <div class="stat-percentage">{{ inactivePercentage() }}%</div>
+        </div>
+        <div class="stat-subtitle">Suspended or inactive</div>
+      </div>
+    </div>
+  </div>
+
   <div class="header" fxLayout="row">
     <mat-form-field appearance="outline" class="search-field">
       <mat-label>Search Managers</mat-label>
@@ -39,14 +100,19 @@
     <ng-container matColumnDef="station">
       <th mat-header-cell *matHeaderCellDef>Station</th>
       <td mat-cell *matCellDef="let manager">
-        {{ manager.station?.name || 'Not assigned' }}
+        <span [class.status-chip]="!manager.station" [class.inactive]="!manager.station">
+          {{ manager.station?.name || 'unassigned' }}
+        </span>
       </td>
     </ng-container>
 
     <ng-container matColumnDef="status">
       <th mat-header-cell *matHeaderCellDef>Status</th>
       <td mat-cell *matCellDef="let manager">
-        {{manager.status}}
+        <span class="status-chip" [class.active]="manager.status === 'active'"
+          [class.inactive]="manager.status !== 'active'">
+          {{manager.status}}
+        </span>
       </td>
     </ng-container>
 

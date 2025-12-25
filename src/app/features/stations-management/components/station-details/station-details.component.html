@@ -3,172 +3,155 @@
 
   <div class="station-details-container">
     @if(stationStore.loading()) {
-      <mat-progress-bar mode="query" class="loading-bar"></mat-progress-bar>
-    } 
-    
+    <mat-progress-bar mode="query" class="loading-bar"></mat-progress-bar>
+    }
+
     @else {
-      <mat-card class="station-main-card">
-        
-        <div style="padding: 15px">
-          <div>
-            <h2 class="station-name">{{ stationStore.selectedStation()?.name }}</h2>
-            <p fxLayout="row" style="padding: 15px">Manager: 
-              @if(stationStore.selectedStation()?.manager){ 
-                {{stationStore.selectedStation()?.manager?.info?.firstName | titlecase}} {{stationStore.selectedStation()?.manager?.info?.lastName | titlecase}}
-                <span fxFlex="1 1 auto"></span>
-                <button mat-flat-button color="primary" (click)="openUnassignManagerDialog()">
-                  Unassign manager
-                </button>
-              }@else {
-                <div fxFlex="row" style="width: 100%;">
-                  Not assigned
-                <span fxFlex="1 1 auto"></span>
-                <button mat-flat-button color="primary" (click)="openAssignManagerDialog()">
-                  Assign manager
-                </button>
-                </div>
-              }
-            </p>
-          </div>
-          
-          <!--<div class="status-indicator-wrapper">
-            @switch (stationStore.selectedStation()?.currentStatus?.toLowerCase()) {
-              @case ('operational') {
-                <span class="status-pill status-operational">
-                  {{ stationStore.selectedStation()?.currentStatus || 'Operational' }}
-                </span>
-              }
-              @case ('maintenance') {
-                <span class="status-pill status-maintenance">
-                  {{ stationStore.selectedStation()?.currentStatus || 'Maintenance' }}
-                </span>
-              }
-              @default {
-                <span class="status-pill status-unknown">
-                  {{ stationStore.selectedStation()?.currentStatus || 'Unknown' }}
-                </span>
-              }
-            }
-          </div>-->
+    <div class="station-main-card">
+
+      <!-- Header Section -->
+      <div class="station-header-section">
+        <div>
+          <h2 class="station-name">{{ stationStore.selectedStation()?.name }}</h2>
+          <p class="station-address">
+            {{ stationStore.selectedStation()?.address }},
+            {{ stationStore.selectedStation()?.lga}},
+            {{ stationStore.selectedStation()?.state}}
+          </p>
         </div>
 
-        <mat-divider class="main-divider"></mat-divider>
+        <div class="manager-section">
+          @if(stationStore.selectedStation()?.manager){
+          <div class="manager-info">
+            <span class="manager-label">Manager</span>
+            <span class="manager-name">
+              {{stationStore.selectedStation()?.manager?.info?.firstName | titlecase}}
+              {{stationStore.selectedStation()?.manager?.info?.lastName | titlecase}}
+            </span>
+          </div>
+          <button mat-stroked-button color="warn" (click)="openUnassignManagerDialog()" class="manager-action-btn">
+            Unassign
+          </button>
+          }@else {
+          <div class="manager-info">
+            <span class="manager-label">Manager</span>
+            <span class="manager-name not-assigned">Not Assigned</span>
+          </div>
+          <button mat-stroked-button color="primary" (click)="openAssignManagerDialog()" class="manager-action-btn">
+            Assign
+          </button>
+          }
+        </div>
+      </div>
 
-        <div class="details-section-grid">
-          
-          <div class="detail-column">
-            <h3 class="info-section-header">Basic Information</h3>
-            <div class="info-details-grid">
-              
-              <div class="detail-item">
-                <mat-icon class="detail-icon">location_on</mat-icon>
-                <span class="detail-label">Location</span>
+      <div class="main-divider"></div>
+
+      <!-- Details Grid -->
+      <div class="details-section-grid">
+
+        <!-- Column 1: Basic Info -->
+        <div class="detail-column">
+          <h3 class="info-section-header">Basic Information</h3>
+          <div class="info-details-grid">
+
+            <div class="detail-item">
+              <div class="icon-wrapper"><mat-icon class="detail-icon">location_on</mat-icon></div>
+              <div class="detail-content">
+                <span class="detail-label">Full Address</span>
                 <span class="detail-value">
-                  {{ stationStore.selectedStation()?.address }}, 
-                  {{ stationStore.selectedStation()?.lga}}, 
-                  {{ stationStore.selectedStation()?.state}}
+                  {{ stationStore.selectedStation()?.address }}
                 </span>
               </div>
-              
-              <div class="detail-item">
-                <mat-icon class="detail-icon">calendar_today</mat-icon>
+            </div>
+
+            <div class="detail-item">
+              <div class="icon-wrapper"><mat-icon class="detail-icon">calendar_today</mat-icon></div>
+              <div class="detail-content">
                 <span class="detail-label">Last Updated</span>
                 <span class="detail-value">
-                  {{stationStore.selectedStation()?.lastUpdated | date}}
-                </span>
-              </div>
-              
-              <div class="detail-item">
-                <mat-icon class="detail-icon">warning</mat-icon>
-                <span class="detail-label">Active Alerts</span>
-                <span class="detail-value alert-value">
-                  0
+                  {{stationStore.selectedStation()?.lastUpdated | date:'mediumDate'}}
                 </span>
               </div>
             </div>
           </div>
+        </div>
 
-          <div class="detail-column">
-            <h3 class="info-section-header">Operational Details</h3>
-            <div class="info-details-grid">
-              
-              <div class="detail-item">
-                <mat-icon class="detail-icon">local_gas_station</mat-icon>
-                <span class="detail-label">Fuel Level</span>
-                <span class="detail-value fuel-level-value">
-                  {{ stationStore.fuelLevel() }}%
-                  <mat-progress-bar mode="determinate" [value]="stationStore.fuelLevel()" class="fuel-level-bar"></mat-progress-bar>
-                </span>
+        <!-- Column 2: Operational Info -->
+        <div class="detail-column">
+          <h3 class="info-section-header">Operational Status</h3>
+          <div class="info-details-grid">
+
+            <div class="detail-item">
+              <div class="icon-wrapper"><mat-icon class="detail-icon">local_gas_station</mat-icon></div>
+              <div class="detail-content full-width">
+                <div class="flex-row-between">
+                  <span class="detail-label">Fuel Level</span>
+                  <span class="detail-value-highlight">{{ stationStore.fuelLevel() }}%</span>
+                </div>
+                <mat-progress-bar mode="determinate" [value]="stationStore.fuelLevel()"
+                  class="fuel-level-bar"></mat-progress-bar>
               </div>
-              
-              <div class="detail-item">
-                <mat-icon class="detail-icon">speed</mat-icon>
+            </div>
+
+            <div class="detail-item">
+              <div class="icon-wrapper"><mat-icon class="detail-icon">speed</mat-icon></div>
+              <div class="detail-content">
                 <span class="detail-label">Active Pumps</span>
                 <span class="detail-value">
-                  {{stationStore.selectedStation()?.pumps?.length}} / {{stationStore.selectedStation()?.pumps?.length}}
+                  {{stationStore.selectedStation()?.pumps?.length}} <span class="sub-text">Total Pumps</span>
                 </span>
               </div>
             </div>
           </div>
         </div>
+      </div>
 
-        <mat-divider class="main-divider"></mat-divider>
+      <div class="main-divider"></div>
 
-        <div class="sales-performance-section">
-          <h3 class="info-section-header chart-header">Daily Sales Performance (Last 5 Days)</h3>
-          
+      <!-- Sales Chart Section -->
+      <div class="sales-performance-section">
+        <div class="section-header-row">
+          <h3 class="info-section-header">Sales Performance</h3>
+          <span class="period-badge">Last 5 Days</span>
+        </div>
+
+        <div class="chart-container">
           <div class="chart-wrapper">
-            <svg [attr.viewBox]="'0 0 ' + chartWidth + ' ' + chartHeight" class="sales-chart-svg">
-              <rect [attr.x]="chartMargin.left" [attr.y]="chartMargin.top" [attr.width]="innerWidth" [attr.height]="innerHeight" fill="#ffffff" stroke="#e0e0e0" rx="4"></rect>
-
-              <line [attr.x1]="chartMargin.left" [attr.y1]="chartMargin.top + innerHeight" [attr.x2]="chartMargin.left + innerWidth" [attr.y2]="chartMargin.top + innerHeight" stroke="#9e9e9e" stroke-width="1"></line>
-              <line [attr.x1]="chartMargin.left" [attr.y1]="chartMargin.top" [attr.x2]="chartMargin.left" [attr.y2]="chartMargin.top + innerHeight" stroke="#9e9e9e" stroke-width="1"></line>
-
-              <polyline [attr.points]="petrolPoints" fill="none" stroke="#4f46e5" stroke-width="2.5"></polyline>
-              <polyline [attr.points]="dieselPoints" fill="none" stroke="#f97316" stroke-width="2.5"></polyline>
-
-              @for (point of salesData; let i = $index; track point.date) {
-                <circle [attr.cx]="indexToX(i)" [attr.cy]="valueToY(point.petrolSales)" r="3" fill="#4f46e5"></circle>
-                <circle [attr.cx]="indexToX(i)" [attr.cy]="valueToY(point.dieselSales)" r="3" fill="#f97316"></circle>
-              }
-
-              <g class="chart-legend">
-                <rect [attr.x]="chartWidth - chartMargin.right - 130" [attr.y]="chartMargin.top + 8" width="120" height="40" rx="4" ry="4" fill="#ffffff" stroke="#e0e0e0"></rect>
-                <line [attr.x1]="chartWidth - chartMargin.right - 118" [attr.y1]="chartMargin.top + 16" [attr.x2]="chartWidth - chartMargin.right - 98" [attr.y2]="chartMargin.top + 16" stroke="#4f46e5" stroke-width="2.5"></line>
-                <text [attr.x]="chartWidth - chartMargin.right - 92" [attr.y]="chartMargin.top + 20" font-size="12" fill="#424242">Petrol</text>
-                <line [attr.x1]="chartWidth - chartMargin.right - 118" [attr.y1]="chartMargin.top + 32" [attr.x2]="chartWidth - chartMargin.right - 98" [attr.y2]="chartMargin.top + 32" stroke="#f97316" stroke-width="2.5"></line>
-                <text [attr.x]="chartWidth - chartMargin.right - 92" [attr.y]="chartMargin.top + 36" font-size="12" fill="#424242">Diesel</text>
-              </g>
-            </svg>
-          </div>
-
-          <div class="sales-summary-table">
-            <h4 class="sales-summary-subheader">Sales Data Summary (Naira)</h4>
-            
-            <div class="summary-table-header">
-              <div class="table-column-icon"></div>
-              <div class="table-column-date">Date</div>
-              <div class="table-column-petrol">Petrol Sales</div>
-              <div class="table-column-diesel">Diesel Sales</div>
-            </div>
-
-            @for(sale of salesData; track sale.date) {
-              <div class="summary-table-row">
-                <mat-icon class="table-column-icon">trending_up</mat-icon>
-                <div class="table-column-date">{{ sale.date | date:'shortDate' }}</div>
-                <div class="table-column-petrol">₦{{ sale.petrolSales | number }}</div>
-                <div class="table-column-diesel">₦{{ sale.dieselSales | number }}</div>
-              </div>
-            }
+            <canvas baseChart [data]="lineChartData" [options]="lineChartOptions" [type]="'line'"
+              [legend]="lineChartLegend">
+            </canvas>
           </div>
         </div>
 
-        <<mat-card-actions fxLayout="row">
-          <span fxFlex="1 1 auto"></span>
-          <button mat-flat-button color="primary">Station's sales performance</button>
-          <span fxFlex="1 1 auto"></span>
-        </mat-card-actions>
-      </mat-card>
+        <!-- Summary Table -->
+        <div class="sales-summary-container">
+          <table class="modern-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th class="text-right">Petrol Sales</th>
+                <th class="text-right">Diesel Sales</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for(sale of salesData; track sale.date) {
+              <tr>
+                <td class="date-cell">{{ sale.date | date:'mediumDate' }}</td>
+                <td class="amount-cell text-right petrol-text">₦{{ sale.petrolSales | number:'1.0-0' }}</td>
+                <td class="amount-cell text-right diesel-text">₦{{ sale.dieselSales | number:'1.0-0' }}</td>
+              </tr>
+              }
+              @if(salesData.length === 0) {
+              <tr>
+                <td colspan="3" class="empty-state">No sales data available for this period.</td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
     }
   </div>
 </div>
