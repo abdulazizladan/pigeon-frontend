@@ -20,6 +20,7 @@ import { TicketDetailsComponent } from './components/ticket-details/ticket-detai
 import { AddTicketComponent } from './components/add-ticket/add-ticket.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 
 
@@ -46,7 +47,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatCardModule,
     MatSelectModule,
     MatSnackBarModule,
-    TicketsManagementRoutingModule
+    TicketsManagementRoutingModule,
+    MatPaginatorModule
   ]
 })
 export class TicketsManagementModule { }

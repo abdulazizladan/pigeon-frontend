@@ -16,6 +16,8 @@
         <span class="status-active">Active</span>
         } @else if(ticketStore.selectedTicket()?.status === 'resolved') {
         <span class="status-resolved">Resolved</span>
+        } @else if(ticketStore.selectedTicket()?.status === 'terminated') {
+        <span class="status-terminated">Terminated</span>
         }
 
       </p>

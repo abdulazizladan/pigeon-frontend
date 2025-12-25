@@ -8,13 +8,15 @@ class TicketState {
   "selectedTicket": Ticket | null;
   "loading": boolean;
   "error": string | null;
+  "stats": { total: number; active: number; resolved: number; dismissed: number; }
 }
 
 const intialState: TicketState = {
   tickets: [],
   selectedTicket: null,
   loading: false,
-  error: ""
+  error: "",
+  stats: { total: 0, active: 0, resolved: 0, dismissed: 0 }
 }
 
 export const TicketsStore = signalStore(
@@ -32,6 +34,14 @@ export const TicketsStore = signalStore(
           error: 'Failed to load tickets. Please try again.',
           loading: false
         });
+      }
+    },
+    async loadStats() {
+      try {
+        const stats = await ticketsService.getStats();
+        patchState(store, { stats });
+      } catch (error) {
+        console.error('Error loading stats: ', error);
       }
     },
     async loadTicketsByEmail(email: string) {
@@ -84,6 +94,11 @@ export const TicketsStore = signalStore(
           selectedTicket: store.selectedTicket()?.id === id ? updatedTicket : store.selectedTicket(),
           loading: false
         });
+        // Reload stats if status changed
+        if (dto.status) {
+          const stats = await ticketsService.getStats();
+          patchState(store, { stats });
+        }
       } catch (error) {
         patchState(store, {
           error: 'Failed to update ticket. Please try again.',
