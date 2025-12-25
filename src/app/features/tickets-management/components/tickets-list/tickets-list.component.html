@@ -58,11 +58,24 @@
     <ng-container matColumnDef="status">
       <th mat-header-cell *matHeaderCellDef>Status</th>
       <td mat-cell *matCellDef="let ticket">
+        @if(authStore.userRole() === 'admin'){
+        <mat-form-field appearance="outline" class="status-dropdown" (click)="$event.stopPropagation()">
+          <mat-select [value]="ticket.status" (selectionChange)="onStatusChange(ticket, $event.value)">
+            <mat-option value="active">Active</mat-option>
+            <mat-option value="resolved">Resolved</mat-option>
+            <mat-option value="terminated">Terminated</mat-option>
+          </mat-select>
+        </mat-form-field>
+        } @else {
         @if(ticket.status === 'active'){
         <span class="status-active">active</span>
         }
         @if(ticket.status == 'resolved'){
         <span class="status-resolved">resolved</span>
+        }
+        @if(ticket.status == 'terminated'){
+        <span class="status-terminated">terminated</span>
+        }
         }
       </td>
     </ng-container>

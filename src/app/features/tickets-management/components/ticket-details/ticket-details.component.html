@@ -28,11 +28,12 @@
 @if(ticketStore.loading()) {
 <mat-progress-bar mode="query"></mat-progress-bar>
 }@else{
-<div>
+<div class="replies-container">
   @for(reply of ticketStore.selectedTicket()?.replies; track reply) {
-  <mat-card>
+  <mat-card class="reply-card" [class.reply-left]="reply.sender?.email === authStore.userEmail()"
+    [class.reply-right]="reply.sender?.email !== authStore.userEmail()">
     <mat-card-header>
-      <mat-card-subtitle>{{reply.date | date:'shortDate'}}</mat-card-subtitle>
+      <mat-card-subtitle class="reply-date">{{reply.date | date:'short'}}</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
       <p>{{reply.message}}</p>
@@ -53,6 +54,7 @@
   </mat-form-field>
 </div>
 <div>
-  <button mat-flat-button color="primary" (click)="submitReply()" [disabled]="replyControl.invalid">Submit</button>
+  <button mat-flat-button color="primary" (click)="submitReply()"
+    [disabled]="replyControl.invalid || replyControl.disabled">Submit</button>
 </div>
 }

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, effect, inject, OnInit } from '@angular/core';
 import { TicketsStore } from '../../store/ticket.store';
 import { ActivatedRoute } from '@angular/router';
 import { FormControl, Validators } from '@angular/forms';
@@ -17,6 +17,17 @@ export class TicketDetailsComponent implements OnInit {
   public authStore = inject(AuthStore);
 
   replyControl = new FormControl('', [Validators.required]);
+
+  constructor() {
+    effect(() => {
+      const ticket = this.ticketStore.selectedTicket();
+      if (ticket && ticket.status !== 'active') {
+        this.replyControl.disable();
+      } else {
+        this.replyControl.enable();
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.ticketId = this.route.snapshot.paramMap.get('id') || "";

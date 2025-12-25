@@ -39,4 +39,10 @@ export class TicketsListComponent implements OnInit {
       }
     })
   }
+
+  onStatusChange(ticket: any, status: string) {
+    if (ticket.status !== status) {
+      this.ticketsStore.updateTicket(ticket.id, { status });
+    }
+  }
 }
