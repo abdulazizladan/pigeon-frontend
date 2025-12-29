@@ -65,6 +65,18 @@ export class SalesService {
   async getStationDailySalesHistory(stationId: string): Promise<{ date: string, totalSales: number }[]> {
     return firstValueFrom(this.http.get<{ date: string, totalSales: number }[]>(`${this.baseUrl}/sales/report/daily/station/${stationId}/history`));
   }
+
+  async getGlobalCumulativeSales(): Promise<{ date: string, totalSales: number }[]> {
+    return firstValueFrom(this.http.get<{ date: string, totalSales: number }[]>(`${this.baseUrl}/sales/report/daily/cumulative`));
+  }
+
+  async getStationCumulativeSales(stationId: string): Promise<{ date: string, totalSales: number }[]> {
+    return firstValueFrom(this.http.get<{ date: string, totalSales: number }[]>(`${this.baseUrl}/sales/report/daily/station/${stationId}/cumulative`));
+  }
+
+  async getSalesByStationId(stationId: string): Promise<Sale[]> {
+    return firstValueFrom(this.http.get<Sale[]>(`${this.baseUrl}/sales/station/${stationId}`));
+  }
 }
 
 export interface CreateSaleDTO {

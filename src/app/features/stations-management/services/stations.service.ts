@@ -100,4 +100,38 @@ export class StationsService implements OnInit {
     );
   }
 
+  // 🚀 New Method: Get the station assigned to the logged-in manager
+  async getMine(): Promise<Station> {
+    return firstValueFrom(
+      this.http.get<Station>(`${this.baseUrl}/station/mine`)
+    );
+  }
+
+  // 🚀 New Method: Get station statistics
+  async getStats(): Promise<any> {
+    return firstValueFrom(
+      this.http.get<{ success: boolean, data: any, message: string }>(`${this.baseUrl}/station/stats`).pipe(
+        map(response => response.data)
+      )
+    );
+  }
+
+  // 🚀 New Method: Get specific station summary stats
+  async getSummary(id: string): Promise<any> {
+    return firstValueFrom(
+      this.http.get<{ success: boolean, data: any, message: string }>(`${this.baseUrl}/station/${id}/summary`).pipe(
+        map(response => response.data)
+      )
+    );
+  }
+
+  // 🚀 New Method: Record/Update daily pump sales
+  async recordDailySales(data: { pumpId: string, closingMeterReading: number, date: string }): Promise<void> {
+    return firstValueFrom(
+      this.http.post<{ success: boolean, message: string }>(`${this.baseUrl}/station/record`, data).pipe(
+        map(response => undefined)
+      )
+    );
+  }
+
 }

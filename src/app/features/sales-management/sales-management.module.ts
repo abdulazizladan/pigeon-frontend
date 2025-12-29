@@ -26,11 +26,13 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDividerModule } from '@angular/material/divider';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 
 @NgModule({
   providers: [
     provideHttpClient(),
+    provideCharts(withDefaultRegisterables())
   ],
   declarations: [
     SalesDashboardComponent,

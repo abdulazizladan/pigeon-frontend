@@ -1,5 +1,6 @@
 import { Manager } from './manager.model';
 import { Pump } from './pump.model';
+import { Dispenser } from '../../dispensers-management/models/dispenser.model';
 
 export interface Station {
   id: string;
@@ -16,10 +17,11 @@ export interface Station {
   petrolPricePerLitre: number;
   dieselPricePerLitre: number;
 
-  status: 'active' | 'inactive';
+  status: 'active' | 'inactive' | 'suspended';
   createdAt: number;
   manager: Manager;
   pumps: Pump[];
+  dispensers: Dispenser[];
   sales: any[];
   lastUpdated: Date;
 }

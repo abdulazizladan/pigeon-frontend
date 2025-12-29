@@ -1,7 +1,7 @@
 import { signalStore, withState, withMethods, patchState } from '@ngrx/signals';
 import { inject } from '@angular/core';
-import { StationService } from '../services/station-service';
-import { Station } from '../models/station.model';
+import { StationsService } from '../../stations-management/services/stations.service';
+import { Station } from '../../stations-management/models/station.model';
 
 interface StationState {
   station: Station | null;
@@ -18,7 +18,7 @@ const initialState: StationState = {
 export const StationStore = signalStore(
   { providedIn: 'root' },
   withState(initialState),
-  withMethods((store, stationService = inject(StationService)) => ({
+  withMethods((store, stationsService = inject(StationsService)) => ({
     /**
      * Loads station data by ID
      * @param id The station ID
@@ -26,7 +26,7 @@ export const StationStore = signalStore(
     async loadStation(id: string) {
       patchState(store, { loading: true, error: null });
       try {
-        const station = await stationService.getStationById(id);
+        const station = await stationsService.getById(id);
         patchState(store, {
           station,
           loading: false,
@@ -50,6 +50,25 @@ export const StationStore = signalStore(
         station: null,
         error: null
       });
+    },
+
+    async loadMyStation() {
+      patchState(store, { loading: true, error: null });
+      try {
+        const station = await stationsService.getMine();
+        patchState(store, {
+          station,
+          loading: false,
+          error: null
+        });
+      } catch (error) {
+        console.error('Error loading my station:', error);
+        patchState(store, {
+          loading: false,
+          error: 'Failed to load your station. Please try again.',
+          station: null
+        });
+      }
     }
   }))
 );

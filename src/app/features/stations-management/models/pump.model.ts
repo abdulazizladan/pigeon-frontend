@@ -3,4 +3,5 @@ export interface Pump {
     "pumpNumber": number;
     "dispensedProduct": string;
     "status": string;
+    "createdAt": number;
 }

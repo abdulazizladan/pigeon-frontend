@@ -1,8 +1,9 @@
 import { Manager } from "./manager.model";
 import { Pump } from "./pump.model";
+import { Dispenser } from "../../dispensers-management/models/dispenser.model";
 
 export interface Station {
-  id: string | null;
+  id: string;
   name: string;
   address: string;
   ward: string;
@@ -16,11 +17,13 @@ export interface Station {
   petrolPricePerLitre: number;
   dieselPricePerLitre: number;
 
-  status: 'active' | 'suspended';
+  status: 'active' | 'inactive';
+  createdAt: number;
 
   // Fields needed for the component's stats/lists
   manager: Manager;
   pumps: Pump[];
+  dispensers: Dispenser[];
   sales: any[];
 
   fuelLevelPercentage?: number;

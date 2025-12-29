@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal, computed } from '@angular/core';
-import { Station } from '../../models/station.model';
+import { Station } from '../../../stations-management/models/station.model';
 import { StationStore } from '../../store/station.store';
 import { ManagerStore } from '../../../../users/manager/store/manager.store';
 
@@ -43,30 +43,16 @@ export class MyStation implements OnInit {
   public stationStore = inject(StationStore);
   public managerStore = inject(ManagerStore);
 
-  // --- Dummy Data Signals ---
+  // --- Data Signals (Initialized empty, populated from Store/API) ---
 
   // 1. Tank Levels
-  public tankLevels = signal<TankLevel[]>([
-    { product: 'Petrol', currentVolume: 12500, capacity: 20000, percentage: 62.5 },
-    { product: 'Diesel', currentVolume: 8200, capacity: 15000, percentage: 54.6 }
-  ]);
+  public tankLevels = signal<TankLevel[]>([]);
 
   // 2. Pump Statuses
-  public pumpStatuses = signal<PumpStatus[]>([
-    { id: 'P1', number: 1, product: 'Petrol', status: 'Active', currentSession: { vehicle: 'Toyota Camry', liters: 25.5, amount: 16575 } },
-    { id: 'P2', number: 2, product: 'Petrol', status: 'Idle' },
-    { id: 'P3', number: 3, product: 'Diesel', status: 'Active', currentSession: { vehicle: 'Mack Truck', liters: 150, amount: 127500 } },
-    { id: 'P4', number: 4, product: 'Diesel', status: 'Maintenance' },
-  ]);
+  public pumpStatuses = signal<PumpStatus[]>([]);
 
   // 3. Recent Transactions
-  public recentTransactions = signal<RecentTransaction[]>([
-    { id: 'TX1001', time: '10:45 AM', product: 'Petrol', liters: 45, amount: 29250, paymentMethod: 'POS', status: 'Completed' },
-    { id: 'TX1002', time: '10:42 AM', product: 'Diesel', liters: 20, amount: 17000, paymentMethod: 'Cash', status: 'Completed' },
-    { id: 'TX1003', time: '10:38 AM', product: 'Petrol', liters: 15, amount: 9750, paymentMethod: 'Transfer', status: 'Pending' },
-    { id: 'TX1004', time: '10:30 AM', product: 'Petrol', liters: 32, amount: 20800, paymentMethod: 'POS', status: 'Completed' },
-    { id: 'TX1005', time: '10:15 AM', product: 'Diesel', liters: 200, amount: 170000, paymentMethod: 'Transfer', status: 'Completed' },
-  ]);
+  public recentTransactions = signal<RecentTransaction[]>([]);
 
   // --- Computed Metrics ---
 
@@ -80,10 +66,62 @@ export class MyStation implements OnInit {
 
 
   async ngOnInit() {
-    // Keep existing store logic for basic station overview
-    const stationId = this.managerStore.station()?.id;
-    if (stationId) {
-      this.stationStore.loadStation(stationId);
+    await this.stationStore.loadMyStation();
+
+    // Update local signals when station data is loaded
+    const station = this.stationStore.station();
+    if (station) {
+      this.updateDashboardData(station);
+    }
+  }
+
+  private updateDashboardData(station: Station) {
+    // Map API data to UI models
+    // Note: Using placeholders for data not yet in Station model
+
+    // 1. Tank Levels (Mapping from station volumes)
+    this.tankLevels.set([
+      {
+        product: 'Petrol',
+        currentVolume: station.petrolVolume || 0,
+        capacity: 33000, // Standard capacity placeholder
+        percentage: ((station.petrolVolume || 0) / 33000) * 100
+      },
+      {
+        product: 'Diesel',
+        currentVolume: station.dieselVolume || 0,
+        capacity: 33000,
+        percentage: ((station.dieselVolume || 0) / 33000) * 100
+      }
+    ]);
+
+    // 2. Pumps (Mapping from station.pumps)
+    // Assuming Pump model has status, if not defaulting to 'Idle'
+    if (station.pumps && station.pumps.length > 0) {
+      const mappedPumps = station.pumps.map((p: any) => ({
+        id: p.id,
+        number: p.pumpNumber || 0,
+        product: p.dispensedProduct === 'PETROL' ? 'Petrol' : 'Diesel' as 'Petrol' | 'Diesel',
+        status: (p.status === 'active' ? 'Idle' : 'Maintenance') as any, // Simple mapping
+        // currentSession: undefined // No live session data yet
+      }));
+      this.pumpStatuses.set(mappedPumps);
+    }
+
+    // 3. Transactions (Placeholder until Sales API integration)
+    // If station.sales exists, map it
+    if (station.sales && station.sales.length > 0) {
+      // Simple mapping if sales structure matches
+      const mappedTx = station.sales.slice(0, 5).map((s: any) => ({
+        id: s.id || 'TX...',
+        time: new Date(s.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        product: s.product,
+        liters: (s.closingMeterReading - s.openingMeterReading),
+        amount: s.totalPrice,
+        paymentMethod: 'Cash' as const, // Placeholder
+        status: 'Completed' as const
+      }));
+      this.recentTransactions.set(mappedTx);
     }
   }
 

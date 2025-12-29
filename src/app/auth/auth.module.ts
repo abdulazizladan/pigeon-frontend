@@ -5,6 +5,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -15,9 +16,9 @@ import { LoginComponent } from './components/login/login.component';
 
 
 @NgModule({
-    providers: [
-      provideHttpClient()
-    ],
+  providers: [
+    provideHttpClient()
+  ],
   declarations: [
     LoginComponent
   ],
@@ -27,6 +28,7 @@ import { LoginComponent } from './components/login/login.component';
     ReactiveFormsModule,
     FlexLayoutModule,
     MatCardModule,
+    MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
     MatIconModule,
