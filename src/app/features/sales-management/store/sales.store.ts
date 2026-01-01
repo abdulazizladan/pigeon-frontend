@@ -1,6 +1,6 @@
 import { inject } from "@angular/core";
 import { patchState, signalStore, withMethods, withState } from "@ngrx/signals";
-import { SalesService } from "../services/sales.service";
+import { SalesService, CreateSaleDTO } from "../services/sales.service";
 import { Sale } from "../models/sale.model";
 
 class SalesState {
@@ -18,39 +18,41 @@ export const initialState: SalesState = {
 }
 
 export const SalesStore = signalStore(
-  {providedIn: 'root'},
+  { providedIn: 'root' },
   withState(initialState),
   withMethods((store, salesService = inject(SalesService)) => ({
-    async addSale(sale: Sale){
-      patchState(store, {loading: true, error: null})
+    async addSale(sale: CreateSaleDTO) {
+      patchState(store, { loading: true, error: null })
       try {
-        
+        await salesService.addSale(sale);
+        patchState(store, { loading: false, error: null });
+        // You might want to reload sales or update a local list here
       } catch (error) {
-        patchState(store, {loading: false, error: "Could not fetch sales records. Please try again later"})
+        patchState(store, { loading: false, error: "Could not add sale. Please try again later" })
       }
     },
     async loadSales() {
-      patchState(store, {loading: true, error: null})
+      patchState(store, { loading: true, error: null })
       try {
 
       } catch (error) {
-        patchState(store, {loading: false, error: "Could not fetch sales records. Please try again later"})
+        patchState(store, { loading: false, error: "Could not fetch sales records. Please try again later" })
       }
     },
     async addSales() {
-      patchState(store, {loading: true, error: null})
+      patchState(store, { loading: true, error: null })
       try {
 
       } catch (error) {
-        patchState(store, {loading: false, error: "Could not fetch sales records. Please try again later"})
+        patchState(store, { loading: false, error: "Could not fetch sales records. Please try again later" })
       }
     },
     async loadSalesByStation(id: number) {
-      patchState(store, {loading: true, error: null})
+      patchState(store, { loading: true, error: null })
       try {
 
       } catch (error) {
-        patchState(store, {loading: false, error: "Could not fetch sales records. Please try again later"})
+        patchState(store, { loading: false, error: "Could not fetch sales records. Please try again later" })
       }
     }
   }))

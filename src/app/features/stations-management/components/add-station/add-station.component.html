@@ -3,10 +3,10 @@
 <!-- Dialog Content (Scrollable) -->
 <mat-dialog-content class="mat-typography">
   <form [formGroup]="stationForm">
-    
+
     <!-- --- Core Location Details --- -->
     <mat-card-subtitle>Location & Pricing</mat-card-subtitle>
-    
+
     <div class="form-row">
       <mat-form-field appearance="outline">
         <mat-label>Station Name</mat-label>
@@ -81,7 +81,7 @@
         </mat-error>
       </mat-form-field>
     </div>-->
-    
+
     <!-- --- Manager Assignment --- 
     <div class="form-row">
       <mat-form-field appearance="outline">
@@ -93,7 +93,7 @@
       </mat-form-field>
     </div>-->
 
-   <!-- <div class="form-row">
+    <!-- <div class="form-row">
       <mat-form-field appearance="outline">
           <mat-label>Manager</mat-label>
           @if(stationStore.managers()){
@@ -114,13 +114,13 @@
       <mat-form-field appearance="outline">
         <mat-label>Initial Petrol Volume (L)</mat-label>
         <!--<span matSuffix>Litres</span>-->
-        <input matInput formControlName="petrolVolume" placeholder="Enter initial petrol volume">
+        <input matInput type="number" formControlName="petrolVolume" placeholder="Enter initial petrol volume">
         <mat-error *ngIf="stationForm.get('petrolVolume')?.hasError('required')">Volume is required</mat-error>
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Petrol Price/L (₦)</mat-label>
         <!--<span matPrefix>&#8358;</span>-->
-        <input matInput formControlName="petrolPricePerLiter">
+        <input matInput type="number" formControlName="petrolPricePerLiter">
         <mat-error *ngIf="stationForm.get('petrolPricePerLiter')?.hasError('required')">Price is required</mat-error>
       </mat-form-field>
     </div>
@@ -129,13 +129,13 @@
       <mat-form-field appearance="outline">
         <mat-label>Initial Diesel Volume (L)</mat-label>
         <!--<span matSuffix>Litres</span>-->
-        <input matInput formControlName="dieselVolume" placeholder="Enter initial diesel volume">
+        <input matInput type="number" formControlName="dieselVolume" placeholder="Enter initial diesel volume">
         <mat-error *ngIf="stationForm.get('dieselVolume')?.hasError('required')">Volume is required</mat-error>
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Diesel Price/L (₦)</mat-label>
         <!--<span matSuffix>per Litre</span>-->
-        <input matInput formControlName="dieselPricePerLiter" placeholder="Enter current diesel price">
+        <input matInput type="number" formControlName="dieselPricePerLiter" placeholder="Enter current diesel price">
         <mat-error *ngIf="stationForm.get('dieselPricePerLiter')?.hasError('required')">Price is required</mat-error>
       </mat-form-field>
     </div>
@@ -143,35 +143,37 @@
 
     <!-- --- Dynamic Pumps Section --- -->
     <mat-card-subtitle style="margin-top: 1.5rem;">Pumps Configuration</mat-card-subtitle>
-    
+
     <div formArrayName="pumps" class="pumps-section">
-      <div *ngFor="let pumpGroup of pumps.controls; let i = index" [formGroupName]="i" class="form-row" style="align-items: center;">
-          <mat-form-field appearance="outline" style="max-width: 150px;">
-              <mat-label>Pump #</mat-label>
-              <input matInput type="number" formControlName="pumpNumber" placeholder="Number">
-              <mat-error *ngIf="pumpGroup.get('pumpNumber')?.hasError('required')">Required</mat-error>
-          </mat-form-field>
+      <div *ngFor="let pumpGroup of pumps.controls; let i = index" [formGroupName]="i" class="form-row"
+        style="align-items: center;">
+        <mat-form-field appearance="outline" style="max-width: 150px;">
+          <mat-label>Pump #</mat-label>
+          <input matInput type="number" formControlName="pumpNumber" placeholder="Number">
+          <mat-error *ngIf="pumpGroup.get('pumpNumber')?.hasError('required')">Required</mat-error>
+        </mat-form-field>
 
-          <mat-form-field appearance="outline">
-              <mat-label>Product Dispensed</mat-label>
-              <mat-select formControlName="dispensedProduct" placeholder="Select Product">
-                  <mat-option *ngFor="let product of productOptions" [value]="product">
-                      {{ product }}
-                  </mat-option>
-              </mat-select>
-              <mat-error *ngIf="pumpGroup.get('dispensedProduct')?.hasError('required')">Required</mat-error>
-          </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Product Dispensed</mat-label>
+          <mat-select formControlName="dispensedProduct" placeholder="Select Product">
+            <mat-option *ngFor="let product of productOptions" [value]="product">
+              {{ product }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="pumpGroup.get('dispensedProduct')?.hasError('required')">Required</mat-error>
+        </mat-form-field>
 
-          <button mat-icon-button color="warn" type="button" (click)="removePump(i)" [disabled]="pumps.length === 1" title="Remove Pump">
-              <mat-icon>delete</mat-icon>
-          </button>
+        <button mat-icon-button color="warn" type="button" (click)="removePump(i)" [disabled]="pumps.length === 1"
+          title="Remove Pump">
+          <mat-icon>delete</mat-icon>
+        </button>
       </div>
     </div>
-    
+
     <button mat-stroked-button color="accent" type="button" (click)="addPump()" style="margin-bottom: 1.5rem;">
       <mat-icon>add</mat-icon> Add Pump
     </button>
-    
+
   </form>
 </mat-dialog-content>
 

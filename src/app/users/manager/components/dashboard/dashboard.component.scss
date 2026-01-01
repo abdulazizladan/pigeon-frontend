@@ -14,6 +14,8 @@ $shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 $shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 $shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 
+@use '../../../../../cards';
+
 :host {
   display: block;
   min-height: 100vh;
@@ -33,125 +35,95 @@ $shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.
 }
 
 // --- Header ---
-.page-header {
-  margin-bottom: 2.5rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+// .page-header removed to use global style
 
-  .page-title {
-    margin: 0;
-    font-size: 2rem;
-    font-weight: 800;
-    background: linear-gradient(135deg, $text-main 30%, $primary-color 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    letter-spacing: -0.02em;
-  }
-
-  p {
-    margin-top: 0.5rem;
-    color: $text-muted;
-    font-size: 1rem;
-  }
-}
 
 // --- Cards Section ---
 .summary-cards-section {
   margin-bottom: 2.5rem;
 }
 
-.dashboard-grid-container {
+// --- Stats Grid ---
+.stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 1.5rem;
+  margin-bottom: 32px;
+  position: relative;
+  z-index: 10;
 }
 
-// Custom Card (Replacing default mat-card styles)
-.card-base {
-  background: $card-bg;
-  border-radius: 1.25rem;
-  box-shadow: $shadow-md;
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  transition: transform 0.2s, box-shadow 0.2s;
-  overflow: hidden;
-
-  // Hover Effect
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: $shadow-lg;
-  }
-}
-
-// Specific Stat Card Styling
+// --- Colorful Card Styling ---
 .stat-card {
-  @extend .card-base;
   padding: 0;
+  border-radius: 16px;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  color: #fff;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  min-height: 180px;
   display: flex;
   flex-direction: column;
-  position: relative;
 
-  // Decorative gradient border/accent
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 6px;
-    height: 100%;
-    background: $primary-color;
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
   }
 
-  .stat-card-content {
-    padding: 2rem;
+  // Header
+  .card-header {
+    padding: 20px 24px 8px;
     display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-  }
+    align-items: center;
+    gap: 12px;
 
-  .stat-text-group {
-    display: flex;
-    flex-direction: column;
-    z-index: 1;
+    .icon-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
-    .stat-title {
-      font-size: 0.875rem;
-      font-weight: 600;
-      color: $text-muted;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 0.5rem;
-    }
-
-    .stat-main-value {
-      font-size: 2.5rem;
-      font-weight: 800;
-      color: $text-main;
-      line-height: 1.1;
-      letter-spacing: -0.02em;
-
-      &.color-indigo {
-        color: $primary-color;
+      .card-icon {
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+        color: #fff;
       }
     }
+
+    .card-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.95);
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
   }
 
-  .stat-icon {
-    font-size: 3rem;
-    width: 3rem;
-    height: 3rem;
-    opacity: 0.1;
-    color: $text-main;
-    transform: rotate(-10deg);
-    position: absolute;
-    right: 1.5rem;
-    top: 1.5rem;
+  // Content
+  .card-content {
+    padding: 0 24px 24px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
 
-    // Gradient Icon Background (Optional, kept simple for now)
-    &.color-indigo {
-      color: $primary-color;
-      opacity: 0.15;
-    }
+  .stat-total {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 0;
+    line-height: 1.1;
+  }
+
+  // --- Specific Gradients ---
+  &.card-revenue {
+    background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%); // Indigo theme
   }
 }
 
@@ -160,7 +132,7 @@ $shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.
   margin-top: 2rem;
 
   mat-card {
-    @extend .card-base; // Apply shared card styles to mat-card
+    @extend %card-base; // Apply shared card styles to mat-card
     padding: 0; // Reset default padding
 
     mat-card-header {

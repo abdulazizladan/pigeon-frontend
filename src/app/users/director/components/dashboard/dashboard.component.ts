@@ -27,6 +27,7 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     this.directorStore.loadSummary();
+    this.directorStore.loadSalesStats();
     this.loadDirectorDashboardData();
   }
 

@@ -53,6 +53,7 @@ export class MyStation implements OnInit {
 
   // 3. Recent Transactions
   public recentTransactions = signal<RecentTransaction[]>([]);
+  public displayedColumns: string[] = ['time', 'id', 'product', 'liters', 'amount', 'paymentMethod', 'status'];
 
   // --- Computed Metrics ---
 

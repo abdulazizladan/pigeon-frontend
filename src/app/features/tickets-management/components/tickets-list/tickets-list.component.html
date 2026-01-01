@@ -57,7 +57,7 @@
   <mat-error>{{ticketsStore.error()}}</mat-error>
   }
 
-  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource">
     <ng-container matColumnDef="title">
       <th mat-header-cell *matHeaderCellDef>Title</th>
       <td mat-cell *matCellDef="let ticket">

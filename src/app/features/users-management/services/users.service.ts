@@ -32,9 +32,7 @@ export class UserService {
    */
   async createUser(user: Omit<User, 'id'>): Promise<User> {
     return firstValueFrom(
-      this.http.post<{ data: User, success: boolean, message: string }>(`${this.baseUrl}/user`, user).pipe(
-        map(response => response.data)
-      )
+      this.http.post<User>(`${this.baseUrl}/user`, user)
     );
   }
 

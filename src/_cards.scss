@@ -1,0 +1,40 @@
+%card-base {
+    background-color: var(--surface-card);
+    border-radius: 16px;
+    /* Consistency with page container */
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    /* Slightly elevated */
+    border: none;
+    /* Removed border in favor of shadow for cleaner look */
+    overflow: hidden;
+    transition: all 0.3s ease;
+
+    &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+    }
+
+    .card-header {
+        padding: 24px;
+        padding-bottom: 0;
+
+        h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .subtitle {
+            margin-top: 8px;
+            color: var(--text-secondary);
+        }
+    }
+
+    .card-body {
+        padding: 24px;
+
+        &.no-padding {
+            padding: 0;
+        }
+    }
+}

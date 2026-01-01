@@ -67,4 +67,10 @@ export class AdminService {
       )
     )
   }
+
+  getActivityLogs(): Promise<any[]> {
+    return firstValueFrom(
+      this.http.get<any[]>(`${this.baseUrl}/activity-log`)
+    )
+  }
 }

@@ -2,7 +2,7 @@
 
 import { Component, inject } from '@angular/core';
 // Import FormArray
-import { FormBuilder, Validators, FormArray, FormGroup } from '@angular/forms'; 
+import { FormBuilder, Validators, FormArray, FormGroup } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
@@ -23,7 +23,7 @@ export class AddStationComponent {
   private router = inject(Router);
 
   // Define the list of possible products for pumps
-  readonly productOptions = ['PETROL', 'DIESEL', 'KERO']; 
+  readonly productOptions = ['PETROL', 'DIESEL', 'KERO'];
 
   // --- FORM INITIALIZATION (Must be defined first) ---
   stationForm = this.fb.group({
@@ -40,15 +40,15 @@ export class AddStationComponent {
     petrolPricePerLiter: [0, [Validators.required, Validators.min(0)]],
     dieselVolume: [0, [Validators.required, Validators.min(0)]],
     dieselPricePerLiter: [0, [Validators.required, Validators.min(0)]],
-    pricePerLiter: [0, [Validators.required, Validators.min(0)]], 
+    pricePerLiter: [0, [Validators.required, Validators.min(0)]],
     // FIX: Call createPumpFormGroup(1) directly to avoid accessing the 'pumps' getter
-    pumps: this.fb.array([this.createPumpFormGroup(1)]) 
+    pumps: this.fb.array([this.createPumpFormGroup(1)])
   });
 
   // Getter to easily access the pumps FormArray in the template
   get pumps(): FormArray {
     // This now works because stationForm is fully constructed.
-    return this.stationForm.get('pumps') as FormArray; 
+    return this.stationForm.get('pumps') as FormArray;
   }
 
   /**
@@ -58,8 +58,8 @@ export class AddStationComponent {
   createPumpFormGroup(initialNumber: number = 1): FormGroup {
     // FIX: Use the passed initialNumber instead of calculating it from 'this.pumps.length'
     return this.fb.group({
-      pumpNumber: [initialNumber, [Validators.required, Validators.min(1)]], 
-      dispensedProduct: ['', Validators.required] 
+      pumpNumber: [initialNumber, [Validators.required, Validators.min(1)]],
+      dispensedProduct: ['', Validators.required]
     });
   }
 
@@ -80,7 +80,7 @@ export class AddStationComponent {
     this.pumps.removeAt(index);
     // Re-index pump numbers after removal
     this.pumps.controls.forEach((group, i) => {
-        group.get('pumpNumber')?.setValue(i + 1);
+      group.get('pumpNumber')?.setValue(i + 1);
     });
   }
 
@@ -89,11 +89,25 @@ export class AddStationComponent {
    */
   onSubmit() {
     if (this.stationForm.valid) {
-      const formData = this.stationForm.value;
-      
-      formData.pumps = formData.pumps?.map(pump => ({
-          ...pump,
-          pumpNumber: Number(pump.pumpNumber)
+      // Create a shallow copy to avoid mutating the form value directly if needed, 
+      // though here it's fine. We cast to any to allow deleting/modifying properties freely.
+      const formData: any = { ...this.stationForm.value };
+
+      // Convert numeric fields that might be strings
+      formData.petrolVolume = Number(formData.petrolVolume);
+      formData.petrolPricePerLiter = Number(formData.petrolPricePerLiter);
+      formData.dieselVolume = Number(formData.dieselVolume);
+      formData.dieselPricePerLiter = Number(formData.dieselPricePerLiter);
+      formData.pricePerLiter = Number(formData.pricePerLiter);
+
+      // Remove managerId if it's empty to avoid UUID validation error
+      if (!formData.managerId) {
+        delete formData.managerId;
+      }
+
+      formData.pumps = formData.pumps?.map((pump: any) => ({
+        ...pump,
+        pumpNumber: Number(pump.pumpNumber)
       }));
 
       this.dialogRef.close(formData);

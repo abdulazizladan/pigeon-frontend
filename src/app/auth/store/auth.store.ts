@@ -9,19 +9,47 @@ interface AuthState {
   token: string | null;
   isAuthenticated: boolean;
   userRole: string | null;
-  userEmail: string| null;
+  userEmail: string | null;
   error: string | null;
   loading: boolean;
 }
 
-const initialState: AuthState = {
-  token: localStorage.getItem('auth_token'),
-  isAuthenticated: !!localStorage.getItem('auth_token'),
-  userRole: null,
-  userEmail: null,
-  loading: false,
-  error: null
+const getInitialState = (): AuthState => {
+  const token = localStorage.getItem('auth_token');
+  if (token) {
+    try {
+      const decoded: any = jwtDecode(token);
+      return {
+        token,
+        isAuthenticated: true,
+        userRole: decoded.role,
+        userEmail: decoded.email,
+        loading: false,
+        error: null
+      };
+    } catch (e) {
+      console.error('Invalid token in localStorage', e);
+      return {
+        token: null,
+        isAuthenticated: false,
+        userRole: null,
+        userEmail: null,
+        loading: false,
+        error: null
+      };
+    }
+  }
+  return {
+    token: null,
+    isAuthenticated: false,
+    userRole: null,
+    userEmail: null,
+    loading: false,
+    error: null
+  };
 };
+
+const initialState: AuthState = getInitialState();
 
 
 export const AuthStore = signalStore(
@@ -66,13 +94,13 @@ export const AuthStore = signalStore(
 
     logout() {
       localStorage.removeItem('auth_token');
-      patchState(store, 
+      patchState(store,
         {
-          loading: false, 
-          error: null, 
-          isAuthenticated: false, 
-          token: null, 
-          userRole: null, 
+          loading: false,
+          error: null,
+          isAuthenticated: false,
+          token: null,
+          userRole: null,
           userEmail: null
         }
       );
@@ -81,8 +109,8 @@ export const AuthStore = signalStore(
     changeToken(newToken: string) {
       patchState(
         store, {
-          token: newToken
-        }
+        token: newToken
+      }
       )
     }
   }))

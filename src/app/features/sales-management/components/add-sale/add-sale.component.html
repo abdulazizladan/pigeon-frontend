@@ -1,38 +1,51 @@
-<h1 matDialogTitle>Title</h1>
+<h1 matDialogTitle>Add New Sale</h1>
 
-<mat-dialog-content fxLayout="column" fxLayoutGap="15px">
+<mat-dialog-content>
+  <form [formGroup]="saleForm" (ngSubmit)="onSubmit()" class="sale-form">
 
-  <form [formGroup]="saleForm" (ngSubmit)="onSubmit()" fxLayout="column" fxLayoutGap="15px">
-    <mat-form-field appearance="outline">
-      <mat-label>Attendant</mat-label>
-      <mat-select formControlName="dispenserId">
-        @for (dispenser of dispensers(); track dispenser.id) {
-        <mat-option [value]="dispenser.id">
-          {{ dispenser.firsName }} {{ dispenser.lastName }}
+    <div class="row-group">
+      <mat-form-field appearance="outline" class="half-width">
+        <mat-label>Product</mat-label>
+        <mat-select formControlName="product">
+          <mat-option value="PETROL">Petrol</mat-option>
+          <mat-option value="DIESEL">Diesel</mat-option>
+          <mat-option value="KEROSENE">Kerosene</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="half-width">
+        <mat-label>Price Per Litre</mat-label>
+        <input matInput formControlName="pricePerLitre" type="number">
+        <span matPrefix>₦&nbsp;</span>
+      </mat-form-field>
+    </div>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Select Pump</mat-label>
+      <mat-select formControlName="pumpId">
+        @for (pump of pumps(); track pump.id) {
+        <mat-option [value]="pump.id">
+          {{ pump.name }}
         </mat-option>
         }
       </mat-select>
     </mat-form-field>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Pump number</mat-label>
-      <input matInput>
-    </mat-form-field>
+    <div class="row-group">
+      <mat-form-field appearance="outline" class="half-width">
+        <mat-label>Opening Reading</mat-label>
+        <input matInput formControlName="openingMeterReading" type="number">
+      </mat-form-field>
 
-
-    <mat-form-field appearance="outline">
-      <mat-label>Opening reading</mat-label>
-      <input matInput>
-    </mat-form-field>
-
-    <mat-form-field appearance="outline">
-      <mat-label>Closing reading</mat-label>
-      <input matInput>
-    </mat-form-field>
+      <mat-form-field appearance="outline" class="half-width">
+        <mat-label>Closing Reading</mat-label>
+        <input matInput formControlName="closingMeterReading" type="number">
+      </mat-form-field>
+    </div>
   </form>
-
-  <mat-dialog-actions align="end">
-    <button mat-button matDialogClose>Close dialog</button>
-    <button mat-flat-button color="primary">Assign</button>
-  </mat-dialog-actions>
 </mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button matDialogClose>Cancel</button>
+  <button mat-flat-button color="primary" (click)="onSubmit()" [disabled]="saleForm.invalid">Add Sale</button>
+</mat-dialog-actions>

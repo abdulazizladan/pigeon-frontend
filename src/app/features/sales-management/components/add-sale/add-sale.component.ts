@@ -1,14 +1,10 @@
 import { Component, inject, OnInit, Inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { DispenserService } from '../../../dispensers-management/services/dispenser.service';
-import { Dispenser } from '../../../dispensers-management/models/dispenser.model';
+import { SalesStore } from '../../store/sales.store'; // Import store
 
 export interface DialogData {
-  dispenserId: number,
-  pumpId: number,
-  startingBalance: number,
-  closingBalance: number
+  // Define if any data is passed, empty for now based on request
 }
 
 @Component({
@@ -25,30 +21,35 @@ export class AddSaleComponent implements OnInit {
   ) { }
 
   private fb = inject(FormBuilder);
-  private dispenserService = inject(DispenserService);
+  // private pumpService = inject(PumpService); // Ideally invoke this
 
-  public dispensers = signal<Dispenser[]>([]);
+  // Mock pumps for now as service is missing/not found
+  public pumps = signal<{ id: string, name: string }[]>([
+    { id: 'a1b2c3d4-e5f6-7890-1234-567890abcdef', name: 'Pump 1' },
+    { id: 'b2c3d4e5-f6a7-8901-2345-678901bcdefg', name: 'Pump 2' }
+  ]);
+
+  private salesStore = inject(SalesStore);
+
   protected saleForm: FormGroup = new FormGroup({})
 
-  async ngOnInit() {
+  ngOnInit() {
     this.saleForm = this.fb.group({
-      dispenserId: ['', [Validators.required]],
-      pumpId: [0, [Validators.required]],
-      startingBalance: [0, [Validators.required]],
-      closingBalance: [0, [Validators.required]]
+      product: ['PETROL', [Validators.required]],
+      pricePerLitre: [680.75, [Validators.required, Validators.min(0)]],
+      openingMeterReading: [1000, [Validators.required, Validators.min(0)]],
+      closingMeterReading: [1200, [Validators.required, Validators.min(0)]],
+      pumpId: ['', [Validators.required]]
     });
 
-    try {
-      const dispensers = await this.dispenserService.get();
-      this.dispensers.set(dispensers);
-    } catch (error) {
-      console.error('Failed to load dispensers', error);
-    }
+    // Load pumps here if service existed
   }
 
   onSubmit(): void {
     if (this.saleForm.valid) {
-      this.dialogRef.close(this.saleForm.value)
+      const saleData = this.saleForm.value;
+      this.salesStore.addSale(saleData);
+      this.dialogRef.close(true); // Close with true to indicate success
     }
   }
 

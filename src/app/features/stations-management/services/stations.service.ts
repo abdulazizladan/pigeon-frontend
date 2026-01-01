@@ -14,11 +14,9 @@ export class StationsService implements OnInit {
   async updateStationStatus(id: string, status: 'active' | 'suspended'): Promise<Station> {
     const body = { status };
     return firstValueFrom(
-      this.http.patch<{ success: boolean, data: Station, message: string }>(
+      this.http.patch<Station>(
         `${this.baseUrl}/station/${id}/status`,
         body
-      ).pipe(
-        map(response => response.data)
       )
     );
   }

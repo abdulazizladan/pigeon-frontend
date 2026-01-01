@@ -19,12 +19,12 @@ import { PageEvent } from '@angular/material/paginator';
 export class UsersListComponent implements OnInit, OnDestroy { // 👈 Implement OnDestroy
   displayedColumns: string[] = ['name', 'email', 'role', 'status'];
   // 1. ISSUE: FormControl needs a type annotation for better safety
-  searchControl = new FormControl<string>(''); 
+  searchControl = new FormControl<string>('');
   searchTerm = signal('');
   public userStore = inject(UserStore);
-  
+
   // 2. ISSUE: Observable cleanup is missing. Use a Subject for cleanup.
-  private destroy$ = new Subject<void>(); 
+  private destroy$ = new Subject<void>();
 
   // Pagination state
   pageSizeOptions: number[] = [5, 10, 25, 50];
@@ -54,7 +54,7 @@ export class UsersListComponent implements OnInit, OnDestroy { // 👈 Implement
   ngOnInit() {
     this.userStore.loadUsers();
   }
-  
+
   // 4. ISSUE: Proper cleanup on component destruction
   ngOnDestroy() {
     this.destroy$.next();
@@ -68,7 +68,7 @@ export class UsersListComponent implements OnInit, OnDestroy { // 👈 Implement
       (user.info?.firstName || '').toLowerCase().includes(search) ||
       user.email.toLowerCase().includes(search) ||
       // 6. ISSUE: Used 'toLowerCase()' instead of the less common 'toLocaleLowerCase()'
-      user.role.toLowerCase().includes(search) 
+      user.role.toLowerCase().includes(search)
     );
   });
 
@@ -100,29 +100,32 @@ export class UsersListComponent implements OnInit, OnDestroy { // 👈 Implement
     const dialogRef = this.dialog.open(AddUserComponent, {
       width: '400px'
     });
-    dialogRef.afterClosed().pipe(takeUntil(this.destroy$)).subscribe(result => {
+    dialogRef.afterClosed().pipe(takeUntil(this.destroy$)).subscribe(async result => {
       if (result) {
-        this.userStore.addUser(result);
-        const snackBarRef = this.snackBar.open(
-          `User '${result.email}' successfully added!`,
-          'Open Details', // The action button text
-          {
-            duration: 5000, // Duration in milliseconds (e.g., 5 seconds)
-          }
-        );
+        const success = await this.userStore.addUser(result);
 
-        // 3. Subscribe to the action button click
-        snackBarRef.onAction().pipe(takeUntil(this.destroy$)).subscribe(() => {
-          // Assuming the added user object has an 'id' property
-          if (result.email) {
-            // Navigate to the user details page, using the user's ID
-            //console.log(result.email)
-            this.router.navigate([`./${result.email}`], {relativeTo: this.route}); 
-          } else {
-            // Handle case where user ID might be missing after creation
-            console.error('Added user is missing an ID for navigation.');
-          }
-        });
+        if (success) {
+          const snackBarRef = this.snackBar.open(
+            `User '${result.email}' successfully added!`,
+            'Open Details', // The action button text
+            {
+              duration: 5000, // Duration in milliseconds (e.g., 5 seconds)
+            }
+          );
+
+          // 3. Subscribe to the action button click
+          snackBarRef.onAction().pipe(takeUntil(this.destroy$)).subscribe(() => {
+            // Assuming the added user object has an 'id' property
+            if (result.email) {
+              // Navigate to the user details page, using the user's ID
+              //console.log(result.email)
+              this.router.navigate([`./${result.email}`], { relativeTo: this.route });
+            } else {
+              // Handle case where user ID might be missing after creation
+              console.error('Added user is missing an ID for navigation.');
+            }
+          });
+        }
       }
     });
   }
@@ -130,12 +133,12 @@ export class UsersListComponent implements OnInit, OnDestroy { // 👈 Implement
   openRemoveUserDialog(id: number) {
     const dialogRef = this.dialog.open(SuspendUserComponent, {
       width: '400px',
-      data: {userId: id}
+      data: { userId: id }
     });
 
     dialogRef.afterClosed().pipe(takeUntil(this.destroy$)).subscribe(resultId => {
       // 7. ISSUE: Renamed parameter to 'resultId' for clarity, assuming the dialog returns the ID on success
-      if(resultId) {
+      if (resultId) {
         // Assuming your store has a method to handle the suspension
         // this.userStore.suspendUser(resultId); 
       }

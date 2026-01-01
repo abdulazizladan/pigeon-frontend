@@ -8,18 +8,20 @@
   </div>
 
   <section class="summary-cards-section">
-    <div class="dashboard-grid-container">
+    <div class="stats-grid">
 
       <!-- Total Revenue Card -->
-      <div class="stat-card">
-        <div class="stat-card-content">
-          <div class="stat-text-group">
-            <span class="stat-title">Total Revenue</span>
-            <span class="stat-main-value color-indigo">
-              &#8358;{{ totalRevenue() | number:'1.2-2' }}
-            </span>
+      <div class="stat-card card-revenue">
+        <div class="card-header">
+          <div class="icon-circle">
+            <mat-icon class="card-icon">payments</mat-icon>
           </div>
-          <mat-icon class="stat-icon color-indigo">payments</mat-icon>
+          <span class="card-title">Total Revenue</span>
+        </div>
+        <div class="card-content">
+          <h1 class="stat-total">
+            &#8358;{{ totalRevenue() | number:'1.2-2' }}
+          </h1>
         </div>
       </div>
 

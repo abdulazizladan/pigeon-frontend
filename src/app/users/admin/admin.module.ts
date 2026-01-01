@@ -12,6 +12,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatTableModule } from '@angular/material/table';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSortModule } from '@angular/material/sort';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from '@angular/material/list';
 import { BaseChartDirective } from 'ng2-charts';
@@ -60,7 +64,10 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     FormsModule,
     ReactiveFormsModule,
     AdminRoutingModule,
-    MatInputModule
-]
+    MatTableModule,
+    MatFormFieldModule,
+    MatSortModule,
+    MatPaginatorModule
+  ]
 })
 export class AdminModule { }

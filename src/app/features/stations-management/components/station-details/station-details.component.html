@@ -125,28 +125,34 @@
 
         <!-- Summary Table -->
         <div class="sales-summary-container">
-          <table class="modern-table">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th class="text-right">Petrol Sales</th>
-                <th class="text-right">Diesel Sales</th>
-              </tr>
-            </thead>
-            <tbody>
-              @for(sale of salesData; track sale.date) {
-              <tr>
-                <td class="date-cell">{{ sale.date | date:'mediumDate' }}</td>
-                <td class="amount-cell text-right petrol-text">₦{{ sale.petrolSales | number:'1.0-0' }}</td>
-                <td class="amount-cell text-right diesel-text">₦{{ sale.dieselSales | number:'1.0-0' }}</td>
-              </tr>
-              }
-              @if(salesData.length === 0) {
-              <tr>
-                <td colspan="3" class="empty-state">No sales data available for this period.</td>
-              </tr>
-              }
-            </tbody>
+          <table mat-table [dataSource]="salesData" class="mat-elevation-z0">
+            <!-- Date Column -->
+            <ng-container matColumnDef="date">
+              <th mat-header-cell *matHeaderCellDef> Date </th>
+              <td mat-cell *matCellDef="let sale"> {{sale.date | date:'mediumDate'}} </td>
+            </ng-container>
+
+            <!-- Petrol Sales Column -->
+            <ng-container matColumnDef="petrolSales">
+              <th mat-header-cell *matHeaderCellDef class="text-right"> Petrol Sales </th>
+              <td mat-cell *matCellDef="let sale" class="text-right petrol-text"> ₦{{sale.petrolSales |
+                number:'1.0-0'}} </td>
+            </ng-container>
+
+            <!-- Diesel Sales Column -->
+            <ng-container matColumnDef="dieselSales">
+              <th mat-header-cell *matHeaderCellDef class="text-right"> Diesel Sales </th>
+              <td mat-cell *matCellDef="let sale" class="text-right diesel-text"> ₦{{sale.dieselSales |
+                number:'1.0-0'}} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell" [attr.colspan]="displayedColumns.length">No sales data available for this period.
+              </td>
+            </tr>
           </table>
         </div>
       </div>

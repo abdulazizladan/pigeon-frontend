@@ -41,7 +41,7 @@ export class DispenserDetailsComponent implements OnInit {
       // For now, using mock data
       const mockDispenser: Dispenser = {
         id: id,
-        firsName: 'John',
+        firstName: 'John',
         middleName: 'Michael',
         lastName: 'Doe',
         phone: '+234 801 234 5678',

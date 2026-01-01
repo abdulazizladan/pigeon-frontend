@@ -1,5 +1,7 @@
 // Custom Theming for Angular Material
 @use '@angular/material' as mat;
+@use 'cards';
+
 
 html {
   @include mat.theme((color: (primary: mat.$azure-palette,
@@ -109,7 +111,8 @@ body {
 /* Material Overrides for Consistency */
 .mat-mdc-card {
   background-color: var(--surface-card) !important;
-  border-radius: var(--radius-lg) !important;
+  border-radius: 16px !important;
+  /* Updated to match .card-base */
   box-shadow: var(--shadow-sm) !important;
   border: 1px solid var(--surface-border) !important;
 }
@@ -150,4 +153,101 @@ body {
     background-color: #fee2e2;
     color: #b91c1c;
   }
+}
+
+/* --- New Global Aesthetics (Promoted from Tickets List) --- */
+
+/* Modern Page Container */
+.page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  min-height: calc(100vh - 100px);
+}
+
+/* Modern Header */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid rgba(99, 102, 241, 0.1);
+
+  .header-content {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  h1 {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+  }
+
+  p {
+    color: var(--text-secondary);
+    margin-top: 0.5rem;
+  }
+}
+
+
+/* Modern Card Base (overrides .card-base or can be used alongside) */
+.card-base {
+  @extend %card-base;
+}
+
+
+/* Modern Table Styling */
+table.custom-table,
+.modern-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th {
+    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+    color: white !important;
+    font-weight: 600 !important;
+    font-size: 0.9rem !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 20px 16px !important;
+    text-align: left;
+  }
+
+  td {
+    padding: 16px !important;
+    font-size: 0.95rem;
+    color: #334155;
+    border-bottom: 1px solid #f1f5f9;
+  }
+
+  tr {
+    transition: all 0.2s ease;
+
+    &:nth-child(even) {
+      background-color: #f8fafc;
+    }
+
+    &:hover {
+      background: linear-gradient(90deg, rgba(99, 102, 241, 0.08) 0%, rgba(79, 70, 229, 0.08) 100%);
+    }
+  }
+}
+
+/* Mat-Dialog Global Customization */
+.mat-mdc-dialog-container {
+  .mdc-dialog__surface {
+    border-radius: 3px !important;
+  }
+}
+
+.mat-mdc-dialog-content {
+  padding: 15px !important;
 }

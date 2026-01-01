@@ -1,9 +1,13 @@
-<h1 mat-dialog-title>{{ data?.title ? 'Edit Ticket' : 'Create Ticket' }}</h1>
+<h2 mat-dialog-title>
+  {{ data?.title ? 'Edit Ticket' : 'Create New Ticket' }}
+</h2>
+
 <div mat-dialog-content>
   <form [formGroup]="dialogForm" (ngSubmit)="onSubmit()">
     <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Title</mat-label>
-      <input matInput placeholder="Enter title" formControlName="title" required>
+      <mat-label>Ticket Title</mat-label>
+      <input matInput placeholder="Briefly describe the issue" formControlName="title" required>
+      <mat-icon matSuffix>edit</mat-icon>
       <mat-error *ngIf="dialogForm.controls['title'].hasError('required')">
         Title is required
       </mat-error>
@@ -11,13 +15,15 @@
 
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Description</mat-label>
-      <textarea matInput placeholder="Enter description" formControlName="description"></textarea>
+      <textarea matInput placeholder="Provide detailed information about your request..."
+        formControlName="description"></textarea>
     </mat-form-field>
   </form>
 </div>
+
 <div mat-dialog-actions align="end">
   <button mat-button (click)="onNoClick()">Cancel</button>
   <button mat-flat-button color="primary" [disabled]="dialogForm.invalid" (click)="onSubmit()">
-    {{ data?.title ? 'Save' : 'Create' }}
+    {{ data?.title ? 'Save Changes' : 'Create Ticket' }}
   </button>
 </div>

@@ -14,10 +14,10 @@
 
   <div class="dashboard-grid">
 
-    <!-- Row 1: Tanks & Inventory (Visual Focus) -->
+    <!-- Row 1: Tanks & Inventory -->
     <div class="card-base inventory-section">
       <div class="card-header">
-        <h3>Fuel Inventory Levels</h3>
+        <h3><mat-icon>water_drop</mat-icon> Fuel Inventory</h3>
         <p class="subtitle">Real-time tank monitoring</p>
       </div>
       <div class="card-body tanks-grid">
@@ -26,16 +26,16 @@
           <div class="tank-visual">
             <div class="liquid" [style.height.%]="tank.percentage" [class.petrol]="tank.product === 'Petrol'"
               [class.diesel]="tank.product === 'Diesel'"></div>
-            <div class="percentage-label">{{ tank.percentage }}%</div>
+            <div class="percentage-label">{{ tank.percentage | number:'1.0-0' }}%</div>
           </div>
           <div class="tank-info">
             <h4>{{ tank.product }} Tank</h4>
             <div class="metric">
               <span class="value">{{ formatNumber(tank.currentVolume) }}</span>
-              <span class="unit">Liters</span>
+              <span class="unit">L</span>
             </div>
             <div class="capacity">
-              Capacity: {{ formatNumber(tank.capacity) }}L
+              / {{ formatNumber(tank.capacity) }}L Capacity
             </div>
           </div>
         </div>
@@ -48,7 +48,7 @@
       <div class="card-header">
         <div class="header-with-stats">
           <div>
-            <h3>Pump Management</h3>
+            <h3><mat-icon>local_gas_station</mat-icon> Pump Management</h3>
             <p class="subtitle">Overview of {{ pumpStatuses().length }} pumps</p>
           </div>
           <div class="stats-pills">
@@ -61,27 +61,27 @@
         @for (pump of pumpStatuses(); track pump.id) {
         <div class="pump-card" [class]="pump.status.toLowerCase()">
           <div class="pump-header">
-            <span class="pump-number">#{{ pump.number }}</span>
-            <span class="pump-status">{{ pump.status }}</span>
+            <div class="pump-id-group">
+              <div class="status-dot"></div>
+              <span class="pump-number">Pump {{ pump.number }}</span>
+            </div>
+            <span class="pump-product">{{ pump.product }}</span>
           </div>
-          <div class="pump-product">{{ pump.product }}</div>
-
-          <mat-divider></mat-divider>
 
           <div class="pump-body">
             @if (pump.status === 'Active' && pump.currentSession) {
             <div class="session-info">
               <div class="vehicle">{{ pump.currentSession.vehicle }}</div>
               <div class="dispensing">
-                <span class="liters">{{ pump.currentSession.liters }}L</span> •
                 <span class="amount">₦{{ formatNumber(pump.currentSession.amount) }}</span>
+                <span class="liters">{{ pump.currentSession.liters }} Liters</span>
               </div>
               <mat-progress-bar mode="indeterminate" class="pump-progress"></mat-progress-bar>
             </div>
             } @else {
             <div class="idle-state">
-              <mat-icon>{{ pump.status === 'Maintenance' ? 'build' : 'local_gas_station' }}</mat-icon>
-              <span>{{ pump.status === 'Idle' ? 'Ready to dispense' : 'Under Service' }}</span>
+              <mat-icon>{{ pump.status === 'Maintenance' ? 'build' : 'power_settings_new' }}</mat-icon>
+              <span>{{ pump.status === 'Idle' ? 'Ready to dispense' : 'Under Maintenance' }}</span>
             </div>
             }
           </div>
@@ -93,43 +93,64 @@
     <!-- Row 3: Recent Activity (Table) -->
     <div class="card-base activity-section">
       <div class="card-header">
-        <h3>Recent Transactions</h3>
+        <h3><mat-icon>receipt_long</mat-icon> Recent Transactions</h3>
       </div>
       <div class="card-body no-padding">
 
-        <div class="table-responsive">
-          <table class="custom-table">
-            <thead>
-              <tr>
-                <th>Time</th>
-                <th>Transaction ID</th>
-                <th>Product</th>
-                <th>Liters</th>
-                <th>Amount</th>
-                <th>Payment</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              @for (tx of recentTransactions(); track tx.id) {
-              <tr>
-                <td>{{ tx.time }}</td>
-                <td class="mono">{{ tx.id }}</td>
-                <td>
-                  <span class="product-badge" [class]="tx.product.toLowerCase()">{{ tx.product }}</span>
-                </td>
-                <td class="numeric">{{ tx.liters }} L</td>
-                <td class="numeric bold">₦{{ formatNumber(tx.amount) }}</td>
-                <td>{{ tx.paymentMethod }}</td>
-                <td>
-                  <span class="status-chip" [class.active]="tx.status === 'Completed'"
-                    [class.pending]="tx.status === 'Pending'">
-                    {{ tx.status }}
-                  </span>
-                </td>
-              </tr>
-              }
-            </tbody>
+        <div class="table-container mat-elevation-z0">
+          <table mat-table [dataSource]="recentTransactions()">
+
+            <!-- Time Column -->
+            <ng-container matColumnDef="time">
+              <th mat-header-cell *matHeaderCellDef> TIME </th>
+              <td mat-cell *matCellDef="let tx"> {{tx.time}} </td>
+            </ng-container>
+
+            <!-- Transaction ID Column -->
+            <ng-container matColumnDef="id">
+              <th mat-header-cell *matHeaderCellDef> ID </th>
+              <td mat-cell *matCellDef="let tx" class="mono"> {{tx.id}} </td>
+            </ng-container>
+
+            <!-- Product Column -->
+            <ng-container matColumnDef="product">
+              <th mat-header-cell *matHeaderCellDef> PRODUCT </th>
+              <td mat-cell *matCellDef="let tx">
+                <span class="product-badge" [class]="tx.product.toLowerCase()">{{ tx.product }}</span>
+              </td>
+            </ng-container>
+
+            <!-- Liters Column -->
+            <ng-container matColumnDef="liters">
+              <th mat-header-cell *matHeaderCellDef> VOLUME </th>
+              <td mat-cell *matCellDef="let tx" class="numeric"> {{tx.liters}}L </td>
+            </ng-container>
+
+            <!-- Amount Column -->
+            <ng-container matColumnDef="amount">
+              <th mat-header-cell *matHeaderCellDef> AMOUNT </th>
+              <td mat-cell *matCellDef="let tx" class="numeric bold"> ₦{{ formatNumber(tx.amount) }} </td>
+            </ng-container>
+
+            <!-- Payment Column -->
+            <ng-container matColumnDef="paymentMethod">
+              <th mat-header-cell *matHeaderCellDef> PAYMENT </th>
+              <td mat-cell *matCellDef="let tx"> {{tx.paymentMethod}} </td>
+            </ng-container>
+
+            <!-- Status Column -->
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef> STATUS </th>
+              <td mat-cell *matCellDef="let tx">
+                <span class="status-chip" [class.active]="tx.status === 'Completed'"
+                  [class.pending]="tx.status === 'Pending'">
+                  {{ tx.status }}
+                </span>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
           </table>
         </div>
 

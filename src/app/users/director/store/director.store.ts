@@ -1,6 +1,6 @@
 import { inject } from "@angular/core";
 import { patchState, signalStore, withMethods, withState } from "@ngrx/signals";
-import { DirectorService, SalesDataPoint, SalesPeriod, } from "../services/director.service";
+import { DirectorService, SalesDataPoint, SalesPeriod, SalesStats } from "../services/director.service";
 import { firstValueFrom } from "rxjs"; // Needed to convert Observable to Promise for async/await
 import { User } from "../models/user.model";
 
@@ -9,7 +9,7 @@ import { User } from "../models/user.model";
 export interface StationStats {
   total: number;
   active: number;
-  inactive: number;
+  suspended: number;
 }
 
 export class RecentSales {
@@ -22,6 +22,7 @@ interface DirectorState {
   "userProfile": User | null;
   "profile": User | null;
   "stationStats": StationStats | null;
+  "salesStats": SalesStats | null; // New: Sales stats for the dashboard cards
   "salesRecords": SalesDataPoint[]; // New: Sales data points for the graph
   "recentSales": RecentSales[];
   "currentSalesPeriod": string; // New: Tracks the active filter (daily/weekly/monthly)
@@ -37,6 +38,7 @@ const initialState: DirectorState = {
   recentSales: [],
   profile: null,
   stationStats: null,
+  salesStats: null, // Initialize sales stats as null
   userProfile: null,
   salesRecords: [], // Initialize sales records as empty array
   currentSalesPeriod: 'daily' // Default to daily sales view
@@ -64,6 +66,22 @@ export const DirectorStore = signalStore(
           loading: false,
           error: 'Failed to load station stats. Please check your connection and try again.'
         })
+      }
+    },
+
+    async loadSalesStats() {
+      // Don't trigger full page loading for this, or maybe separate loading state? 
+      // Re-using loading for now or salesLoading? Let's use salesLoading.
+      patchState(store, { salesLoading: true, error: null });
+      try {
+        const salesStats = await firstValueFrom(directorService.getSalesStats());
+        patchState(store, { salesStats, salesLoading: false });
+      } catch (error) {
+        console.error('Error loading sales stats:', error);
+        patchState(store, {
+          salesLoading: false,
+          // Optional: set a specific error or just log it so other parts still work
+        });
       }
     },
 

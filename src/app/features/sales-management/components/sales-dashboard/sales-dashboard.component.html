@@ -1,14 +1,14 @@
-<div class="page-container">
+<div class="page-container" fxLayout="column" fxLayoutGap="2rem">
 
-  <!-- Header Section -->
   <div class="page-header">
-    <div class="header-content">
+    <div class="header-content" fxLayout="row" fxLayoutAlign="space-between center" fxLayout.lt-md="column"
+      fxLayoutAlign.lt-md="start start" fxLayoutGap="1rem">
       <div class="title-group">
         <h1>{{ stationName() }} - Sales Dashboard</h1>
         <p>Real-time insights and performance metrics</p>
       </div>
 
-      <div class="action-group">
+      <div class="action-group" fxLayout="row" fxLayoutGap="1rem">
         <button mat-flat-button color="primary" (click)="openSalesDialog()">
           <mat-icon>add</mat-icon>
           Add Sale
@@ -16,10 +16,20 @@
       </div>
     </div>
 
+  </div>
+
+  <div>
+
+  </div>
+
+  <div class="page-container" fxLayout="column" fxLayoutGap="2rem">
+
+
+
 
     <!-- Loading State -->
     @if (loading()) {
-    <div class="loading-state">
+    <div class="loading-state" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="1.5rem">
       <mat-progress-bar mode="indeterminate"></mat-progress-bar>
       <p>Loading analytics...</p>
     </div>
@@ -27,9 +37,9 @@
 
     <!-- Error State -->
     @if (error()) {
-    <div class="card-base error-card">
+    <div class="card-base error-card" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="2.5rem">
       <mat-icon>error_outline</mat-icon>
-      <div class="error-content">
+      <div class="error-content" fxFlex>
         <h3>Error Loading Data</h3>
         <p>{{ error() }}</p>
       </div>
@@ -39,205 +49,215 @@
 
     <!-- Dashboard Content -->
     @if (!loading() && !error()) {
-    <div class="dashboard-grid">
+    <div class="dashboard-grid" fxLayout="column" fxLayoutGap="2rem">
 
-      <!-- Summary Statistics Cards -->
-      <div class="stats-grid">
+      <!-- Today's Sales Gradient Cards -->
+      <div class="gradient-cards-row" fxLayout="row wrap" fxLayoutGap="2rem grid">
 
-        <!-- Total Revenue Card -->
-        <div class="card-base stat-card">
-          <div class="icon-wrapper revenue">
-            <mat-icon>payments</mat-icon>
-          </div>
-          <div class="stat-details">
-            <span class="label">Total Revenue</span>
-            <span class="value">{{ formatCurrency(totalSales()) }}</span>
-            <span class="subtitle">All-time sales</span>
+        <!-- Total Revenue (Today) -->
+        <div class="card-base gradient-card card-revenue" fxFlex.gt-md="25" fxFlex.md="50" fxFlex="100">
+          <div class="card-content">
+            <div class="icon-circle">
+              <mat-icon>monetization_on</mat-icon>
+            </div>
+            <div class="card-info">
+              <span class="card-label">Total Revenue</span>
+              <span class="card-value">{{ formatCurrency(totalSales()) }}</span>
+              <span class="card-sub">All time</span>
+            </div>
           </div>
         </div>
 
-        <!-- Average Daily Sales Card -->
-        <div class="card-base stat-card">
-          <div class="icon-wrapper average">
-            <mat-icon>trending_up</mat-icon>
-          </div>
-          <div class="stat-details">
-            <span class="label">Avg. Daily Sales</span>
-            <span class="value">{{ formatCurrency(averageDailySales()) }}</span>
-            <span class="subtitle">Last 30 days</span>
+        <!-- Today's Petrol Sales -->
+        <div class="card-base gradient-card card-petrol" fxFlex.gt-md="25" fxFlex.md="50" fxFlex="100">
+          <div class="card-content">
+            <div class="icon-circle">
+              <mat-icon>local_gas_station</mat-icon>
+            </div>
+            <div class="card-info">
+              <span class="card-label">Petrol Sales</span>
+              <span class="card-value">{{ formatCurrency(todayPetrolSales()) }}</span>
+              <span class="card-sub">Today</span>
+            </div>
           </div>
         </div>
 
-        <!-- Total Volume Card -->
-        @if (stationSummary()) {
-        <div class="card-base stat-card">
-          <div class="icon-wrapper volume">
-            <mat-icon>local_gas_station</mat-icon>
-          </div>
-          <div class="stat-details">
-            <span class="label">Total Volume</span>
-            <span class="value">{{ (stationSummary()?.totalVolume || 0).toLocaleString() }} L</span>
-            <span class="subtitle">Fuel dispensed</span>
+        <!-- Today's Diesel Sales -->
+        <div class="card-base gradient-card card-diesel" fxFlex.gt-md="25" fxFlex.md="50" fxFlex="100">
+          <div class="card-content">
+            <div class="icon-circle">
+              <mat-icon>local_shipping</mat-icon>
+            </div>
+            <div class="card-info">
+              <span class="card-label">Diesel Sales</span>
+              <span class="card-value">{{ formatCurrency(todayDieselSales()) }}</span>
+              <span class="card-sub">Today</span>
+            </div>
           </div>
         </div>
-        }
 
-        <!-- Station Status Card -->
-        @if (myStation()) {
-        <div class="card-base stat-card">
-          <div class="icon-wrapper status">
-            <mat-icon>{{ myStation()?.status === 'active' ? 'check_circle' : 'cancel' }}</mat-icon>
-          </div>
-          <div class="stat-details">
-            <span class="label">Station Status</span>
-            <span class="value status-badge" [class.active]="myStation()?.status === 'active'"
-              [class.suspended]="myStation()?.status === 'suspended'">
-              {{ myStation()?.status || 'Unknown' }}
-            </span>
-            <span class="subtitle">Current state</span>
+        <!-- Today's Total Sales -->
+        <div class="card-base gradient-card card-total" fxFlex.gt-md="25" fxFlex.md="50" fxFlex="100">
+          <div class="card-content">
+            <div class="icon-circle">
+              <mat-icon>payments</mat-icon>
+            </div>
+            <div class="card-info">
+              <span class="card-label">Total Sales</span>
+              <span class="card-value">{{ formatCurrency(todayTotalSales()) }}</span>
+              <span class="card-sub">Today</span>
+            </div>
           </div>
         </div>
-        }
 
       </div>
+
+      <!-- Station Summary Cards -->
 
       <!-- Station Information Section -->
       @if (myStation()) {
-      <div class="station-info-section">
-        <div class="card-base station-info-card">
-          <div class="card-header">
-            <div class="title-with-icon">
-              <mat-icon class="info-icon">business</mat-icon>
-              <h3>Station Information</h3>
+      <div class="station-info-grid" fxLayout="column" fxLayoutGap="2rem grid">
+
+        <!-- Location Details Card -->
+        <div class="info-card card-location" fxFlex.gt-md="25" fxFlex.md="50" fxFlex="100">
+          <div class="card-header-accent"></div>
+          <div class="card-content">
+            <div class="card-title-row">
+              <div class="icon-box">
+                <mat-icon>location_on</mat-icon>
+              </div>
+              <h3>Location Details</h3>
             </div>
-          </div>
-          <div class="card-body">
-            <div class="info-grid">
-
-              <!-- Location Information -->
-              <div class="info-group">
-                <h4 class="group-title">
-                  <mat-icon>location_on</mat-icon>
-                  Location Details
-                </h4>
-                <div class="info-items">
-                  <div class="info-item">
-                    <span class="info-label">Address</span>
-                    <span class="info-value">{{ myStation()?.address }}</span>
-                  </div>
-                  <div class="info-item">
-                    <span class="info-label">Ward</span>
-                    <span class="info-value">{{ myStation()?.ward }}</span>
-                  </div>
-                  <div class="info-item">
-                    <span class="info-label">LGA</span>
-                    <span class="info-value">{{ myStation()?.lga }}</span>
-                  </div>
-                  <div class="info-item">
-                    <span class="info-label">State</span>
-                    <span class="info-value">{{ myStation()?.state }}</span>
-                  </div>
-                  <div class="info-item">
-                    <span class="info-label">Coordinates</span>
-                    <span class="info-value">{{ myStation()?.latitude }}°N, {{ myStation()?.longitude }}°E</span>
-                  </div>
-                </div>
+            <div class="info-list">
+              <div class="info-row">
+                <span class="label">Address</span>
+                <span class="value">{{ myStation()?.address }}</span>
               </div>
-
-              <!-- Fuel Information -->
-              <div class="info-group">
-                <h4 class="group-title">
-                  <mat-icon>local_gas_station</mat-icon>
-                  Fuel Inventory
-                </h4>
-                <div class="info-items">
-                  <div class="info-item highlight">
-                    <span class="info-label">Petrol Volume</span>
-                    <span class="info-value">{{ (myStation()?.petrolVolume || 0).toLocaleString() }} L</span>
-                  </div>
-                  <div class="info-item highlight">
-                    <span class="info-label">Petrol Price</span>
-                    <span class="info-value">{{ formatCurrency(myStation()?.petrolPricePerLitre || 0) }}/L</span>
-                  </div>
-                  <div class="info-item highlight">
-                    <span class="info-label">Diesel Volume</span>
-                    <span class="info-value">{{ (myStation()?.dieselVolume || 0).toLocaleString() }} L</span>
-                  </div>
-                  <div class="info-item highlight">
-                    <span class="info-label">Diesel Price</span>
-                    <span class="info-value">{{ formatCurrency(myStation()?.dieselPricePerLitre || 0) }}/L</span>
-                  </div>
-                </div>
+              <div class="info-row">
+                <span class="label">Ward</span>
+                <span class="value">{{ myStation()?.ward }}</span>
               </div>
-
-              <!-- Manager Information -->
-              @if (myStation()?.manager) {
-              <div class="info-group">
-                <h4 class="group-title">
-                  <mat-icon>person</mat-icon>
-                  Manager Details
-                </h4>
-                <div class="info-items">
-                  <div class="info-item">
-                    <span class="info-label">Email</span>
-                    <span class="info-value">{{ myStation()?.manager?.email }}</span>
-                  </div>
-                  <div class="info-item">
-                    <span class="info-label">Role</span>
-                    <span class="info-value badge">{{ myStation()?.manager?.role }}</span>
-                  </div>
-                  <div class="info-item">
-                    <span class="info-label">Status</span>
-                    <span class="info-value badge" [class.active]="myStation()?.manager?.status === 'active'"
-                      [class.inactive]="myStation()?.manager?.status !== 'active'">
-                      {{ myStation()?.manager?.status }}
-                    </span>
-                  </div>
-                </div>
+              <div class="info-row">
+                <span class="label">LGA</span>
+                <span class="value">{{ myStation()?.lga }}</span>
               </div>
-              }
-
-              <!-- Station Metadata -->
-              <div class="info-group">
-                <h4 class="group-title">
-                  <mat-icon>info</mat-icon>
-                  Station Metadata
-                </h4>
-                <div class="info-items">
-                  <div class="info-item">
-                    <span class="info-label">Station ID</span>
-                    <span class="info-value mono">{{ myStation()?.id }}</span>
-                  </div>
-                  <div class="info-item">
-                    <span class="info-label">Created</span>
-                    <span class="info-value">{{ formatDate(myStation()?.createdAt) }}</span>
-                  </div>
-                  <div class="info-item">
-                    <span class="info-label">Last Updated</span>
-                    <span class="info-value">{{ formatDate(myStation()?.lastUpdated) }}</span>
-                  </div>
-                  <div class="info-item">
-                    <span class="info-label">Pumps</span>
-                    <span class="info-value">{{ myStation()?.pumps?.length || 0 }} pump(s)</span>
-                  </div>
-                  <div class="info-item">
-                    <span class="info-label">Dispensers</span>
-                    <span class="info-value">{{ myStation()?.dispensers?.length || 0 }} dispenser(s)</span>
-                  </div>
-                </div>
+              <div class="info-row">
+                <span class="label">State</span>
+                <span class="value">{{ myStation()?.state }}</span>
               </div>
-
+              <div class="info-row">
+                <span class="label">Coordinates</span>
+                <span class="value mono">{{ myStation()?.latitude }}°N, {{ myStation()?.longitude }}°E</span>
+              </div>
             </div>
           </div>
         </div>
+
+        <!-- Fuel Inventory Card -->
+        <div class="info-card card-fuel" fxFlex.gt-md="25" fxFlex.md="50" fxFlex="100">
+          <div class="card-header-accent"></div>
+          <div class="card-content">
+            <div class="card-title-row">
+              <div class="icon-box">
+                <mat-icon>local_gas_station</mat-icon>
+              </div>
+              <h3>Fuel Inventory</h3>
+            </div>
+            <div class="info-list">
+              <div class="info-row highlight">
+                <span class="label">Petrol Volume</span>
+                <span class="value highlight-text">{{ (myStation()?.petrolVolume || 0).toLocaleString() }} L</span>
+              </div>
+              <div class="info-row">
+                <span class="label">Petrol Price</span>
+                <span class="value">{{ formatCurrency(myStation()?.petrolPricePerLitre || 0) }}/L</span>
+              </div>
+              <div class="info-row highlight">
+                <span class="label">Diesel Volume</span>
+                <span class="value highlight-text">{{ (myStation()?.dieselVolume || 0).toLocaleString() }} L</span>
+              </div>
+              <div class="info-row">
+                <span class="label">Diesel Price</span>
+                <span class="value">{{ formatCurrency(myStation()?.dieselPricePerLitre || 0) }}/L</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Manager Details Card -->
+        @if (myStation()?.manager) {
+        <div class="info-card card-manager" fxFlex.gt-md="25" fxFlex.md="50" fxFlex="100">
+          <div class="card-header-accent"></div>
+          <div class="card-content">
+            <div class="card-title-row">
+              <div class="icon-box">
+                <mat-icon>person</mat-icon>
+              </div>
+              <h3>Manager Details</h3>
+            </div>
+            <div class="info-list">
+              <div class="info-row">
+                <span class="label">Email</span>
+                <span class="value text-truncate" [title]="myStation()?.manager?.email">{{ myStation()?.manager?.email
+                  }}</span>
+              </div>
+              <div class="info-row">
+                <span class="label">Role</span>
+                <span class="value badge role">{{ myStation()?.manager?.role }}</span>
+              </div>
+              <div class="info-row">
+                <span class="label">Status</span>
+                <span class="value badge status" [class.active]="myStation()?.manager?.status === 'active'"
+                  [class.inactive]="myStation()?.manager?.status !== 'active'">
+                  {{ myStation()?.manager?.status }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        }
+
+        <!-- Metadata Card
+        <div class="info-card card-meta" fxFlex.gt-md="25" fxFlex.md="50" fxFlex="100">
+          <div class="card-header-accent"></div>
+          <div class="card-content">
+            <div class="card-title-row">
+              <div class="icon-box">
+                <mat-icon>info</mat-icon>
+              </div>
+              <h3>Station Metadata</h3>
+            </div>
+            <div class="info-list">
+              <div class="info-row">
+                <span class="label">Station ID</span>
+                <span class="value mono sm">{{ myStation()?.id }}</span>
+              </div>
+              <div class="info-row">
+                <span class="label">Created</span>
+                <span class="value">{{ formatDate(myStation()?.createdAt) }}</span>
+              </div>
+              <div class="info-row">
+                <span class="label">Last Updated</span>
+                <span class="value">{{ formatDate(myStation()?.lastUpdated) }}</span>
+              </div>
+              <div class="info-row">
+                <span class="label gap">Infrastructure</span>
+                <span class="value">{{ myStation()?.pumps?.length || 0 }} pumps • {{ myStation()?.dispensers?.length ||
+                  0 }} dispensers</span>
+              </div>
+            </div>
+          </div>
+        </div>-->
+
       </div>
       }
 
+
       <!-- Charts Section -->
-      <div class="charts-layout">
+      <div class="charts-layout" fxLayout="row wrap" fxLayoutGap="2.5rem grid">
 
         <!-- 30-Day Sales History Chart -->
-        <div class="card-base chart-card">
+        <div class="card-base chart-card" fxFlex.gt-md="50" fxFlex="100">
           <div class="card-header">
             <div class="title-with-icon">
               <mat-icon class="chart-icon">show_chart</mat-icon>
@@ -249,7 +269,7 @@
             <canvas baseChart [data]="dailySalesChartData()" [options]="lineChartOptions" [type]="lineChartType">
             </canvas>
             } @else {
-            <div class="no-data">
+            <div class="no-data" fxLayout="column" fxLayoutAlign="center center">
               <mat-icon>insert_chart</mat-icon>
               <p>No sales data available for the last 30 days</p>
             </div>
@@ -258,7 +278,7 @@
         </div>
 
         <!-- Cumulative Sales Trend Chart -->
-        <div class="card-base chart-card">
+        <div class="card-base chart-card" fxFlex.gt-md="50" fxFlex="100">
           <div class="card-header">
             <div class="title-with-icon">
               <mat-icon class="chart-icon">timeline</mat-icon>
@@ -270,7 +290,7 @@
             <canvas baseChart [data]="cumulativeSalesChartData()" [options]="areaChartOptions" [type]="areaChartType">
             </canvas>
             } @else {
-            <div class="no-data">
+            <div class="no-data" fxLayout="column" fxLayoutAlign="center center">
               <mat-icon>insert_chart</mat-icon>
               <p>No cumulative sales data available</p>
             </div>
@@ -279,7 +299,7 @@
         </div>
 
         <!-- Monthly Sales Breakdown Chart -->
-        <div class="card-base chart-card full-width">
+        <div class="card-base chart-card full-width" fxFlex="100">
           <div class="card-header">
             <div class="title-with-icon">
               <mat-icon class="chart-icon">bar_chart</mat-icon>
@@ -291,7 +311,7 @@
             <canvas baseChart [data]="monthlySalesChartData()" [options]="barChartOptions" [type]="barChartType">
             </canvas>
             } @else {
-            <div class="no-data">
+            <div class="no-data" fxLayout="column" fxLayoutAlign="center center">
               <mat-icon>insert_chart</mat-icon>
               <p>No monthly sales data available</p>
             </div>
@@ -301,6 +321,8 @@
 
       </div>
 
+
     </div>
     }
   </div>
+</div>

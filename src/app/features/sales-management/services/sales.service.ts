@@ -77,6 +77,43 @@ export class SalesService {
   async getSalesByStationId(stationId: string): Promise<Sale[]> {
     return firstValueFrom(this.http.get<Sale[]>(`${this.baseUrl}/sales/station/${stationId}`));
   }
+
+  async getStationDailyTrend(): Promise<StationDailyTrend[]> {
+    // Fetch flat data from the documented endpoint
+    const flatData = await firstValueFrom(
+      this.http.get<{ stationName: string, date: string, totalDailyRevenue: number, stationId: string }[]>(
+        `${this.baseUrl}/station/report/daily`
+      )
+    );
+
+    // Transform into StationDailyTrend[] (Group by Station)
+    const grouped: { [key: string]: StationDailyTrend } = {};
+
+    flatData.forEach(item => {
+      if (!grouped[item.stationName]) {
+        grouped[item.stationName] = {
+          stationName: item.stationName,
+          stationId: item.stationId,
+          dailySales: []
+        };
+      }
+      grouped[item.stationName].dailySales.push({
+        date: item.date,
+        totalSales: item.totalDailyRevenue
+      });
+    });
+
+    return Object.values(grouped);
+  }
+}
+
+export interface StationDailyTrend {
+  stationName: string;
+  stationId?: string;
+  dailySales: {
+    date: string;
+    totalSales: number;
+  }[];
 }
 
 export interface CreateSaleDTO {

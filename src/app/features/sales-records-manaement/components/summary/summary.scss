@@ -3,6 +3,8 @@ $primary-color: #4f46e5; // Indigo 600
 $primary-light: #818cf8; // Indigo 400
 $primary-dark: #3730a3; // Indigo 800
 $secondary-color: #64748b; // Slate 500
+@use 'sass:color';
+
 $background-bg: #f8fafc; // Slate 50
 $card-bg: #ffffff;
 $text-main: #0f172a; // Slate 900 (Darker for better contrast)
@@ -30,27 +32,13 @@ $shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 
     }
 }
 
-// Common Card Style
-.card-base {
-    background: $card-bg;
-    border-radius: 1.5rem; // More rounded corners
-    box-shadow: $shadow-md;
-    border: 1px solid rgba(255, 255, 255, 0.5); // Subtle highlighting
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    overflow: hidden;
-
-    &:hover {
-        transform: translateY(-4px);
-        box-shadow: $shadow-xl;
-    }
-}
+// .card-base removed to use global style
 
 // Header
+// .page-header variables removed to use global style
 .page-header {
-    margin-bottom: 3.5rem; // More space below header
-    max-width: 1600px;
-    margin-left: auto;
-    margin-right: auto;
+    // Keep unique children styles
+
 
     .header-content {
         display: flex;
@@ -98,7 +86,7 @@ $shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 
                 &:hover {
                     transform: translateY(-2px);
                     box-shadow: $shadow-lg;
-                    background-color: darken($primary-color, 5%);
+                    background-color: color.adjust($primary-color, $lightness: -5%);
                 }
 
                 mat-icon {

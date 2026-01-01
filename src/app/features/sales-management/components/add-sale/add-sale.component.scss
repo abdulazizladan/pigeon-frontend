@@ -1,0 +1,35 @@
+/* Raw CSS for Layout and Styling */
+
+:host {
+    display: block;
+}
+
+/* Form Container */
+.sale-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    /* Maintain min-width for dialog sizing if not handled globally, 
+       but removing explicit top padding/color overrides */
+}
+
+/* Form Fields */
+.full-width {
+    width: 100%;
+}
+
+.row-group {
+    display: flex;
+    gap: 16px;
+}
+
+.half-width {
+    flex: 1;
+}
+
+@media (max-width: 600px) {
+    .row-group {
+        flex-direction: column;
+        gap: 16px;
+    }
+}

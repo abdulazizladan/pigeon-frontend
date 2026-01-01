@@ -14,7 +14,8 @@ interface AdminState {
   stationsSummary: StationsSummary;
   loading: boolean;
   error: string | null;
-  profile: User | null
+  profile: User | null;
+  activityLogs: any[];
 }
 
 const initialState: AdminState = {
@@ -45,7 +46,8 @@ const initialState: AdminState = {
   },
   loading: false,
   error: null,
-  profile: null
+  profile: null,
+  activityLogs: []
 }
 
 export const AdminStore = signalStore(
@@ -55,11 +57,12 @@ export const AdminStore = signalStore(
     async loadSummary() {
       patchState(store, { loading: true, error: null });
       try {
-        const [users, tickets, attendants, stations] = await Promise.all([
+        const [users, tickets, attendants, stations, logs] = await Promise.all([
           adminService.getUserSummary(),
           adminService.getTicketsSummary(),
           adminService.getAttendantsSummary(),
-          adminService.getStationsSummary()
+          adminService.getStationsSummary(),
+          adminService.getActivityLogs()
         ]);
 
         patchState(store, {
@@ -67,6 +70,7 @@ export const AdminStore = signalStore(
           ticketsSummary: tickets,
           attendantsSummary: attendants,
           stationsSummary: stations,
+          activityLogs: logs,
           loading: false
         });
       } catch (error) {
@@ -87,6 +91,17 @@ export const AdminStore = signalStore(
           error: 'Failed to load profile. Please check your connection and try again.',
           loading: false
         })
+      }
+    },
+    async loadActivityLogs() {
+      // This is now loaded as part of loadSummary for simplicity to match dashboard requirement, 
+      // but can be separate if needed. 
+      // Re-fetching just logs if needed:
+      try {
+        const logs = await adminService.getActivityLogs();
+        patchState(store, { activityLogs: logs });
+      } catch (error) {
+        console.error('Error loading activity logs:', error);
       }
     }
   }))

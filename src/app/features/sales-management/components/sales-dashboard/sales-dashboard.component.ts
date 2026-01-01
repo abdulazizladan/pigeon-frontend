@@ -112,6 +112,26 @@ export class SalesDashboardComponent implements OnInit {
 
 
 
+  // Today's Sales Helper Signals
+  todaySalesList = signal<any[]>([]);
+
+  todayPetrolSales = computed(() => {
+    return this.todaySalesList()
+      .filter(s => s.product === 'PMS' || s.product === 'Petrol') // Adjust checks based on actual enum/data
+      .reduce((sum, s) => sum + (s.totalPrice || 0), 0);
+  });
+
+  todayDieselSales = computed(() => {
+    return this.todaySalesList()
+      .filter(s => s.product === 'AGO' || s.product === 'Diesel')
+      .reduce((sum, s) => sum + (s.totalPrice || 0), 0);
+  });
+
+  todayTotalSales = computed(() => {
+    return this.todaySalesList()
+      .reduce((sum, s) => sum + (s.totalPrice || 0), 0);
+  });
+
   // --- Chart Configurations ---
 
   // Line Chart for 30-Day Sales History
@@ -301,7 +321,7 @@ export class SalesDashboardComponent implements OnInit {
           console.log('📊 Fetching dashboard data for station:', station.id);
 
           // Fetch all dashboard data in parallel
-          const [summary, revenue, dailyHistory, cumulative, weekly, monthly] = await Promise.all([
+          const [summary, revenue, dailyHistory, cumulative, weekly, monthly, allSales] = await Promise.all([
             this.stationsService.getSummary(station.id).catch((err) => {
               console.warn('⚠️ Summary fetch failed:', err);
               return null;
@@ -325,6 +345,10 @@ export class SalesDashboardComponent implements OnInit {
             this.salesService.getMonthlySales().catch((err) => {
               console.warn('⚠️ Monthly sales fetch failed:', err);
               return [];
+            }),
+            this.salesService.getSalesByStationId(station.id).catch((err) => {
+              console.warn('⚠️ Sales list fetch failed:', err);
+              return [];
             })
           ]);
 
@@ -336,6 +360,12 @@ export class SalesDashboardComponent implements OnInit {
           this.cumulativeSales.set(cumulative);
           this.weeklySales.set(weekly);
           this.monthlySales.set(monthly);
+
+          // Filter for today's sales
+          const today = new Date();
+          const todayString = today.toDateString();
+          const todaysSalesRaw = allSales.filter((s: any) => new Date(s.createdAt).toDateString() === todayString);
+          this.todaySalesList.set(todaysSalesRaw);
 
           console.log('✅ All signals updated successfully');
         } catch (dataErr) {

@@ -36,14 +36,19 @@ export class AddUserComponent {
 
   onSubmit() {
     if (this.userForm.valid) {
-      const formValue = this.userForm.value;
+      const formValue = this.userForm.getRawValue();
+      console.log('Form Raw Value:', formValue); // Debug log
+
       const userData = {
         email: formValue.credentials.email,
         password: formValue.credentials.password,
         role: formValue.credentials.role,
         info: formValue.info,
-        contact: formValue.contact
+        contact: formValue.contact,
+        status: 'active'
       };
+      console.log('Constructed User Data:', userData); // Debug log
+
       this.dialogRef.close(userData);
     }
   }

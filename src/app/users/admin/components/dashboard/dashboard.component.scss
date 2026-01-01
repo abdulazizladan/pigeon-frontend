@@ -1,3 +1,5 @@
+@use '../../../../../cards';
+
 :host {
   display: block;
 }
@@ -45,194 +47,197 @@
   text-align: left;
 }
 
-.dashboard-grid-row {
+// --- Stats Grid ---
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); // 4 columns on large screens
+  gap: 1.5rem;
+  margin-bottom: 32px;
   position: relative;
   z-index: 10;
-  margin-bottom: 32px;
+
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
 }
 
-/* --- Light Glass Statistic Card Styling --- */
+// --- Colored Card Styling ---
 .stat-card {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(12px) saturate(160%);
-  -webkit-backdrop-filter: blur(12px) saturate(160%);
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  border-radius: 24px;
-  box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.03);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  height: 100%;
-  color: #1e293b;
-  overflow: hidden;
-
-  &:hover {
-    transform: translateY(-6px);
-    border-color: rgba(0, 0, 0, 0.1);
-    box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.08);
-    background: rgba(255, 255, 255, 0.85);
-  }
-}
-
-.card-header {
-  padding: 24px 24px 12px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
+  padding: 0;
+  border-radius: 16px; // Slightly smaller radius
   border: none;
-}
-
-.card-icon {
-  font-size: 32px;
-  height: 32px;
-  width: 32px;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.05));
-}
-
-.card-title {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #475569;
-  letter-spacing: 0.02em;
-}
-
-/* Header Theming (Light Mode adjusted) */
-.user-card-header .card-icon {
-  color: #4f46e5;
-}
-
-.attendant-card-header .card-icon {
-  color: #10b981;
-}
-
-.station-card-header .card-icon {
-  color: #3b82f6;
-}
-
-.ticket-card-header .card-icon {
-  color: #f97316;
-}
-
-.card-content {
-  padding: 0 24px 24px;
-  display: flex;
-  flex-direction: column;
-}
-
-.stat-total {
-  font-size: 4.5rem;
-  font-weight: 800;
-  color: #0f172a;
-  margin: 8px 0 20px 0;
-  line-height: 1;
-  letter-spacing: -0.05em;
-}
-
-.loading-indicator-area {
-  height: 4.5rem;
-  display: flex;
-  align-items: center;
-}
-
-::ng-deep {
-  .mat-mdc-progress-bar {
-    height: 6px !important;
-    border-radius: 4px;
-    --mdc-linear-progress-track-color: rgba(0, 0, 0, 0.05);
-    --mdc-linear-progress-active-indicator-color: #3b82f6;
-  }
-}
-
-.stat-pills-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 8px;
-}
-
-.stat-pill {
-  display: flex;
-  align-items: center;
-  padding: 6px 14px;
-  font-size: 0.875rem;
-  font-weight: 600;
-  border-radius: 12px;
-  gap: 8px;
-  transition: all 0.2s ease;
-  background: rgba(0, 0, 0, 0.03);
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  color: #475569;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); // Softer shadow
+  color: #fff; // Default text color for colored cards
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  min-height: 180px; // Compact height
 
   &:hover {
-    background: rgba(0, 0, 0, 0.06);
-    transform: scale(1.05);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
   }
 
-  .pill-icon {
-    font-size: 18px;
-    height: 18px;
-    width: 18px;
-  }
-}
+  // Common Header
+  .card-header {
+    padding: 16px 20px 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
 
-/* Pill Theming (Light Mode) */
-.pill-indigo {
-  color: #4f46e5;
-  background: #eef2ff;
-  border-color: #e0e7ff;
-}
+    .icon-circle {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
-.pill-green {
-  color: #059669;
-  background: #ecfdf5;
-  border-color: #d1fae5;
-}
+      .card-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+        color: #fff;
+      }
+    }
 
-.pill-red {
-  color: #dc2626;
-  background: #fef2f2;
-  border-color: #fee2e2;
-}
-
-.pill-blue {
-  color: #2563eb;
-  background: #eff6ff;
-  border-color: #dbeafe;
-}
-
-.pill-gray {
-  color: #4b5563;
-  background: #f3f4f6;
-  border-color: #e5e7eb;
-}
-
-.pill-orange {
-  color: #ea580c;
-  background: #fff7ed;
-  border-color: #ffedd5;
-}
-
-.pill-green-light {
-  color: #16a34a;
-  background: #f0fdf4;
-  border-color: #dcfce7;
-}
-
-/* --- Responsive Adjustments --- */
-@media (max-width: 768px) {
-  .dashboard-wrapper {
-    padding: 32px 20px;
+    .card-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.9);
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
   }
 
-  .page-title {
-    font-size: 2.25rem;
-    text-align: center;
-    margin-bottom: 32px;
+  // Common Content
+  .card-content {
+    padding: 0 20px 20px;
   }
 
   .stat-total {
-    font-size: 3.5rem;
+    font-size: 3rem; // Main number
+    font-weight: 700;
+    color: #fff;
+    margin: 4px 0 16px 0;
+    line-height: 1;
   }
 
-  .stat-card {
-    margin-bottom: 8px;
+  .stat-pills-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .stat-pill {
+    padding: 4px 10px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 999px; // Pill shape
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  // --- Specific Color Themes ---
+
+  // Users: Indigo/Violet
+  &.card-users {
+    background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%);
+  }
+
+  // Attendants: Emerald/Teal
+  &.card-attendants {
+    background: linear-gradient(135deg, #10b981 0%, #047857 100%);
+  }
+
+  // Stations: Blue/Cyan
+  &.card-stations {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  }
+
+  // Tickets: Orange/Amber
+  &.card-tickets {
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+  }
+}
+
+// --- Activity Logs Section ---
+.activity-logs-section {
+  margin-top: 3rem;
+  position: relative;
+  z-index: 10;
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #0f172a; // Match page title color
+      margin: 0;
+    }
+
+    .filter-field {
+      width: 100%;
+      max-width: 400px;
+      margin-bottom: -1.25em; // Standard fix for mat-form-field spacing
+
+      ::ng-deep .mat-mdc-text-field-wrapper {
+        background-color: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(12px);
+        border-radius: 12px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      }
+    }
+  }
+
+  .table-container {
+    @extend %card-base; // Use the shared card placeholder
+    overflow: hidden; // Ensure border-radius clips content
+    background: rgba(255, 255, 255, 0.7); // Glassmorphism base
+    backdrop-filter: blur(12px) saturate(160%);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.03);
+
+    .activity-table {
+      width: 100%;
+      background: transparent; // Let container background show through
+
+      th.mat-header-cell {
+        background-color: rgba(248, 250, 252, 0.8); // Slightly transparent header
+        color: #64748b;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.05em;
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+      }
+
+      td.mat-cell {
+        padding: 1rem 1.5rem;
+        color: #1e293b;
+        border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+        font-size: 0.875rem;
+      }
+
+      tr.mat-row {
+        transition: background-color 0.2s ease;
+
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.5);
+        }
+      }
+    }
   }
 }

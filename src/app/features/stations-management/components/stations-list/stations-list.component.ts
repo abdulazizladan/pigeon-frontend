@@ -29,15 +29,9 @@ export class StationsListComponent implements OnInit {
   // --- Computed Statistics ---
   public totalStations = computed(() => this.stationStore.stations()?.length || 0);
 
-  public activeStations = computed(() => {
-    const stations = this.stationStore.stations();
-    return stations ? stations.filter(s => s.status === 'active').length : 0;
-  });
+  public activeStations = this.stationStore.activeStationsCount;
 
-  public suspendedStations = computed(() => {
-    const stations = this.stationStore.stations();
-    return stations ? stations.filter(s => s.status !== 'active').length : 0;
-  });
+  public suspendedStations = this.stationStore.suspendedStationsCount;
 
 
   // Data source for the mat-table, must be a MatTableDataSource for filtering

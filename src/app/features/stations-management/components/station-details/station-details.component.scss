@@ -279,65 +279,7 @@
 }
 
 
-/* Modern Table */
-.sales-summary-container {
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  overflow: hidden;
-}
 
-.modern-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 14px;
-}
-
-.modern-table th {
-  background-color: #f8fafc;
-  color: #64748b;
-  font-weight: 600;
-  text-align: left;
-  padding: 12px 24px;
-  border-bottom: 1px solid #e2e8f0;
-}
-
-.modern-table td {
-  padding: 16px 24px;
-  color: #334155;
-  border-bottom: 1px solid #f1f5f9;
-}
-
-.modern-table tr:last-child td {
-  border-bottom: none;
-}
-
-.modern-table .text-right {
-  text-align: right;
-}
-
-.date-cell {
-  font-weight: 500;
-}
-
-.amount-cell {
-  font-family: 'Roboto Mono', monospace;
-  /* Monospace for numbers */
-  font-weight: 600;
-}
-
-.petrol-text {
-  color: #6366f1;
-}
-
-.diesel-text {
-  color: #f97316;
-}
-
-.empty-state {
-  text-align: center;
-  color: #94a3b8;
-  padding: 32px;
-}
 
 /* Responsive */
 @media (max-width: 768px) {

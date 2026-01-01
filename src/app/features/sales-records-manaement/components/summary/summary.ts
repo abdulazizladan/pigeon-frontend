@@ -3,7 +3,7 @@ import { FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AddSaleComponent } from '../../../sales-management/components/add-sale/add-sale.component';
-import { SalesService } from '../../../sales-management/services/sales.service';
+import { SalesService, StationDailyTrend } from '../../../sales-management/services/sales.service';
 import { Chart, registerables, ChartData, ChartType, ChartOptions, ChartConfiguration } from 'chart.js';
 import { StationsService } from '../../../stations-management/services/stations.service'; // Import StationsService
 import { Station } from '../../../stations-management/models/station.model'; // Import Station model
@@ -102,6 +102,12 @@ interface StationSales {
   totalSales: number;
 }
 
+export interface FlatStationTrend {
+  stationName: string;
+  date: string;
+  totalSales: number;
+}
+
 @Component({
   selector: 'app-summary',
   standalone: false,
@@ -122,6 +128,7 @@ export class Summary implements OnInit {
   weeklySales = signal<WeeklySalesTrend[]>([]);
   monthlySales = signal<MonthlySalesTrend[]>([]);
   stations = signal<Station[]>([]); // Signal for real stations
+  stationTrends = signal<StationDailyTrend[]>([]); // Signal for station daily trends
   loading = signal<boolean>(false);
   error = signal<string | null>(null);
 
@@ -131,45 +138,15 @@ export class Summary implements OnInit {
     timePeriod: ['monthly'] // 'weekly' or 'monthly'
   });
 
-  // --- Mock Data (Replace with API calls when backend is ready) ---
-  private mockWeeklySales: WeeklySalesTrend[] = [
-    { week: 40, totalSale: 950000 },
-    { week: 41, totalSale: 1100000 },
-    { week: 42, totalSale: 1050000 },
-    { week: 43, totalSale: 1200000 },
-    { week: 44, totalSale: 1150000 },
-    { week: 45, totalSale: 1300000 },
-    { week: 46, totalSale: 1250000 },
-    { week: 47, totalSale: 1400000 }
-  ];
-
-  private mockMonthlySales: MonthlySalesTrend[] = [
-    { month: '2024-05', totalSale: 3800000 },
-    { month: '2024-06', totalSale: 4200000 },
-    { month: '2024-07', totalSale: 4500000 },
-    { month: '2024-08', totalSale: 4100000 },
-    { month: '2024-09', totalSale: 4800000 },
-    { month: '2024-10', totalSale: 5200000 },
-    { month: '2024-11', totalSale: 5500000 }
-  ];
-
-  private mockStationSales: StationSales[] = [
-    { stationId: 'S001', stationName: 'Lagos Main', totalSales: 2500000 },
-    { stationId: 'S002', stationName: 'Abuja West', totalSales: 1800000 },
-    { stationId: 'S003', stationName: 'P/Harcourt East', totalSales: 2100000 },
-    { stationId: 'S004', stationName: 'Kano North', totalSales: 900000 },
-    { stationId: 'S005', stationName: 'Ibadan South', totalSales: 700000 }
-  ];
-
   // --- Computed Properties ---
 
   // Available stations for filter
   allStations = computed(() => {
     // Map real stations to dropdown options. Check if stations exist, otherwise fallback to mock (or just empty)
     if (this.stations().length > 0) {
-      return this.stations().map(s => ({ id: s.id || '', name: s.name }));
+      return this.stations().map(s => ({ id: s.name, name: s.name })); // Use name as ID for filter consistency if needed, or stick to ID
     }
-    return this.mockStationSales.map(s => ({ id: s.stationId, name: s.stationName }));
+    return [];
   });
 
   // Current time period selection
@@ -183,6 +160,34 @@ export class Summary implements OnInit {
     }
     return this.monthlySales();
   });
+
+  // Filtered Daily Station Trends for Table
+  filteredTrendData = computed<FlatStationTrend[]>(() => {
+    const rawData = this.stationTrends();
+    const filterId = this.filterForm.controls.stationId.value;
+
+    // Flatten data
+    let flatData: FlatStationTrend[] = [];
+    rawData.forEach(station => {
+      station.dailySales.forEach(day => {
+        flatData.push({
+          stationName: station.stationName,
+          date: day.date,
+          totalSales: day.totalSales
+        });
+      });
+    });
+
+    // Filter if needed
+    // Filter by Station Name
+    if (filterId && filterId !== 'all') {
+      flatData = flatData.filter(d => d.stationName === filterId);
+    }
+
+    return flatData;
+  });
+
+  displayedColumns: string[] = ['date', 'stationName', 'totalSales'];
 
   // --- Chart Configurations ---
 
@@ -287,18 +292,42 @@ export class Summary implements OnInit {
 
   stationComparisonChartData = computed<ChartData<'bar'>>(() => {
     const stationId = this.filterForm.controls.stationId.value;
-    let data = this.mockStationSales;
+    const trends = this.stationTrends();
+    let labels: string[] = [];
+    let data: number[] = [];
 
-    // Filter by station if not 'all'
-    if (stationId && stationId !== 'all') {
-      data = data.filter(s => s.stationId === stationId);
+    // Use fetched trends if available
+    if (trends && trends.length > 0) {
+      // Calculate total sales for each station
+      let stations = trends.map(t => {
+        const total = t.dailySales.reduce((sum, day) => sum + day.totalSales, 0);
+        return { name: t.stationName, total, id: t.stationId }; // Assuming stationId might be mapped or we match by name
+      });
+
+      // Filter if needed
+      if (stationId && stationId !== 'all') {
+        stations = stations.filter(s => s.name === stationId);
+      }
+
+      // Sort by total sales descending
+      stations.sort((a, b) => b.total - a.total);
+
+      labels = stations.map(s => s.name);
+      data = stations.map(s => s.total);
+
+      labels = stations.map(s => s.name);
+      data = stations.map(s => s.total);
+
+    } else {
+      labels = [];
+      data = [];
     }
 
     return {
-      labels: data.map(s => s.stationName),
+      labels: labels,
       datasets: [{
-        data: data.map(s => s.totalSales),
-        label: 'Station Sales',
+        data: data,
+        label: 'Total Sales',
         backgroundColor: [
           '#10b981',
           '#3b82f6',
@@ -335,21 +364,28 @@ export class Summary implements OnInit {
     this.error.set(null);
 
     try {
-      // TODO: Replace with actual API calls when backend is ready
-      // const totalSalesData = await this.salesService.getTotalSales();
-      // const weeklyData = await this.salesService.getWeeklySales();
-      // const monthlyData = await this.salesService.getMonthlySales();
+      // Fetch total revenue
+      const totalRev = await this.salesService.getTotalRevenue();
+      this.totalSales.set(totalRev.totalSale);
 
-      // Using mock data for now
-      await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API delay
+      // Fetch trends
+      const weekly = await this.salesService.getWeeklySales();
+      this.weeklySales.set(weekly);
 
-      this.totalSales.set(5500000);
-      this.weeklySales.set(this.mockWeeklySales);
-      this.monthlySales.set(this.mockMonthlySales);
+      const monthly = await this.salesService.getMonthlySales();
+      this.monthlySales.set(monthly);
 
       // Fetch real stations
       const realStations = await this.stationsService.getAll();
       this.stations.set(realStations);
+
+      // Fetch Daily Station Trends
+      try {
+        const trends = await this.salesService.getStationDailyTrend();
+        this.stationTrends.set(trends);
+      } catch (e) {
+        console.warn('Failed to fetch station trends', e);
+      }
 
     } catch (err) {
       console.error('Error loading dashboard data:', err);

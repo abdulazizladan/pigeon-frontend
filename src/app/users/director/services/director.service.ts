@@ -25,13 +25,21 @@ export type SalesPeriod = 'daily' | 'weekly' | 'monthly';
 export interface StationStatsResponse {
   total: number;
   active: number;
-  inactive: number;
+  inactive?: number;
+  suspended?: number;
 }
 
 export interface StationStats {
   total: number;
   active: number;
-  inactive: number;
+  suspended: number;
+}
+
+export interface SalesStats {
+  totalSalesThisMonth: number;
+  totalVolumeSoldToday: number;
+  totalPetrolVolumeSoldToday: number;
+  totalDieselVolumeSoldToday: number;
 }
 
 @Injectable({
@@ -47,6 +55,10 @@ export class DirectorService {
   getStations() {
     const url: string = `https://pigeon-backend-17s7.onrender.com/station`;
     return this.http.get(url)
+  }
+
+  getSalesStats(): Observable<SalesStats> {
+    return this.http.get<SalesStats>(`${this.baseUrl}/analytics/sales/stats`);
   }
 
   getProfile(email: string): Promise<User> {
@@ -68,7 +80,11 @@ export class DirectorService {
       // 2. Map the full API response object to the simplified domain model (StationStats)
       map(response => {
         if (response) {
-          return response
+          return {
+            total: response.total,
+            active: response.active,
+            suspended: response.suspended ?? response.inactive ?? 0
+          } as StationStats;
         }
         // If the API returns a non-success response, throw an error
         throw new Error('Failed to fetch station stats with status OK.');
@@ -80,7 +96,7 @@ export class DirectorService {
 
         // Return a default safe/empty object to prevent the application from crashing
         // This is crucial for keeping the dashboard functional even with API issues.
-        return of({ total: 0, active: 0, inactive: 0 } as StationStats);
+        return of({ total: 0, active: 0, suspended: 0 } as StationStats);
       })
     );
   }

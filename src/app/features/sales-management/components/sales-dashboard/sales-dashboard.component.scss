@@ -3,6 +3,8 @@ $primary-color: #4f46e5; // Indigo 600
 $primary-light: #818cf8; // Indigo 400
 $primary-dark: #3730a3; // Indigo 800
 $secondary-color: #64748b; // Slate 500
+@use 'sass:color';
+
 $background-bg: #f8fafc; // Slate 50
 $card-bg: #ffffff;
 $text-main: #0f172a; // Slate 900
@@ -19,45 +21,19 @@ $shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 
 
 :host {
   display: block;
-  min-height: 100vh;
-  padding: 3rem;
-  background-color: $background-bg;
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  color: $text-main;
-
-  @media (max-width: 768px) {
-    padding: 1.5rem;
-  }
 }
 
-// Common Card Style
-.card-base {
-  background: $card-bg;
-  border-radius: 1.5rem;
-  box-shadow: $shadow-md;
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  overflow: hidden;
-
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: $shadow-xl;
-  }
-}
+// .card-base removed to use global style
 
 // Header
+// .page-header variables removed to use global style
 .page-header {
-  margin-bottom: 3.5rem;
-  max-width: 1600px;
-  margin-left: auto;
-  margin-right: auto;
+  // Keep unique children styles
+
 
   .header-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    flex-wrap: wrap;
-    gap: 2rem;
+    // Layout handled by fxLayout
+
 
     .title-group {
       h1 {
@@ -67,6 +43,7 @@ $shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 
         letter-spacing: -0.03em;
         background: linear-gradient(135deg, $text-main 30%, $primary-color 100%);
         -webkit-background-clip: text;
+        background-clip: text;
         -webkit-text-fill-color: transparent;
       }
 
@@ -81,8 +58,8 @@ $shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 
     }
 
     .action-group {
-      display: flex;
-      gap: 1rem;
+      // Layout handled by fxLayout
+
 
       button {
         height: 3rem;
@@ -98,7 +75,7 @@ $shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 
         &:hover {
           transform: translateY(-2px);
           box-shadow: $shadow-lg;
-          background-color: darken($primary-color, 5%);
+          background-color: color.adjust($primary-color, $lightness: -5%);
         }
 
         mat-icon {
@@ -114,12 +91,7 @@ $shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 
 
 // Main Grid Container
 .dashboard-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 3rem;
-  max-width: 1600px;
-  margin-left: auto;
-  margin-right: auto;
+  width: 100%;
 }
 
 /* --- Controls Section (Filters & Summary) --- */
@@ -247,17 +219,8 @@ $shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 
 }
 
 /* --- Stats Grid --- */
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
-  margin-bottom: 1rem;
+/* --- Stats Grid --- */
 
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-}
 
 .stat-card {
   padding: 2rem;
@@ -369,15 +332,8 @@ $shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 
 }
 
 /* --- Charts Section --- */
-.charts-layout {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-  gap: 2.5rem;
+/* --- Charts Section --- */
 
-  @media (max-width: 1024px) {
-    grid-template-columns: 1fr;
-  }
-}
 
 .chart-card {
   display: flex;
@@ -425,11 +381,10 @@ $shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 
     box-sizing: border-box;
 
     .no-data {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
       height: 100%;
+      color: $text-muted;
+      // Layout handled by fxLayout
+
       color: $text-muted;
 
       mat-icon {
@@ -452,11 +407,8 @@ $shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 
 /* --- Loading & Error --- */
 .loading-state {
   margin-top: 6rem;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.5rem;
+  // Layout handled by fxLayout
+
 
   mat-progress-bar {
     max-width: 300px;
@@ -476,9 +428,12 @@ $shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 
   margin: 3rem auto;
   padding: 3rem;
   max-width: 800px;
-  display: flex;
-  align-items: center;
-  gap: 2.5rem;
+  background-color: #fff1f2;
+  border: 1px solid #fda4af;
+  border-left: 8px solid #fb7185;
+  border-radius: 1rem;
+  // Layout handled by fxLayout
+
   background-color: #fff1f2;
   border: 1px solid #fda4af;
   border-left: 8px solid #fb7185;
@@ -511,54 +466,206 @@ $shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 
 }
 
 /* --- Station Information Section --- */
-.station-info-section {
-  margin-bottom: 3rem;
+
+
+// --- Info Cards Grid ---
+.station-info-grid {
+  margin-top: 1rem;
 }
 
-.station-info-card {
+.info-card {
+  background: white;
+  border-radius: 1rem;
+  box-shadow: $shadow-md;
+  overflow: hidden;
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   border: 1px solid rgba($border-color, 0.6);
+  height: 100%; // Fill height if flex row stretch
 
-  .card-header {
-    padding: 2rem 2.5rem;
-    border-bottom: 1px solid $border-color;
-    background: #fff;
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: $shadow-lg;
+  }
 
-    .title-with-icon {
+  .card-header-accent {
+    height: 6px;
+    width: 100%;
+  }
+
+  .card-content {
+    padding: 1.5rem;
+  }
+
+  .card-title-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+
+    .icon-box {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
       display: flex;
       align-items: center;
-      gap: 1rem;
+      justify-content: center;
+      background: $background-bg;
 
-      .info-icon {
-        color: $primary-color;
-        font-size: 1.5rem;
-        width: 1.5rem;
-        height: 1.5rem;
+      mat-icon {
+        font-size: 22px;
+        width: 22px;
+        height: 22px;
+      }
+    }
+
+    h3 {
+      margin: 0;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: $text-main;
+      letter-spacing: 0.01em;
+    }
+  }
+
+  .info-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px dashed rgba($border-color, 0.7);
+
+      &:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
       }
 
-      h3 {
-        margin: 0;
-        font-size: 1.25rem;
-        font-weight: 700;
+      .label {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: $text-muted;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        flex-shrink: 0;
+
+        &.gap {
+          margin-right: 1rem;
+        }
+      }
+
+      .value {
+        font-size: 0.95rem;
+        font-weight: 600;
         color: $text-main;
+        text-align: right;
+        word-break: break-word; // careful with long addresses
+
+        &.mono {
+          font-family: 'Courier New', monospace;
+          background: #f1f5f9;
+          padding: 0.1rem 0.4rem;
+          border-radius: 4px;
+          color: $secondary-color;
+
+          &.sm {
+            font-size: 0.8rem;
+          }
+        }
+
+        &.text-truncate {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: 180px; // Rough limit
+        }
+
+        &.badge {
+          padding: 0.2rem 0.6rem;
+          border-radius: 99px;
+          font-size: 0.75rem;
+          text-transform: uppercase;
+
+          &.role {
+            background: #eef2ff;
+            color: $primary-dark;
+          }
+
+          &.status {
+            &.active {
+              background: #dcfce7;
+              color: #166534;
+            }
+
+            &.inactive {
+              background: #fee2e2;
+              color: #991b1b;
+            }
+          }
+        }
+      }
+
+      &.highlight {
+        .value.highlight-text {
+          color: $primary-color;
+          font-weight: 700;
+        }
       }
     }
   }
 
-  .card-body {
-    padding: 2.5rem;
+  // --- Variants ---
+
+  &.card-location {
+    .card-header-accent {
+      background: linear-gradient(90deg, #ec4899, #f43f5e); // Pink/Rose
+    }
+
+    .icon-box {
+      color: #f43f5e;
+      background: rgba(#f43f5e, 0.1);
+    }
+  }
+
+  &.card-fuel {
+    .card-header-accent {
+      background: linear-gradient(90deg, #f59e0b, #ea580c); // Amber/Orange
+    }
+
+    .icon-box {
+      color: #ea580c;
+      background: rgba(#ea580c, 0.1);
+    }
+  }
+
+  &.card-manager {
+    .card-header-accent {
+      background: linear-gradient(90deg, #8b5cf6, #6366f1); // Violet/Indigo
+    }
+
+    .icon-box {
+      color: #6366f1;
+      background: rgba(#6366f1, 0.1);
+    }
+  }
+
+  &.card-meta {
+    .card-header-accent {
+      background: linear-gradient(90deg, #64748b, #475569); // Slate
+    }
+
+    .icon-box {
+      color: #475569;
+      background: rgba(#475569, 0.1);
+    }
   }
 }
 
-.info-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2.5rem;
 
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-    gap: 2rem;
-  }
-}
 
 .info-group {
   .group-title {
@@ -655,5 +762,112 @@ $shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 
         }
       }
     }
+  }
+}
+
+// --- Gradient Cards Row ---
+.gradient-cards-row {
+  margin-bottom: 2rem;
+  width: 100%;
+}
+
+.gradient-card {
+  border: none;
+  border-radius: 1rem; // Matches existing bg radius
+  overflow: hidden;
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  color: white; // Text is always white on gradients
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+  }
+
+  .card-content {
+    padding: 1.75rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .icon-circle {
+    background: rgba(255, 255, 255, 0.2); // Semi-transparent white
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(5px); // Frosted glass effect
+    flex-shrink: 0;
+
+    mat-icon {
+      font-size: 30px;
+      width: 30px;
+      height: 30px;
+      color: white;
+    }
+  }
+
+  .card-info {
+    display: flex;
+    flex-direction: column;
+
+    .card-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      opacity: 0.95;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.25rem;
+    }
+
+    .card-value {
+      font-size: 1.6rem;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+
+    .card-sub {
+      font-size: 0.75rem;
+      opacity: 0.85;
+      margin-top: 0.25rem;
+      font-weight: 500;
+    }
+  }
+
+  // Gradient Variations
+  &.card-revenue {
+    background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); // Indigo to Purple
+  }
+
+  &.card-petrol {
+    background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%); // Blue to Cyan
+  }
+
+  &.card-diesel {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); // Amber to Orange
+  }
+
+  &.card-total {
+    background: linear-gradient(135deg, #10b981 0%, #34d399 100%); // Emerald to Green
+  }
+
+  // Decorative abstract shape (optional raw CSS polish)
+  &::after {
+    content: '';
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    width: 100px;
+    height: 100px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    z-index: 0;
+    pointer-events: none;
   }
 }

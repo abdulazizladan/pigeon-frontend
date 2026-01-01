@@ -40,7 +40,7 @@ export const StationStore = signalStore(
   withState(initialState),
 
   // Add computed selectors based on the selectedStation
-  withComputed(({ selectedStation }) => ({
+  withComputed(({ selectedStation, stations }) => ({
     // Use selectedStation instead of the old 'station'
     activePumpCount: computed(() =>
       selectedStation()?.pumps?.filter((p: any) => p.status === 'active')?.length ?? 0
@@ -50,6 +50,12 @@ export const StationStore = signalStore(
     ),
     fuelLevel: computed(() =>
       selectedStation()?.fuelLevelPercentage ?? 0
+    ),
+    activeStationsCount: computed(() =>
+      stations().filter(s => s.status === 'active').length
+    ),
+    suspendedStationsCount: computed(() =>
+      stations().filter(s => s.status !== 'active').length
     )
   })),
 

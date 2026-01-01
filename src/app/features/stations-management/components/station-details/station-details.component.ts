@@ -22,6 +22,7 @@ export interface SalesDataPoint {
 export class StationDetailsComponent implements OnInit {
 
   public stationStore = inject(StationStore);
+  public displayedColumns: string[] = ['date', 'petrolSales', 'dieselSales'];
 
   // Chart Configuration
   public lineChartData: ChartConfiguration<'line'>['data'] = {

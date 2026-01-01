@@ -64,7 +64,7 @@ export class DispensersListComponent implements OnInit, OnDestroy {
     const search = this.searchTerm().toLowerCase();
     return this.dispenserStore.dispensers().filter(dispenser =>
       // Combine name and phone search
-      (dispenser.firsName || '').toLowerCase().includes(search) ||
+      (dispenser.firstName || '').toLowerCase().includes(search) ||
       (dispenser.lastName || '').toLowerCase().includes(search) ||
       (dispenser.middleName || '').toLowerCase().includes(search) ||
       (dispenser.phone || '').toLowerCase().includes(search)

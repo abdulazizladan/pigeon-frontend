@@ -47,8 +47,8 @@
               <mat-icon>report_problem</mat-icon>
             </div>
             <div class="stat-info">
-              <span class="label">Inactive</span>
-              <span class="value">{{ directorStore.stationStats()?.inactive ?? 0 }}</span>
+              <span class="label">Suspended</span>
+              <span class="value">{{ directorStore.stationStats()?.suspended ?? 0 }}</span>
             </div>
           </div>
 
@@ -64,7 +64,7 @@
       </div>
 
       <div class="section-body">
-        @if (directorStore.loading()) {
+        @if (directorStore.salesLoading()) {
         <div class="loading-state">
           <mat-progress-bar mode="indeterminate"></mat-progress-bar>
           <p>Loading sales statistics...</p>
@@ -74,21 +74,12 @@
 
           <div class="stat-card primary">
             <div class="icon-wrapper">
-              <mat-icon>payments</mat-icon>
+              <mat-icon>calendar_today</mat-icon>
             </div>
             <div class="stat-info">
-              <span class="label">Total Revenue</span>
-              <span class="value">&#8358;{{ totalRevenue() | number:'1.2-2' }}</span>
-            </div>
-          </div>
-
-          <div class="stat-card success">
-            <div class="icon-wrapper">
-              <mat-icon>trending_up</mat-icon>
-            </div>
-            <div class="stat-info">
-              <span class="label">Today's Revenue</span>
-              <span class="value">&#8358;0.00</span>
+              <span class="label">Sales This Month</span>
+              <span class="value">&#8358;{{ directorStore.salesStats()?.totalSalesThisMonth |
+                number:'1.2-2' }}</span>
             </div>
           </div>
 
@@ -97,8 +88,28 @@
               <mat-icon>water_drop</mat-icon>
             </div>
             <div class="stat-info">
-              <span class="label">Volume Sold</span>
-              <span class="value">0.00 L</span>
+              <span class="label">Total Volume Today</span>
+              <span class="value">{{ directorStore.salesStats()?.totalVolumeSoldToday | number }} L</span>
+            </div>
+          </div>
+
+          <div class="stat-card success">
+            <div class="icon-wrapper">
+              <mat-icon>local_gas_station</mat-icon>
+            </div>
+            <div class="stat-info">
+              <span class="label">Petrol Today</span>
+              <span class="value">{{ directorStore.salesStats()?.totalPetrolVolumeSoldToday | number }} L</span>
+            </div>
+          </div>
+
+          <div class="stat-card warning">
+            <div class="icon-wrapper">
+              <mat-icon>directions_bus</mat-icon>
+            </div>
+            <div class="stat-info">
+              <span class="label">Diesel Today</span>
+              <span class="value">{{ directorStore.salesStats()?.totalDieselVolumeSoldToday | number }} L</span>
             </div>
           </div>
 

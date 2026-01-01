@@ -4,4 +4,4 @@ export interface Pump {
     "dispensedProduct": string;
     "status": string;
     "createdAt": number;
-}
+} 
