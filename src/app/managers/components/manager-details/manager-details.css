@@ -1,0 +1,315 @@
+/* =============================================
+   Managers – Details
+   ============================================= */
+
+.md-page {
+  padding: 32px 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.md-breadcrumb {
+  margin-bottom: 20px;
+}
+
+.md-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 600;
+  padding: 6px 10px 6px 4px;
+  border-radius: 6px;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.md-back-btn:hover {
+  background-color: var(--hover-overlay);
+  color: var(--brand-primary);
+}
+
+.md-back-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.md-state-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 72px 24px;
+  gap: 16px;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.spinner-ring {
+  width: 52px;
+  height: 52px;
+  border: 4px solid var(--border-divider);
+  border-top-color: var(--brand-primary);
+  border-radius: 50%;
+  animation: md-spin 0.75s linear infinite;
+}
+
+@keyframes md-spin {
+  to { transform: rotate(360deg); }
+}
+
+.md-content {
+  transition: opacity 0.2s;
+}
+
+.md-content.is-updating {
+  opacity: 0.7;
+}
+
+/* Hero */
+.md-hero {
+  padding: 0;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.md-hero-bar {
+  height: 6px;
+  background: var(--brand-primary);
+}
+
+.md-hero[data-status="inactive"] .md-hero-bar {
+  background: var(--text-secondary);
+}
+
+.md-hero-body {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 24px;
+}
+
+.md-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  font-weight: 700;
+  color: #ffffff;
+  background: linear-gradient(135deg, #1877f2 0%, #0a56c8 100%);
+  flex-shrink: 0;
+}
+
+.md-avatar.is-inactive {
+  background: linear-gradient(135deg, #8a8d91 0%, #5f6368 100%);
+}
+
+.md-hero-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.md-name {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--text-primary);
+}
+
+.md-handle {
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.md-alert {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.md-alert-dismiss {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: inherit;
+  line-height: 1;
+}
+
+/* Cards */
+.md-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.md-card {
+  padding: 20px;
+  margin: 0;
+}
+
+.md-card-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 14px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.md-card-title svg {
+  width: 18px;
+  height: 18px;
+  color: var(--text-secondary);
+}
+
+.md-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 8px 0;
+  font-size: 14px;
+}
+
+.md-label {
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.md-value {
+  color: var(--text-primary);
+  font-weight: 600;
+  text-align: right;
+  word-break: break-word;
+}
+
+.md-value.mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.md-link {
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+.md-link:hover {
+  color: var(--brand-primary);
+  text-decoration: underline;
+}
+
+.md-divider {
+  height: 1px;
+  background-color: var(--border-divider);
+}
+
+/* Station block */
+.md-station,
+.md-empty {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border-divider);
+  background: var(--input-bg);
+  text-align: left;
+}
+
+.md-station {
+  cursor: pointer;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+.md-station:hover {
+  border-color: var(--brand-primary);
+  background-color: var(--hover-overlay);
+}
+
+.md-station-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  background: linear-gradient(135deg, #1baf7a 0%, #0f7a54 100%);
+  flex-shrink: 0;
+}
+
+.md-station-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.md-station-icon--empty {
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  border: 2px dashed var(--border-divider);
+  font-weight: 700;
+}
+
+.md-station-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+
+.md-station-name {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--text-primary);
+}
+
+.md-station-code {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.md-station-chevron {
+  width: 20px;
+  height: 20px;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.md-card-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-divider);
+}
+
+.md-card-actions .btn {
+  gap: 8px;
+}
+
+.md-danger-text {
+  color: var(--brand-danger);
+}
+
+@media (max-width: 640px) {
+  .md-page {
+    padding: 20px 16px;
+  }
+}

@@ -1,0 +1,290 @@
+<div class="sd-page">
+
+  <div class="sd-breadcrumb">
+    <button type="button" class="sd-back-btn" (click)="goBack()" id="station-details-back-btn">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+      Back to Stations
+    </button>
+  </div>
+
+  @if (isLoading()) {
+    <div class="sd-state-center">
+      <div class="spinner-ring"></div>
+      <p>Loading station…</p>
+    </div>
+  } @else if (loadError()) {
+    <div class="sd-state-center">
+      <p>{{ loadError() }}</p>
+      <button type="button" class="btn btn-secondary" (click)="store.loadStations()">Retry</button>
+    </div>
+  } @else if (notFound()) {
+    <div class="sd-state-center">
+      <p>Station not found.</p>
+      <button type="button" class="btn btn-secondary" (click)="goBack()">Go Back</button>
+    </div>
+  } @else if (station(); as s) {
+    <div class="sd-content" [class.is-updating]="isUpdating()">
+
+      <!-- Hero -->
+      <div class="card sd-hero" [attr.data-status]="s.status">
+        <div class="sd-hero-bar"></div>
+        <div class="sd-hero-body">
+          <div class="sd-hero-icon" [attr.data-status]="s.status">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3L2 12h3v8h14v-8h3L12 3zm0 2.7l6 5.4V18h-4v-5H10v5H6v-6.9l6-5.4z"/></svg>
+          </div>
+          <div class="sd-hero-info">
+            <div class="sd-hero-title-row">
+              <h1 class="sd-name">{{ s.name }}</h1>
+              <span class="status-badge" [attr.data-status]="s.status">{{ statusLabel(s.status) }}</span>
+            </div>
+            <p class="sd-code">{{ s.code }} · {{ statusDescription(s.status) }}</p>
+            @if (s.description) {
+              <p class="sd-description">{{ s.description }}</p>
+            }
+          </div>
+        </div>
+      </div>
+
+      @if (store.updateErrorMessage()) {
+        <div class="um-form-alert alert-error sd-alert" role="alert">
+          <span>{{ store.updateErrorMessage() }}</span>
+          <button type="button" class="sd-alert-dismiss" (click)="store.clearUpdateError()" aria-label="Dismiss">×</button>
+        </div>
+      }
+
+      <div class="sd-grid">
+
+        <!-- Location -->
+        <section class="card sd-card" aria-labelledby="sd-location-heading">
+          <h2 id="sd-location-heading" class="sd-card-title">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg>
+            Location
+          </h2>
+          <div class="sd-row"><span class="sd-label">Address</span><span class="sd-value">{{ s.address || '—' }}</span></div>
+          <div class="sd-divider"></div>
+          <div class="sd-row"><span class="sd-label">LGA</span><span class="sd-value">{{ s.lga || '—' }}</span></div>
+          <div class="sd-divider"></div>
+          <div class="sd-row"><span class="sd-label">State</span><span class="sd-value">{{ s.state || '—' }}</span></div>
+          <div class="sd-divider"></div>
+          <div class="sd-row"><span class="sd-label">Country</span><span class="sd-value">Nigeria</span></div>
+        </section>
+
+        <!-- Manager -->
+        <section class="card sd-card" aria-labelledby="sd-manager-heading">
+          <h2 id="sd-manager-heading" class="sd-card-title">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            Assigned manager
+          </h2>
+
+          @if (s.managerId) {
+            <div class="sd-manager">
+              <div class="sd-manager-avatar">{{ (managerDisplayName() || 'M').charAt(0).toUpperCase() }}</div>
+              <div class="sd-manager-info">
+                <span class="sd-manager-name">{{ managerDisplayName() }}</span>
+                <span class="sd-manager-handle">&#64;{{ s.managerUsername }}</span>
+                @if (manager()?.phoneNumber) {
+                  <a class="sd-manager-phone" href="tel:{{ manager()!.phoneNumber }}">{{ manager()!.phoneNumber }}</a>
+                }
+              </div>
+            </div>
+
+            @if (canManage()) {
+              <div class="sd-card-actions">
+                <button type="button" class="btn btn-secondary sd-danger-text" (click)="askUnassign()" [disabled]="isUpdating()" id="unassign-manager-btn">
+                  <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16" aria-hidden="true"><path d="M14 8c0-2.21-1.79-4-4-4S6 5.79 6 8s1.79 4 4 4 4-1.79 4-4zm3 2v2h6v-2h-6zM2 18v2h16v-2c0-2.66-5.33-4-8-4s-8 1.34-8 4z"/></svg>
+                  Unassign manager
+                </button>
+              </div>
+            }
+          } @else {
+            <div class="sd-empty-manager">
+              <div class="sd-manager-avatar sd-manager-avatar--empty">?</div>
+              <div class="sd-manager-info">
+                <span class="sd-manager-name">No manager assigned</span>
+                <span class="sd-manager-handle">This station is running without a manager.</span>
+              </div>
+            </div>
+
+            @if (canManage()) {
+              <div class="sd-card-actions">
+                <button type="button" class="btn btn-primary" (click)="openAssign()" [disabled]="isUpdating()" id="assign-manager-btn">
+                  <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16" aria-hidden="true"><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                  Assign manager
+                </button>
+              </div>
+            }
+          }
+        </section>
+
+        <!-- Record -->
+        <section class="card sd-card" aria-labelledby="sd-record-heading">
+          <h2 id="sd-record-heading" class="sd-card-title">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+            Record
+          </h2>
+          <div class="sd-row"><span class="sd-label">Station ID</span><span class="sd-value mono">{{ s.id }}</span></div>
+          <div class="sd-divider"></div>
+          <div class="sd-row"><span class="sd-label">Created</span><span class="sd-value">{{ s.createdAt | date:'MMM d, y, h:mm a' }}</span></div>
+          <div class="sd-divider"></div>
+          <div class="sd-row"><span class="sd-label">Last updated</span><span class="sd-value">{{ s.updatedAt | date:'MMM d, y, h:mm a' }}</span></div>
+        </section>
+      </div>
+
+      <!-- ===== Products, pumps & reservoirs ===== -->
+      <div class="sd-section-header">
+        <h2 class="sd-section-title">Products &amp; equipment</h2>
+        @if (equipment.loadingState() === 'error') {
+          <button type="button" class="btn btn-secondary" (click)="equipment.loadForStation(s.id)">Retry</button>
+        }
+      </div>
+
+      @if (equipment.saveErrorMessage()) {
+        <div class="um-form-alert alert-error sd-alert" role="alert">
+          <span>{{ equipment.saveErrorMessage() }}</span>
+          <button type="button" class="sd-alert-dismiss" (click)="equipment.clearSaveError()" aria-label="Dismiss">×</button>
+        </div>
+      }
+      @if (equipment.loadingState() === 'error') {
+        <p class="sd-error-text">{{ equipment.errorMessage() }}</p>
+      }
+
+      <div class="sd-grid sd-grid--equipment" [class.is-loading]="equipment.loadingState() === 'loading'">
+
+        <!-- Prices -->
+        <section class="card sd-card" aria-labelledby="sd-prices-heading">
+          <h2 id="sd-prices-heading" class="sd-card-title">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+            Selling prices (₦/litre)
+          </h2>
+          @for (product of products; track product) {
+            <div class="sd-row sd-row--equipment">
+              <span class="sd-label sd-product"><span class="um-role-dot" [attr.data-product]="product"></span>{{ productLabel(product) }}</span>
+              @if (editingPrice() === product) {
+                <span class="sd-inline-edit">
+                  <input type="number" inputmode="decimal" min="0.01" step="0.01" class="sd-inline-input" [value]="priceDraft()" (input)="setPriceDraft($event)" (keydown.enter)="savePrice(product)" (keydown.escape)="cancelEditPrice()" aria-label="Price per litre" autofocus />
+                  <button type="button" class="btn btn-primary sd-mini-btn" (click)="savePrice(product)" [disabled]="!priceDraftValid()">Save</button>
+                  <button type="button" class="btn btn-secondary sd-mini-btn" (click)="cancelEditPrice()">Cancel</button>
+                </span>
+              } @else {
+                <span class="sd-value sd-value--actions">
+                  @if (equipment.priceByProduct()[product] !== null) {
+                    {{ equipment.priceByProduct()[product] | currency:currencyCode:'symbol':'1.0-2' }}
+                  } @else {
+                    <span class="sd-not-set">Not set</span>
+                  }
+                  @if (canManage()) {
+                    <button type="button" class="row-action" (click)="startEditPrice(product)" [disabled]="equipment.isSaving('price:' + product)" [attr.aria-label]="'Edit ' + productLabel(product) + ' price'" title="Edit price">
+                      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+                    </button>
+                  }
+                </span>
+              }
+            </div>
+            @if (!$last) { <div class="sd-divider"></div> }
+          }
+          @if (!equipment.hasAllPrices() && equipment.loadingState() === 'success') {
+            <p class="sd-hint sd-hint--warn">Daily sales cannot be recorded until every product has a price.</p>
+          }
+        </section>
+
+        <!-- Pumps -->
+        <section class="card sd-card" aria-labelledby="sd-pumps-heading">
+          <div class="sd-card-title-row">
+            <h2 id="sd-pumps-heading" class="sd-card-title">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.77 7.23l.01-.01-3.72-3.72L15 4.56l2.11 2.11c-.94.36-1.61 1.26-1.61 2.33 0 1.38 1.12 2.5 2.5 2.5.36 0 .69-.08 1-.21v7.21c0 .55-.45 1-1 1s-1-.45-1-1V14c0-1.1-.9-2-2-2h-1V5c0-1.1-.9-2-2-2H6c-1.1 0-2 .9-2 2v16h10v-7.5h1.5v5c0 1.38 1.12 2.5 2.5 2.5s2.5-1.12 2.5-2.5V9c0-.69-.28-1.32-.73-1.77zM12 10H6V5h6v5z"/></svg>
+              Pumps <span class="sd-count">{{ equipment.activePumps().length }} active / {{ equipment.pumps().length }}</span>
+            </h2>
+            @if (canManage()) {
+              <button type="button" class="btn btn-secondary sd-mini-btn" (click)="equipment.openAddPumpModal()" id="add-pump-btn">+ Add pump</button>
+            }
+          </div>
+          @if (equipment.pumps().length === 0 && equipment.loadingState() === 'success') {
+            <p class="sd-hint">No pumps yet.</p>
+          }
+          @for (pump of equipment.pumps(); track trackPump($index, pump)) {
+            <div class="sd-row sd-row--equipment" [class.is-off]="pump.status === 'inactive'">
+              <span class="sd-label sd-product">
+                <span class="um-role-dot" [attr.data-product]="pump.product"></span>
+                <span><strong class="sd-pump-name">{{ pump.name }}</strong> <span class="sd-muted">· {{ productLabel(pump.product) }}</span></span>
+              </span>
+              <span class="sd-value sd-value--actions">
+                <span class="status-badge" [attr.data-status]="pump.status">{{ pump.status === 'active' ? 'In service' : 'Out of service' }}</span>
+                @if (canManage()) {
+                  <button type="button" class="btn btn-secondary sd-mini-btn" (click)="togglePump(pump)" [disabled]="equipment.isSaving(pump.id)">
+                    {{ pump.status === 'active' ? 'Take out' : 'Put back' }}
+                  </button>
+                }
+                @if (isAdmin()) {
+                  <button type="button" class="row-action sd-row-action--danger" (click)="askRemovePump(pump)" [disabled]="equipment.isSaving(pump.id)" [attr.aria-label]="'Remove ' + pump.name" title="Remove pump" [attr.id]="'remove-pump-btn-' + pump.id">
+                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                  </button>
+                }
+              </span>
+            </div>
+            @if (!$last) { <div class="sd-divider"></div> }
+          }
+        </section>
+
+        <!-- Reservoirs -->
+        <section class="card sd-card" aria-labelledby="sd-reservoirs-heading">
+          <div class="sd-card-title-row">
+            <h2 id="sd-reservoirs-heading" class="sd-card-title">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 4.24 2 7v10c0 2.76 4.48 5 10 5s10-2.24 10-5V7c0-2.76-4.48-5-10-5zm0 2c4.42 0 8 1.34 8 3s-3.58 3-8 3-8-1.34-8-3 3.58-3 8-3zm0 16c-4.42 0-8-1.34-8-3v-2.2c1.84 1.33 4.73 2.2 8 2.2s6.16-.87 8-2.2V17c0 1.66-3.58 3-8 3z"/></svg>
+              Reservoirs
+            </h2>
+            @if (canManage() && equipment.missingReservoirProducts().length) {
+              <button type="button" class="btn btn-secondary sd-mini-btn" (click)="equipment.openAddReservoirModal()" id="add-reservoir-btn">+ Add reservoir</button>
+            }
+          </div>
+          @if (equipment.reservoirs().length === 0 && equipment.loadingState() === 'success') {
+            <p class="sd-hint">No reservoirs yet.</p>
+          }
+          @for (tank of equipment.reservoirs(); track trackReservoir($index, tank)) {
+            <div class="sd-row sd-row--equipment">
+              <span class="sd-label sd-product"><span class="um-role-dot" [attr.data-product]="tank.product"></span>{{ productLabel(tank.product) }}</span>
+              @if (editingReservoirId() === tank.id) {
+                <span class="sd-inline-edit">
+                  <input type="number" inputmode="decimal" min="1" step="1" class="sd-inline-input" [value]="capacityDraft()" (input)="setCapacityDraft($event)" (keydown.enter)="saveCapacity(tank)" (keydown.escape)="cancelEditCapacity()" aria-label="Capacity in litres" autofocus />
+                  <button type="button" class="btn btn-primary sd-mini-btn" (click)="saveCapacity(tank)" [disabled]="!capacityDraftValid()">Save</button>
+                  <button type="button" class="btn btn-secondary sd-mini-btn" (click)="cancelEditCapacity()">Cancel</button>
+                </span>
+              } @else {
+                <span class="sd-value sd-value--actions">
+                  {{ tank.capacityLitres | number:'1.0-0' }} L
+                  @if (canManage()) {
+                    <button type="button" class="row-action" (click)="startEditCapacity(tank)" [disabled]="equipment.isSaving(tank.id)" aria-label="Edit capacity" title="Edit capacity">
+                      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+                    </button>
+                  }
+                </span>
+              }
+            </div>
+            @if (!$last) { <div class="sd-divider"></div> }
+          }
+          @if (equipment.missingReservoirProducts().length && equipment.loadingState() === 'success') {
+            <p class="sd-hint sd-hint--warn">
+              No tank for @for (p of equipment.missingReservoirProducts(); track p) { {{ productLabel(p) }}{{ $last ? '' : ', ' }} }: expected sales for it cannot be computed.
+            </p>
+          }
+        </section>
+      </div>
+
+      <!-- ===== Daily sales ===== -->
+      <div class="sd-records">
+        <app-daily-records-list [stationId]="s.id" [canRecord]="canManage()" title="Daily sales records"></app-daily-records-list>
+      </div>
+    </div>
+  }
+</div>
+
+<app-assign-manager-modal></app-assign-manager-modal>
+<app-add-pump-modal></app-add-pump-modal>
+<app-add-reservoir-modal></app-add-reservoir-modal>
+
+<app-confirm-dialog [open]="confirmUnassign()" title="Unassign manager" confirmLabel="Unassign" busyLabel="Unassigning…" [busy]="isUpdating()" (confirmed)="unassign()" (cancelled)="cancelUnassign()">
+  Unassign <strong>{{ managerDisplayName() }}</strong> from {{ station()?.name }}? The station will have no manager until you assign another.
+</app-confirm-dialog>
+
+<app-confirm-dialog [open]="!!pumpToRemove()" title="Remove pump" confirmLabel="Remove pump" busyLabel="Removing…" [busy]="isRemovingPump()" (confirmed)="removePump()" (cancelled)="cancelRemovePump()">
+  Remove <strong>{{ pumpToRemove()?.name }}</strong> from {{ station()?.name }}? It will no longer appear in daily records. Readings already recorded for it are kept.
+</app-confirm-dialog>

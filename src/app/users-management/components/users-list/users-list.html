@@ -1,0 +1,160 @@
+<!-- Users Management Page Shell -->
+<div class="um-page">
+
+  <!-- Page Header -->
+  <div class="um-header">
+    <div class="um-header-left">
+      <div class="um-page-icon">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+        </svg>
+      </div>
+      <div>
+        <h1 class="um-title">Users Management</h1>
+        <p class="um-subtitle">
+          {{ store.totalCount() }} user{{ store.totalCount() !== 1 ? 's' : '' }} registered
+        </p>
+      </div>
+    </div>
+
+    <div class="um-header-right">
+      <!-- Search Bar -->
+      <div class="um-search-wrap">
+        <svg class="um-search-icon" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+        </svg>
+        <input
+          id="um-search-input"
+          type="text"
+          class="um-search-input"
+          placeholder="Search by username or role…"
+          [value]="store.searchQuery()"
+          (input)="onSearch($event)"
+          autocomplete="off"
+        />
+        @if (store.searchQuery()) {
+          <button class="um-search-clear" (click)="store.setSearchQuery('')" title="Clear search">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+          </button>
+        }
+      </div>
+
+      <!-- Add User Button -->
+      @if (canCreateUsers()) {
+        <button id="um-add-user-btn" class="btn btn-primary um-add-btn" (click)="openAddUser()">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+            <path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+          </svg>
+          Add User
+        </button>
+      }
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  @if (store.loadingState() === 'loading') {
+    <div class="um-state-container">
+      <div class="um-spinner">
+        <div class="spinner-ring"></div>
+      </div>
+      <p class="um-state-text">Loading users…</p>
+    </div>
+  }
+
+  <!-- Error State -->
+  @if (store.loadingState() === 'error') {
+    <div class="um-state-container">
+      <div class="um-state-icon error-icon">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+        </svg>
+      </div>
+      <p class="um-state-text">{{ store.errorMessage() }}</p>
+      <button class="btn btn-secondary" (click)="store.loadUsers()">Retry</button>
+    </div>
+  }
+
+  <!-- Users Table -->
+  @if (store.loadingState() === 'success') {
+    @if (store.filteredUsers().length === 0) {
+      <div class="um-state-container">
+        <div class="um-state-icon empty-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+          </svg>
+        </div>
+        <p class="um-state-text">
+          @if (store.searchQuery()) {
+            No users found for "<strong>{{ store.searchQuery() }}</strong>".
+          } @else {
+            No users yet. Add the first one!
+          }
+        </p>
+      </div>
+    } @else {
+      <div class="data-table-wrap card">
+        <table class="data-table" id="um-users-table">
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Username</th>
+              <th scope="col">Phone</th>
+              <th scope="col">Role</th>
+              <th scope="col" class="data-th-actions"><span class="sr-only">Actions</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (user of store.filteredUsers(); track trackByUserId($index, user)) {
+              <tr
+                class="data-row"
+                id="user-row-{{ user.id }}"
+                (click)="viewUser(user.id)"
+                (keydown.enter)="viewUser(user.id)"
+                tabindex="0"
+              >
+                <td>
+                  <div class="cell-with-avatar">
+                    <div class="um-card-avatar" [attr.data-role]="user.role">
+                      {{ getInitial(user) }}
+                    </div>
+                    <span class="cell-primary">{{ getFullName(user) }}</span>
+                  </div>
+                </td>
+                <td class="cell-mono">{{ user.username }}</td>
+                <td>
+                  @if (user.phoneNumber) {
+                    <a class="cell-link" href="tel:{{ user.phoneNumber }}" (click)="$event.stopPropagation()">{{ user.phoneNumber }}</a>
+                  } @else {
+                    <span class="cell-muted">—</span>
+                  }
+                </td>
+                <td><span [class]="getRoleBadgeClass(user.role)">{{ user.role }}</span></td>
+                <td class="data-td-actions">
+                  <button
+                    type="button"
+                    class="row-action"
+                    (click)="viewUser(user.id); $event.stopPropagation()"
+                    [attr.aria-label]="'View ' + getFullName(user)"
+                    title="View details"
+                  >
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
+                    </svg>
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <p class="um-results-count">
+        Showing {{ store.filteredUsers().length }} of {{ store.totalCount() }} users
+        @if (store.searchQuery()) { · filtered by "<em>{{ store.searchQuery() }}</em>" }
+      </p>
+    }
+  }
+</div>
+
+<!-- Add User Modal -->
+<app-add-user-modal></app-add-user-modal>

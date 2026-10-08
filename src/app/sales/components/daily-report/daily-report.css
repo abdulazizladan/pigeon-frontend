@@ -1,0 +1,132 @@
+.dr-report {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.dr-totals {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+}
+
+.dr-total {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  background-color: var(--input-bg);
+  border: 1px solid var(--border-divider);
+}
+
+.dr-total[data-severity="warn"] { border-color: rgba(245, 195, 59, 0.6); }
+.dr-total[data-severity="bad"] { border-color: rgba(240, 40, 73, 0.5); }
+
+.dr-total-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+}
+
+.dr-total-value {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.dr-total-sub {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.dr-product {
+  border: 1px solid var(--border-divider);
+  border-left-width: 4px;
+  border-radius: 8px;
+  padding: 14px;
+  background-color: var(--bg-secondary);
+}
+
+.dr-product[data-severity="ok"] { border-left-color: var(--brand-success); }
+.dr-product[data-severity="warn"] { border-left-color: var(--brand-warning); }
+.dr-product[data-severity="bad"] { border-left-color: var(--brand-danger); }
+.dr-product[data-severity="none"] { border-left-color: var(--border-divider); }
+
+.dr-product-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.dr-product-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dr-product-title h4 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.dr-price {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.dr-tank {
+  margin: 0 0 10px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.dr-tank strong {
+  color: var(--text-primary);
+}
+
+.dr-tank--missing {
+  color: var(--brand-danger);
+}
+
+.dr-table-wrap {
+  margin: 0;
+}
+
+.dr-table th.num,
+.dr-table td.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.dr-table th,
+.dr-table td {
+  padding: 8px 12px;
+  font-size: 13px;
+}
+
+.dr-row {
+  cursor: default;
+}
+
+.dr-subtotal td {
+  font-weight: 700;
+  background-color: var(--bg-primary);
+  border-top: 1px solid var(--border-divider);
+}
+
+.dr-notes {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}

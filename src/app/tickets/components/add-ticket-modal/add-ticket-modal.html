@@ -1,0 +1,116 @@
+@if (store.isAddTicketModalOpen()) {
+  <div class="um-modal-backdrop" (click)="onBackdropClick($event)" role="dialog" aria-modal="true" aria-labelledby="ticket-modal-title">
+    <div class="um-modal">
+
+      <div class="um-modal-header">
+        <div class="um-modal-title-group">
+          <div class="um-modal-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M22 10V6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v4c1.1 0 2 .9 2 2s-.9 2-2 2v4c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2v-4c-1.1 0-2-.9-2-2s.9-2 2-2zm-9 7.5h-2v-2h2v2zm0-4.5h-2v-2h2v2zm0-4.5h-2v-2h2v2z"/>
+            </svg>
+          </div>
+          <div>
+            <h2 id="ticket-modal-title" class="um-modal-title">New Support Ticket</h2>
+            <p class="um-modal-subtitle">Describe the issue so the team can pick it up</p>
+          </div>
+        </div>
+        <button type="button" class="um-modal-close" (click)="onClose()" title="Close" aria-label="Close" id="ticket-modal-close-btn">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+          </svg>
+        </button>
+      </div>
+
+      <form class="um-modal-form" (submit)="onSubmit($event)" novalidate>
+
+        @if (store.createErrorMessage()) {
+          <div class="um-form-alert alert-error" role="alert">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+            </svg>
+            {{ store.createErrorMessage() }}
+          </div>
+        }
+
+        <div class="um-form-group">
+          <label class="um-form-label" for="ticket-title">Title</label>
+          <div class="um-input-wrap">
+            <input
+              id="ticket-title"
+              type="text"
+              class="um-form-input um-form-input--plain"
+              [class.is-invalid]="titleError()"
+              placeholder="Short summary of the issue"
+              [value]="title()"
+              (input)="updateTitle($event)"
+              maxlength="120"
+              autocomplete="off"
+              [disabled]="isSubmitting()"
+              required
+            />
+          </div>
+          @if (titleError()) {
+            <span class="um-form-error">{{ titleError() }}</span>
+          }
+        </div>
+
+        <div class="um-form-group">
+          <label class="um-form-label" for="ticket-description">Description</label>
+          <div class="um-input-wrap">
+            <textarea
+              id="ticket-description"
+              class="um-form-input um-form-textarea"
+              [class.is-invalid]="descriptionError()"
+              placeholder="What happened? What did you expect? Steps to reproduce…"
+              [value]="description()"
+              (input)="updateDescription($event)"
+              maxlength="2000"
+              [disabled]="isSubmitting()"
+              required
+            ></textarea>
+          </div>
+          @if (descriptionError()) {
+            <span class="um-form-error">{{ descriptionError() }}</span>
+          }
+        </div>
+
+        <div class="um-form-group">
+          <span class="um-form-label">Priority</span>
+          <div class="um-role-grid">
+            @for (p of priorities; track p) {
+              <label class="um-role-option" [class.selected]="priority() === p" [attr.data-priority]="p">
+                <input
+                  type="radio"
+                  name="priority"
+                  [value]="p"
+                  [checked]="priority() === p"
+                  (change)="updatePriority($event)"
+                  [disabled]="isSubmitting()"
+                />
+                <div class="um-role-dot" [attr.data-priority]="p"></div>
+                <div class="um-role-label-group">
+                  <span class="um-role-name">{{ p | titlecase }}</span>
+                  <span class="um-role-desc">{{ priorityDescription(p) }}</span>
+                </div>
+              </label>
+            }
+          </div>
+        </div>
+
+        <div class="um-modal-actions">
+          <button type="button" class="btn btn-secondary" (click)="onClose()" [disabled]="isSubmitting()" id="cancel-add-ticket-btn">
+            Cancel
+          </button>
+          <button type="submit" class="btn btn-primary um-submit-btn" [disabled]="!isFormValid() || isSubmitting()" id="submit-add-ticket-btn">
+            @if (isSubmitting()) {
+              <span class="btn-spinner"></span>
+              Creating…
+            } @else {
+              Create Ticket
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

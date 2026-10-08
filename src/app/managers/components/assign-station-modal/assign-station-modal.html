@@ -1,0 +1,77 @@
+@if (store.isAssignStationModalOpen() && manager(); as m) {
+  <div class="um-modal-backdrop" (click)="onBackdropClick($event)" role="dialog" aria-modal="true" aria-labelledby="assign-station-title">
+    <div class="um-modal">
+
+      <div class="um-modal-header">
+        <div class="um-modal-title-group">
+          <div class="um-modal-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3L2 12h3v8h14v-8h3L12 3zm0 2.7l6 5.4V18h-4v-5H10v5H6v-6.9l6-5.4z"/></svg>
+          </div>
+          <div>
+            <h2 id="assign-station-title" class="um-modal-title">{{ m.station ? 'Change station' : 'Assign station' }}</h2>
+            <p class="um-modal-subtitle">Choose the station {{ managerName() }} will run</p>
+          </div>
+        </div>
+        <button type="button" class="um-modal-close" (click)="onClose()" title="Close" aria-label="Close" id="assign-station-close-btn">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </div>
+
+      <form class="um-modal-form" (submit)="onSubmit($event)" novalidate>
+
+        @if (store.updateErrorMessage()) {
+          <div class="um-form-alert alert-error" role="alert">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+            {{ store.updateErrorMessage() }}
+          </div>
+        }
+
+        @if (m.station) {
+          <p class="as-note">Currently runs <strong>{{ m.station.name }}</strong>. Picking another station moves them there and leaves {{ m.station.name }} without a manager.</p>
+        }
+
+        <div class="um-form-group">
+          <label class="um-form-label" for="assign-station-search">Find a station</label>
+          <div class="um-input-wrap">
+            <svg class="um-input-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+            <input id="assign-station-search" type="text" class="um-form-input" placeholder="Search by name, code or location" [value]="search()" (input)="onSearch($event)" autocomplete="off" [disabled]="isSubmitting()" />
+          </div>
+        </div>
+
+        <div class="um-form-group">
+          <span class="um-form-label">Stations <span class="um-form-optional">({{ availableCount() }} without a manager)</span></span>
+
+          @if (stations.loadingState() === 'loading' && options().length === 0) {
+            <p class="as-state">Loading stations…</p>
+          } @else if (stations.loadingState() === 'error') {
+            <p class="as-state as-state--error">{{ stations.errorMessage() }}</p>
+          } @else if (options().length === 0) {
+            <p class="as-state">@if (search()) { No stations match "{{ search() }}". } @else { No stations available. }</p>
+          } @else {
+            <div class="as-list" role="radiogroup" aria-label="Stations">
+              @for (o of options(); track o.id) {
+                <label class="um-role-option as-option" [class.selected]="selectedId() === o.id" [class.is-disabled]="!!o.takenBy" (click)="select(o.id, !!o.takenBy)">
+                  <input type="radio" name="assign-station" [value]="o.id" [checked]="selectedId() === o.id" [disabled]="!!o.takenBy || isSubmitting()" (change)="select(o.id, !!o.takenBy)" />
+                  <div class="um-role-dot" [attr.data-status]="o.status"></div>
+                  <div class="um-role-label-group">
+                    <span class="um-role-name">{{ o.name }} <span class="as-code">{{ o.code }}</span></span>
+                    <span class="um-role-desc">
+                      @if (o.takenBy) { Run by &#64;{{ o.takenBy }} } @else { {{ statusLabel(o.status) }}@if (o.location) { · {{ o.location }} } }
+                    </span>
+                  </div>
+                </label>
+              }
+            </div>
+          }
+        </div>
+
+        <div class="um-modal-actions">
+          <button type="button" class="btn btn-secondary" (click)="onClose()" [disabled]="isSubmitting()" id="cancel-assign-station-btn">Cancel</button>
+          <button type="submit" class="btn btn-primary um-submit-btn" [disabled]="!selectedId() || isSubmitting()" id="submit-assign-station-btn">
+            @if (isSubmitting()) { <span class="btn-spinner"></span> Assigning… } @else { Assign station }
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

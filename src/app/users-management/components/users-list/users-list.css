@@ -1,0 +1,323 @@
+/* =============================================
+   Users Management – Users List
+   ============================================= */
+
+.um-page {
+  padding: 32px 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* ---- Header ---- */
+.um-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.um-header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.um-page-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #1877f2 0%, #0a56c8 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(24, 119, 242, 0.35);
+}
+
+.um-page-icon svg {
+  width: 28px;
+  height: 28px;
+  color: #ffffff;
+}
+
+.um-title {
+  margin: 0 0 2px 0;
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.5px;
+}
+
+.um-subtitle {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.um-header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* ---- Search Bar ---- */
+.um-search-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.um-search-icon {
+  position: absolute;
+  left: 12px;
+  width: 18px;
+  height: 18px;
+  color: var(--text-secondary);
+  pointer-events: none;
+}
+
+.um-search-input {
+  height: 40px;
+  padding: 0 40px 0 40px;
+  width: 280px;
+  border-radius: 20px;
+  border: 1.5px solid var(--border-divider);
+  background-color: var(--input-bg);
+  color: var(--text-primary);
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s, width 0.3s ease;
+}
+
+.um-search-input:focus {
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 3px rgba(24, 119, 242, 0.15);
+  width: 320px;
+}
+
+.um-search-input::placeholder {
+  color: var(--text-secondary);
+}
+
+.um-search-clear {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  border-radius: 50%;
+  transition: color 0.2s, background-color 0.2s;
+}
+
+.um-search-clear:hover {
+  color: var(--text-primary);
+  background-color: var(--hover-overlay);
+}
+
+.um-search-clear svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* ---- Add Button ---- */
+.um-add-btn {
+  gap: 8px;
+  padding: 0 18px;
+  height: 40px;
+  border-radius: 20px;
+  font-size: 14px;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(24, 119, 242, 0.3);
+  transition: background-color 0.2s, transform 0.15s, box-shadow 0.2s;
+}
+
+.um-add-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(24, 119, 242, 0.4);
+}
+
+.um-add-btn:active {
+  transform: translateY(0);
+}
+
+/* ---- State containers (loading / error / empty) ---- */
+.um-state-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 72px 24px;
+  gap: 16px;
+  text-align: center;
+}
+
+.um-state-text {
+  margin: 0;
+  font-size: 15px;
+  color: var(--text-secondary);
+}
+
+/* Spinner */
+.um-spinner {
+  width: 52px;
+  height: 52px;
+}
+
+.spinner-ring {
+  width: 52px;
+  height: 52px;
+  border: 4px solid var(--border-divider);
+  border-top-color: var(--brand-primary);
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.um-state-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.um-state-icon svg {
+  width: 32px;
+  height: 32px;
+}
+
+.error-icon {
+  background-color: rgba(240, 40, 73, 0.12);
+  color: var(--brand-danger);
+}
+
+.empty-icon {
+  background-color: var(--input-bg);
+  color: var(--text-secondary);
+}
+
+/* Row Avatar (used inside .cell-with-avatar) */
+.um-card-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+  flex-shrink: 0;
+  text-transform: uppercase;
+}
+
+.um-card-avatar[data-role="admin"] {
+  background: linear-gradient(135deg, #f02849 0%, #b01033 100%);
+}
+
+.um-card-avatar[data-role="director"] {
+  background: linear-gradient(135deg, #7928ca 0%, #4e1a84 100%);
+}
+
+.um-card-avatar[data-role="manager"] {
+  background: linear-gradient(135deg, #1877f2 0%, #0a56c8 100%);
+}
+
+/* Role Badges */
+.role-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  width: fit-content;
+}
+
+.role-admin {
+  background-color: rgba(240, 40, 73, 0.12);
+  color: #c0122e;
+}
+
+html.dark .role-admin {
+  background-color: rgba(240, 40, 73, 0.2);
+  color: #f25a72;
+}
+
+.role-director {
+  background-color: rgba(121, 40, 202, 0.12);
+  color: #5f1fa0;
+}
+
+html.dark .role-director {
+  background-color: rgba(121, 40, 202, 0.2);
+  color: #b57ef5;
+}
+
+.role-manager {
+  background-color: rgba(24, 119, 242, 0.12);
+  color: #0a56c8;
+}
+
+html.dark .role-manager {
+  background-color: rgba(24, 119, 242, 0.2);
+  color: #5da3ff;
+}
+
+/* ---- Results count line ---- */
+.um-results-count {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+  text-align: right;
+  padding: 0 4px;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 640px) {
+  .um-page {
+    padding: 20px 16px;
+  }
+
+  .um-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .um-header-right {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .um-search-wrap {
+    width: 100%;
+  }
+
+  .um-search-input {
+    width: 100%;
+  }
+
+  .um-search-input:focus {
+    width: 100%;
+  }
+
+  .um-add-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

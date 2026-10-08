@@ -1,0 +1,23 @@
+.mds-page {
+  padding: 8px 0 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.mds-header {
+  margin-bottom: 20px;
+}
+
+.mds-title {
+  margin: 0 0 4px;
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--text-primary);
+}
+
+.mds-subtitle {
+  margin: 0;
+  font-size: 15px;
+  color: var(--text-secondary);
+}

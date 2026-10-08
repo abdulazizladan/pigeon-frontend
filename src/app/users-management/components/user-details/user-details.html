@@ -1,0 +1,188 @@
+<div class="ud-page">
+
+  <!-- Back Navigation -->
+  <div class="ud-breadcrumb">
+    <button class="ud-back-btn" (click)="goBack()" id="user-details-back-btn">
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+      </svg>
+      Back to Users
+    </button>
+  </div>
+
+  <!-- Loading State -->
+  @if (isLoading()) {
+    <div class="ud-state-center">
+      <div class="ud-spinner"><div class="spinner-ring"></div></div>
+      <p>Loading user…</p>
+    </div>
+  }
+
+  <!-- Error State -->
+  @if (loadError()) {
+    <div class="ud-state-center">
+      <div class="ud-state-icon error">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+      </div>
+      <p>{{ loadError() }}</p>
+      <button class="btn btn-secondary" (click)="goBack()">Go Back</button>
+    </div>
+  }
+
+  <!-- Not Found -->
+  @if (!isLoading() && !loadError() && !user()) {
+    <div class="ud-state-center">
+      <div class="ud-state-icon empty">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
+      </div>
+      <p>User not found.</p>
+      <button class="btn btn-secondary" (click)="goBack()">Go Back</button>
+    </div>
+  }
+
+  <!-- User Detail Card -->
+  @if (!isLoading() && !loadError() && user()) {
+    <div class="ud-content">
+
+      <!-- Profile Hero Card -->
+      <div class="ud-hero-card card" [attr.data-role]="user()!.role">
+        <div class="ud-hero-bg"></div>
+        <div class="ud-hero-body">
+          <div class="ud-avatar" [attr.data-role]="user()!.role">
+            {{ getInitials(user()!) }}
+          </div>
+          <div class="ud-hero-info">
+            <h1 class="ud-username">{{ getFullName(user()!) }}</h1>
+            <p class="ud-handle">&#64;{{ user()!.username }}</p>
+            <div class="ud-role-pill" [attr.data-role]="user()!.role">
+              {{ getRoleLabel(user()!.role) }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Details Grid -->
+      <div class="ud-details-grid">
+
+        <!-- Account Info Card -->
+        <div class="ud-info-card card">
+          <h2 class="ud-card-title">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            Account Information
+          </h2>
+
+          <div class="ud-info-row">
+            <span class="ud-info-label">User ID</span>
+            <span class="ud-info-value mono">{{ user()!.id }}</span>
+          </div>
+
+          <div class="ud-info-divider"></div>
+
+          <div class="ud-info-row">
+            <span class="ud-info-label">Username</span>
+            <span class="ud-info-value">{{ user()!.username }}</span>
+          </div>
+
+          <div class="ud-info-divider"></div>
+
+          <div class="ud-info-row">
+            <span class="ud-info-label">First name</span>
+            <span class="ud-info-value">{{ user()!.firstName || '—' }}</span>
+          </div>
+
+          <div class="ud-info-divider"></div>
+
+          <div class="ud-info-row">
+            <span class="ud-info-label">Last name</span>
+            <span class="ud-info-value">{{ user()!.lastName || '—' }}</span>
+          </div>
+
+          <div class="ud-info-divider"></div>
+
+          <div class="ud-info-row">
+            <span class="ud-info-label">Phone</span>
+            <span class="ud-info-value">
+              @if (user()!.phoneNumber) {
+                <a class="ud-phone-link" href="tel:{{ user()!.phoneNumber }}">{{ user()!.phoneNumber }}</a>
+              } @else {
+                —
+              }
+            </span>
+          </div>
+
+          <div class="ud-info-divider"></div>
+
+          <div class="ud-info-row">
+            <span class="ud-info-label">Role</span>
+            <span class="ud-info-value">
+              <span class="ud-inline-badge" [attr.data-role]="user()!.role">
+                {{ user()!.role }}
+              </span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Permissions Card -->
+        <div class="ud-info-card card">
+          <h2 class="ud-card-title">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+            Role & Permissions
+          </h2>
+
+          <p class="ud-role-description">{{ getRoleDescription(user()!.role) }}</p>
+
+          <div class="ud-permissions-list">
+            <!-- Admin Permissions -->
+            @if (user()!.role === 'admin') {
+              <div class="ud-perm-item granted">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                <span>Create &amp; manage all users</span>
+              </div>
+              <div class="ud-perm-item granted">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                <span>Assign any role (Admin, Director, Manager)</span>
+              </div>
+              <div class="ud-perm-item granted">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                <span>Access system settings &amp; audits</span>
+              </div>
+            }
+
+            <!-- Director Permissions -->
+            @if (user()!.role === 'director') {
+              <div class="ud-perm-item granted">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                <span>Create manager accounts</span>
+              </div>
+              <div class="ud-perm-item granted">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                <span>View team members &amp; reports</span>
+              </div>
+              <div class="ud-perm-item denied">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                <span>Cannot assign Admin or Director roles</span>
+              </div>
+            }
+
+            <!-- Manager Permissions -->
+            @if (user()!.role === 'manager') {
+              <div class="ud-perm-item granted">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                <span>Access operational dashboard</span>
+              </div>
+              <div class="ud-perm-item denied">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                <span>Cannot create or manage users</span>
+              </div>
+              <div class="ud-perm-item denied">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                <span>No access to system configuration</span>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+
+    </div>
+  }
+</div>

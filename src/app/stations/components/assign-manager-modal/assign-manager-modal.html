@@ -1,0 +1,91 @@
+@if (store.isAssignManagerModalOpen() && station(); as s) {
+  <div class="um-modal-backdrop" (click)="onBackdropClick($event)" role="dialog" aria-modal="true" aria-labelledby="assign-modal-title">
+    <div class="um-modal">
+
+      <div class="um-modal-header">
+        <div class="um-modal-title-group">
+          <div class="um-modal-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+            </svg>
+          </div>
+          <div>
+            <h2 id="assign-modal-title" class="um-modal-title">Assign manager</h2>
+            <p class="um-modal-subtitle">Choose who will run {{ s.name }}</p>
+          </div>
+        </div>
+        <button type="button" class="um-modal-close" (click)="onClose()" title="Close" aria-label="Close" id="assign-modal-close-btn">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+          </svg>
+        </button>
+      </div>
+
+      <form class="um-modal-form" (submit)="onSubmit($event)" novalidate>
+
+        @if (store.updateErrorMessage()) {
+          <div class="um-form-alert alert-error" role="alert">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+            </svg>
+            {{ store.updateErrorMessage() }}
+          </div>
+        }
+
+        <div class="um-form-group">
+          <label class="um-form-label" for="assign-search">Find a manager</label>
+          <div class="um-input-wrap">
+            <svg class="um-input-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+            </svg>
+            <input id="assign-search" type="text" class="um-form-input" placeholder="Search by name or username" [value]="search()" (input)="onSearch($event)" autocomplete="off" [disabled]="isSubmitting()" />
+          </div>
+        </div>
+
+        <div class="um-form-group">
+          <span class="um-form-label">
+            Active managers
+            <span class="um-form-optional">({{ availableCount() }} available)</span>
+          </span>
+
+          @if (managers.loadingState() === 'loading' && options().length === 0) {
+            <p class="am-state">Loading managers…</p>
+          } @else if (managers.loadingState() === 'error') {
+            <p class="am-state am-state--error">{{ managers.errorMessage() }}</p>
+          } @else if (options().length === 0) {
+            <p class="am-state">
+              @if (search()) { No managers match "{{ search() }}". } @else { No active managers available. Create one under Managers first. }
+            </p>
+          } @else {
+            <div class="am-list" role="radiogroup" aria-label="Managers">
+              @for (o of options(); track o.id) {
+                <label class="um-role-option am-option" [class.selected]="selectedId() === o.id" [class.is-disabled]="!!o.assignedTo" (click)="select(o.id, !!o.assignedTo)">
+                  <input type="radio" name="assign-manager" [value]="o.id" [checked]="selectedId() === o.id" [disabled]="!!o.assignedTo || isSubmitting()" (change)="select(o.id, !!o.assignedTo)" />
+                  <div class="am-avatar">{{ o.name.charAt(0).toUpperCase() }}</div>
+                  <div class="um-role-label-group">
+                    <span class="um-role-name">{{ o.name }} <span class="am-handle">&#64;{{ o.username }}</span></span>
+                    <span class="um-role-desc">
+                      @if (o.assignedTo) { Already runs {{ o.assignedTo }} } @else if (o.phone) { {{ o.phone }} } @else { Available }
+                    </span>
+                  </div>
+                </label>
+              }
+            </div>
+          }
+        </div>
+
+        <div class="um-modal-actions">
+          <button type="button" class="btn btn-secondary" (click)="onClose()" [disabled]="isSubmitting()" id="cancel-assign-manager-btn">Cancel</button>
+          <button type="submit" class="btn btn-primary um-submit-btn" [disabled]="!selectedId() || isSubmitting()" id="submit-assign-manager-btn">
+            @if (isSubmitting()) {
+              <span class="btn-spinner"></span>
+              Assigning…
+            } @else {
+              Assign to {{ s.name }}
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

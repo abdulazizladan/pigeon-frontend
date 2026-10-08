@@ -1,0 +1,107 @@
+<div class="dr-report">
+
+  <!-- Day totals -->
+  <div class="dr-totals" role="group" aria-label="Day totals">
+    <div class="dr-total">
+      <span class="dr-total-label">Expected (reservoirs)</span>
+      <span class="dr-total-value">{{ report().totals.expectedAmount | currency:currencyCode:'symbol':'1.0-0' }}</span>
+      <span class="dr-total-sub">{{ report().totals.expectedLitres | number:'1.0-0' }} L</span>
+    </div>
+    <div class="dr-total">
+      <span class="dr-total-label">Actual (pump meters)</span>
+      <span class="dr-total-value">{{ report().totals.actualAmount | currency:currencyCode:'symbol':'1.0-0' }}</span>
+      <span class="dr-total-sub">{{ report().totals.actualLitres | number:'1.0-0' }} L</span>
+    </div>
+    <div class="dr-total" [attr.data-severity]="severity(report().totals)">
+      <span class="dr-total-label">Variance</span>
+      <span class="dr-total-value">{{ sign(report().totals.varianceAmount) }}{{ report().totals.varianceAmount | currency:currencyCode:'symbol':'1.0-0' }}</span>
+      <span class="dr-total-sub">{{ sign(report().totals.varianceLitres) }}{{ report().totals.varianceLitres | number:'1.0-0' }} L</span>
+    </div>
+  </div>
+
+  <!-- Per product -->
+  @for (line of report().products; track trackProduct($index, line)) {
+    <section class="dr-product" [attr.data-severity]="severity(line)" [attr.aria-label]="label(line.product)">
+      <header class="dr-product-header">
+        <div class="dr-product-title">
+          <span class="um-role-dot" [attr.data-product]="line.product"></span>
+          <h4>{{ label(line.product) }}</h4>
+          @if (line.pricePerLitre !== null) {
+            <span class="dr-price">{{ line.pricePerLitre | currency:currencyCode:'symbol':'1.0-2' }}/L</span>
+          }
+        </div>
+        <span class="variance-badge" [attr.data-severity]="severity(line)">
+          {{ sign(line.varianceLitres) }}{{ line.varianceLitres | number:'1.0-0' }} L
+          · {{ sign(line.varianceAmount) }}{{ line.varianceAmount | currency:currencyCode:'symbol':'1.0-0' }}
+        </span>
+      </header>
+
+      @if (line.reservoir; as tank) {
+        <p class="dr-tank">
+          Reservoir: opened at <strong>{{ tank.openingLevel | number:'1.0-0' }} L</strong>
+          @if (tank.deliveredLitres) { , received <strong>{{ tank.deliveredLitres | number:'1.0-0' }} L</strong> }
+          , closed at <strong>{{ tank.closingLevel | number:'1.0-0' }} L</strong>
+          → <strong>{{ tank.expectedLitres | number:'1.0-0' }} L</strong> expected to have been sold.
+        </p>
+      } @else {
+        <p class="dr-tank dr-tank--missing">No reservoir reading for this product, so expected sales could not be computed.</p>
+      }
+
+      <div class="data-table-wrap dr-table-wrap">
+        <table class="data-table dr-table">
+          <thead>
+            <tr>
+              <th scope="col">Pump</th>
+              <th scope="col" class="num">Opening</th>
+              <th scope="col" class="num">Closing</th>
+              <th scope="col" class="num">Actual L</th>
+              <th scope="col" class="num">Expected L</th>
+              <th scope="col" class="num">Variance L</th>
+              <th scope="col" class="num">Actual ₦</th>
+              <th scope="col" class="num">Expected ₦</th>
+              <th scope="col" class="num">Variance ₦</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (pump of line.pumps; track trackPump($index, pump)) {
+              <tr class="data-row dr-row">
+                <td class="cell-primary">{{ pump.pumpName }}</td>
+                <td class="num cell-mono">{{ pump.openingReading | number:'1.0-2' }}</td>
+                <td class="num cell-mono">{{ pump.closingReading | number:'1.0-2' }}</td>
+                <td class="num"><strong>{{ pump.actualLitres | number:'1.0-0' }}</strong></td>
+                <td class="num">{{ pump.expectedLitres !== null ? (pump.expectedLitres | number:'1.0-0') : '—' }}</td>
+                <td class="num">
+                  @if (pump.varianceLitres !== null) {
+                    <span class="variance-text" [attr.data-severity]="severity(pump)">{{ sign(pump.varianceLitres) }}{{ pump.varianceLitres | number:'1.0-0' }}</span>
+                  } @else { — }
+                </td>
+                <td class="num"><strong>{{ pump.actualAmount | currency:currencyCode:'symbol':'1.0-0' }}</strong></td>
+                <td class="num">{{ pump.expectedAmount !== null ? (pump.expectedAmount | currency:currencyCode:'symbol':'1.0-0') : '—' }}</td>
+                <td class="num">
+                  @if (pump.varianceAmount !== null) {
+                    <span class="variance-text" [attr.data-severity]="severity(pump)">{{ sign(pump.varianceAmount) }}{{ pump.varianceAmount | currency:currencyCode:'symbol':'1.0-0' }}</span>
+                  } @else { — }
+                </td>
+              </tr>
+            }
+            <tr class="dr-subtotal">
+              <td>Total {{ label(line.product) }}</td>
+              <td class="num"></td>
+              <td class="num"></td>
+              <td class="num">{{ line.actualLitres | number:'1.0-0' }}</td>
+              <td class="num">{{ line.expectedLitres | number:'1.0-0' }}</td>
+              <td class="num"><span class="variance-text" [attr.data-severity]="severity(line)">{{ sign(line.varianceLitres) }}{{ line.varianceLitres | number:'1.0-0' }}</span></td>
+              <td class="num">{{ line.actualAmount | currency:currencyCode:'symbol':'1.0-0' }}</td>
+              <td class="num">{{ line.expectedAmount | currency:currencyCode:'symbol':'1.0-0' }}</td>
+              <td class="num"><span class="variance-text" [attr.data-severity]="severity(line)">{{ sign(line.varianceAmount) }}{{ line.varianceAmount | currency:currencyCode:'symbol':'1.0-0' }}</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  }
+
+  @if (showNotes() && report().notes) {
+    <p class="dr-notes"><strong>Notes:</strong> {{ report().notes }}</p>
+  }
+</div>

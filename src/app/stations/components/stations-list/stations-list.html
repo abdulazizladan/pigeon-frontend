@@ -1,0 +1,142 @@
+<div class="st-page">
+
+  <!-- Page Header -->
+  <div class="st-header">
+    <div class="st-header-left">
+      <div class="st-page-icon">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M12 3L2 12h3v8h14v-8h3L12 3zm0 2.7l6 5.4V18h-4v-5H10v5H6v-6.9l6-5.4z"/>
+        </svg>
+      </div>
+      <div>
+        <h1 class="st-title">Stations</h1>
+        <p class="st-subtitle">
+          {{ store.statusCounts().active }} active ·
+          {{ store.statusCounts().maintenance }} under maintenance ·
+          {{ store.statusCounts().inactive }} inactive
+        </p>
+      </div>
+    </div>
+
+    <div class="st-header-right">
+      <div class="st-search-wrap">
+        <svg class="st-search-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+        </svg>
+        <input
+          id="st-search-input"
+          type="text"
+          class="st-search-input"
+          placeholder="Search by name, code, location or manager…"
+          [value]="store.searchQuery()"
+          (input)="onSearch($event)"
+          autocomplete="off"
+        />
+        @if (store.searchQuery()) {
+          <button type="button" class="st-search-clear" (click)="store.setSearchQuery('')" title="Clear search" aria-label="Clear search">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+            </svg>
+          </button>
+        }
+      </div>
+
+      @if (canManage()) {
+        <button id="st-add-station-btn" type="button" class="btn btn-primary st-add-btn" (click)="openAddStation()">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18" aria-hidden="true">
+            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+          </svg>
+          Add Station
+        </button>
+      }
+    </div>
+  </div>
+
+  <!-- Loading -->
+  @if (store.loadingState() === 'loading') {
+    <div class="st-state-container">
+      <div class="spinner-ring"></div>
+      <p class="st-state-text">Loading stations…</p>
+    </div>
+  }
+
+  <!-- Error -->
+  @if (store.loadingState() === 'error') {
+    <div class="st-state-container">
+      <p class="st-state-text">{{ store.errorMessage() }}</p>
+      <button type="button" class="btn btn-secondary" (click)="store.loadStations()">Retry</button>
+    </div>
+  }
+
+  <!-- Table -->
+  @if (store.loadingState() === 'success') {
+    @if (store.filteredStations().length === 0) {
+      <div class="st-state-container">
+        <p class="st-state-text">
+          @if (store.searchQuery()) {
+            No stations match "<strong>{{ store.searchQuery() }}</strong>".
+          } @else {
+            No stations yet. Add the first one!
+          }
+        </p>
+      </div>
+    } @else {
+      <div class="data-table-wrap card">
+        <table class="data-table" id="st-stations-table">
+          <thead>
+            <tr>
+              <th scope="col">Station</th>
+              <th scope="col">Location</th>
+              <th scope="col">Status</th>
+              <th scope="col">Manager</th>
+              <th scope="col" class="data-th-actions"><span class="sr-only">Actions</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (s of store.filteredStations(); track trackById($index, s)) {
+              <tr
+                class="data-row st-row"
+                id="station-row-{{ s.id }}"
+                (click)="viewStation(s.id)"
+                (keydown.enter)="viewStation(s.id)"
+                tabindex="0"
+                role="button"
+                [attr.aria-label]="'View ' + s.name"
+              >
+                <td class="cell-wrap st-cell-name">
+                  <span class="cell-primary">{{ s.name }}</span>
+                  <span class="st-code">{{ s.code }}</span>
+                  @if (s.description) {
+                    <span class="st-description">{{ s.description }}</span>
+                  }
+                </td>
+                <td class="cell-wrap st-cell-location">
+                  @if (s.address) { <span class="st-address">{{ s.address }}</span> }
+                  <span class="cell-muted">{{ [s.lga, s.state].join(', ') || '—' }}</span>
+                </td>
+                <td>
+                  <span class="status-badge" [attr.data-status]="s.status">{{ statusLabel(s.status) }}</span>
+                </td>
+                <td class="cell-mono">
+                  @if (s.managerUsername) { {{ s.managerUsername }} } @else { <span class="cell-muted">Unassigned</span> }
+                </td>
+                <td class="data-td-actions">
+                  <button type="button" class="row-action" (click)="viewStation(s.id); $event.stopPropagation()" title="View details" [attr.aria-label]="'View ' + s.name">
+                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <p class="st-results-count">
+        Showing {{ store.filteredStations().length }} of {{ store.totalCount() }} stations
+        @if (store.searchQuery()) { · filtered by "<em>{{ store.searchQuery() }}</em>" }
+      </p>
+    }
+  }
+</div>
+
+<app-add-station-modal></app-add-station-modal>

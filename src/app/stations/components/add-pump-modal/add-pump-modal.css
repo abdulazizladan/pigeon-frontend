@@ -1,0 +1,14 @@
+.ap-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.ap-toggle input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--brand-primary);
+}

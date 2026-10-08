@@ -1,0 +1,58 @@
+@if (store.isAddReservoirModalOpen()) {
+  <div class="um-modal-backdrop" (click)="onBackdropClick($event)" role="dialog" aria-modal="true" aria-labelledby="add-reservoir-title">
+    <div class="um-modal">
+      <div class="um-modal-header">
+        <div class="um-modal-title-group">
+          <div class="um-modal-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 4.24 2 7v10c0 2.76 4.48 5 10 5s10-2.24 10-5V7c0-2.76-4.48-5-10-5zm0 2c4.42 0 8 1.34 8 3s-3.58 3-8 3-8-1.34-8-3 3.58-3 8-3zm0 16c-4.42 0-8-1.34-8-3v-2.2c1.84 1.33 4.73 2.2 8 2.2s6.16-.87 8-2.2V17c0 1.66-3.58 3-8 3z"/></svg>
+          </div>
+          <div>
+            <h2 id="add-reservoir-title" class="um-modal-title">Add reservoir</h2>
+            <p class="um-modal-subtitle">One storage tank per product</p>
+          </div>
+        </div>
+        <button type="button" class="um-modal-close" (click)="onClose()" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </div>
+
+      <form class="um-modal-form" (submit)="onSubmit($event)" novalidate>
+        @if (store.saveErrorMessage()) {
+          <div class="um-form-alert alert-error" role="alert">{{ store.saveErrorMessage() }}</div>
+        }
+
+        @if (options().length === 0) {
+          <p class="um-form-hint">This station already has a reservoir for every product.</p>
+        } @else {
+          <div class="um-form-group">
+            <span class="um-form-label">Product</span>
+            <div class="um-role-grid um-role-grid--three">
+              @for (p of options(); track p) {
+                <label class="um-role-option" [class.selected]="product() === p" [attr.data-product]="p">
+                  <input type="radio" name="reservoir-product" [value]="p" [checked]="product() === p" (change)="setProduct($event)" [disabled]="isSubmitting()" />
+                  <div class="um-role-dot" [attr.data-product]="p"></div>
+                  <div class="um-role-label-group"><span class="um-role-name">{{ label(p) }}</span></div>
+                </label>
+              }
+            </div>
+          </div>
+
+          <div class="um-form-group">
+            <label class="um-form-label" for="reservoir-capacity">Capacity (litres)</label>
+            <div class="um-input-wrap">
+              <input id="reservoir-capacity" type="number" inputmode="decimal" min="1" step="1" class="um-form-input um-form-input--plain" [class.is-invalid]="capacityError()" placeholder="e.g. 33000" [value]="capacity()" (input)="setCapacity($event)" [disabled]="isSubmitting()" required />
+            </div>
+            @if (capacityError()) { <span class="um-form-error">{{ capacityError() }}</span> }
+          </div>
+        }
+
+        <div class="um-modal-actions">
+          <button type="button" class="btn btn-secondary" (click)="onClose()" [disabled]="isSubmitting()">Cancel</button>
+          <button type="submit" class="btn btn-primary um-submit-btn" [disabled]="!isValid() || isSubmitting()" id="submit-add-reservoir-btn">
+            @if (isSubmitting()) { <span class="btn-spinner"></span> Adding… } @else { Add reservoir }
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

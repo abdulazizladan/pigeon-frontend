@@ -1,0 +1,282 @@
+/* =============================================
+   Tickets – List
+   ============================================= */
+
+.tk-page {
+  padding: 32px 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.tk-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.tk-header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.tk-page-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #7928ca 0%, #4e1a84 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(121, 40, 202, 0.35);
+}
+
+.tk-page-icon svg {
+  width: 28px;
+  height: 28px;
+  color: #ffffff;
+}
+
+.tk-title {
+  margin: 0 0 2px 0;
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.5px;
+}
+
+.tk-subtitle {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.tk-header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* Search */
+.tk-search-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.tk-search-icon {
+  position: absolute;
+  left: 12px;
+  width: 18px;
+  height: 18px;
+  color: var(--text-secondary);
+  pointer-events: none;
+}
+
+.tk-search-input {
+  height: 40px;
+  padding: 0 40px;
+  width: 260px;
+  border-radius: 20px;
+  border: 1.5px solid var(--border-divider);
+  background-color: var(--input-bg);
+  color: var(--text-primary);
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.tk-search-input:focus {
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 3px rgba(24, 119, 242, 0.15);
+}
+
+.tk-search-clear {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-secondary);
+  display: flex;
+  padding: 2px;
+  border-radius: 50%;
+}
+
+.tk-search-clear:hover {
+  color: var(--text-primary);
+  background-color: var(--hover-overlay);
+}
+
+.tk-search-clear svg {
+  width: 16px;
+  height: 16px;
+}
+
+.tk-add-btn {
+  gap: 8px;
+  height: 40px;
+  padding: 0 18px;
+  border-radius: 20px;
+  font-size: 14px;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(24, 119, 242, 0.3);
+}
+
+/* Filter chips */
+.tk-filters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.tk-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 12px;
+  border-radius: 9999px;
+  border: 1px solid var(--border-divider);
+  background-color: var(--bg-secondary);
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.tk-chip:hover {
+  background-color: var(--hover-overlay);
+  color: var(--text-primary);
+}
+
+.tk-chip.active {
+  background-color: var(--brand-primary);
+  border-color: var(--brand-primary);
+  color: #ffffff;
+}
+
+.tk-chip-count {
+  font-size: 11px;
+  padding: 1px 7px;
+  border-radius: 9999px;
+  background-color: var(--hover-overlay);
+}
+
+.tk-chip.active .tk-chip-count {
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
+/* Inline alert */
+.tk-inline-alert {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.tk-alert-dismiss {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: inherit;
+  line-height: 1;
+}
+
+/* States */
+.tk-state-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 72px 24px;
+  gap: 16px;
+  text-align: center;
+}
+
+.tk-state-text {
+  margin: 0;
+  font-size: 15px;
+  color: var(--text-secondary);
+}
+
+.spinner-ring {
+  width: 52px;
+  height: 52px;
+  border: 4px solid var(--border-divider);
+  border-top-color: var(--brand-primary);
+  border-radius: 50%;
+  animation: tk-spin 0.75s linear infinite;
+}
+
+@keyframes tk-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Table tweaks */
+.tk-row {
+  cursor: default;
+}
+
+.tk-row.is-updating td {
+  opacity: 0.6;
+}
+
+.tk-cell-title {
+  min-width: 260px;
+  max-width: 420px;
+}
+
+.tk-cell-title .cell-primary {
+  display: block;
+}
+
+.tk-description {
+  display: block;
+  margin-top: 2px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tk-results-count {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+  text-align: right;
+  padding: 0 4px;
+}
+
+@media (max-width: 640px) {
+  .tk-page {
+    padding: 20px 16px;
+  }
+
+  .tk-header,
+  .tk-header-right {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .tk-search-wrap,
+  .tk-search-input {
+    width: 100%;
+  }
+
+  .tk-add-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

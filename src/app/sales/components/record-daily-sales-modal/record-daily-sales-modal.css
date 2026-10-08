@@ -1,0 +1,222 @@
+/* Builds on the shared modal styles in src/styles.css. */
+
+.rds-form {
+  max-height: calc(100vh - 180px);
+  overflow-y: auto;
+}
+
+.rds-errors ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.rds-state {
+  margin: 8px 0 16px;
+  color: var(--text-secondary);
+}
+
+.rds-state--error {
+  color: var(--brand-danger);
+  font-weight: 600;
+}
+
+.rds-top-row {
+  grid-template-columns: minmax(0, 260px);
+}
+
+.rds-product {
+  border: 1px solid var(--border-divider);
+  border-left-width: 4px;
+  border-radius: 8px;
+  padding: 12px 14px 14px;
+  margin: 0 0 16px;
+  min-width: 0;
+}
+
+.rds-product[data-severity="ok"] { border-left-color: var(--brand-success); }
+.rds-product[data-severity="warn"] { border-left-color: var(--brand-warning); }
+.rds-product[data-severity="bad"] { border-left-color: var(--brand-danger); }
+
+.rds-legend {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 6px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.rds-price {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.rds-block {
+  margin-top: 10px;
+}
+
+.rds-block-title {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.rds-cap {
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.rds-grid {
+  display: grid;
+  gap: 10px;
+  align-items: end;
+}
+
+.rds-grid--tank {
+  grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(110px, 0.9fr);
+}
+
+.rds-grid--pump {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) repeat(2, minmax(100px, 0.8fr));
+}
+
+.rds-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  min-width: 0;
+}
+
+.rds-field input {
+  height: 38px;
+  padding: 0 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border-divider);
+  background-color: var(--input-bg);
+  color: var(--text-primary);
+  font-size: 14px;
+  font-family: inherit;
+  font-variant-numeric: tabular-nums;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.rds-field input:focus {
+  outline: none;
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 2px rgba(24, 119, 242, 0.2);
+}
+
+.rds-computed {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background-color: var(--bg-primary);
+  font-size: 12px;
+  color: var(--text-secondary);
+  min-height: 38px;
+  justify-content: center;
+}
+
+.rds-computed strong {
+  font-size: 14px;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.rds-pump {
+  padding: 10px;
+  border-radius: 8px;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-divider);
+  margin-bottom: 8px;
+}
+
+.rds-pump.has-error {
+  border-color: rgba(240, 40, 73, 0.5);
+}
+
+.rds-pump-name {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.rds-missing {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: var(--brand-danger);
+}
+
+.rds-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 8px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--border-divider);
+}
+
+.rds-summary > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.rds-summary strong {
+  font-size: 14px;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.rds-day-totals {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  padding: 12px 14px;
+  border-radius: 8px;
+  background-color: var(--input-bg);
+  margin-bottom: 8px;
+}
+
+.rds-day-totals > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.rds-day-totals strong {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.rds-day-totals small {
+  font-size: 12px;
+}
+
+@media (max-width: 640px) {
+  .rds-grid--tank,
+  .rds-grid--pump {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

@@ -1,0 +1,269 @@
+/* =============================================
+   Director – Dashboard
+   ============================================= */
+
+.dd-page {
+  padding: 8px 0 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.dd-header {
+  margin-bottom: 28px;
+}
+
+.dd-title {
+  margin: 0 0 4px;
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--text-primary);
+}
+
+.dd-subtitle {
+  margin: 0;
+  font-size: 15px;
+  color: var(--text-secondary);
+}
+
+.dd-section {
+  margin-bottom: 32px;
+}
+
+.dd-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.dd-section-title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.dd-ops-grid {
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+}
+
+.dd-kpi-grid {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.stats-cards-container.is-loading .stat-value {
+  color: var(--text-secondary);
+}
+
+.stat-sub {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.dd-error-text {
+  margin: 8px 0 0;
+  color: var(--brand-danger);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* ---- Filter row (one row, above the content it scopes) ---- */
+.dd-filters {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  flex-wrap: wrap;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-divider);
+  border-radius: 8px;
+}
+
+.dd-filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.dd-filter-label {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+}
+
+.dd-chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.dd-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 32px;
+  padding: 0 12px;
+  border-radius: 9999px;
+  border: 1px solid var(--border-divider);
+  background-color: var(--bg-secondary);
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.dd-chip:hover {
+  background-color: var(--hover-overlay);
+  color: var(--text-primary);
+}
+
+.dd-chip.active {
+  background-color: var(--brand-primary);
+  border-color: var(--brand-primary);
+  color: #ffffff;
+}
+
+.dd-chip:focus-visible,
+.dd-select:focus-visible,
+.dd-date-field input:focus-visible {
+  outline: 2px solid var(--brand-primary);
+  outline-offset: 2px;
+}
+
+.dd-custom-range {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding-top: 10px;
+  border-top: 1px solid var(--border-divider);
+}
+
+.dd-date-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.dd-date-field input,
+.dd-select {
+  height: 36px;
+  padding: 0 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border-divider);
+  background-color: var(--input-bg);
+  color: var(--text-primary);
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.dd-select {
+  min-width: 220px;
+  cursor: pointer;
+}
+
+.dd-range-error {
+  font-size: 12px;
+  color: var(--brand-danger);
+  font-weight: 600;
+}
+
+/* ---- Chart card ---- */
+.dd-chart-card {
+  padding: 20px;
+  margin-bottom: 0;
+  transition: opacity 0.2s;
+}
+
+.dd-chart-card.is-loading .dd-chart-canvas-wrap {
+  opacity: 0.55;
+}
+
+.dd-chart-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.dd-chart-title {
+  margin: 0 0 2px;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.dd-chart-subtitle {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.dd-table-toggle {
+  height: 32px;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.dd-chart-canvas-wrap {
+  position: relative;
+  height: 320px;
+  transition: opacity 0.2s;
+}
+
+.dd-chart-state {
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  text-align: center;
+}
+
+.dd-state-text {
+  margin: 0;
+  color: var(--text-secondary);
+}
+
+.dd-table-wrap {
+  margin: 16px 0 0;
+  max-height: 360px;
+  overflow-y: auto;
+}
+
+.dd-table-row {
+  cursor: default;
+}
+
+.data-table th.num,
+.data-table td.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 640px) {
+  .dd-filters {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .dd-select {
+    width: 100%;
+  }
+
+  .dd-chart-canvas-wrap {
+    height: 260px;
+  }
+}

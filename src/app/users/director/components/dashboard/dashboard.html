@@ -1,0 +1,240 @@
+<div class="dd-page">
+
+  <header class="dd-header">
+    <div>
+      <h1 class="dd-title">Director Dashboard</h1>
+      <p class="dd-subtitle">Welcome back, {{ greetingName() }}. Station health, team coverage and sales at a glance.</p>
+    </div>
+  </header>
+
+  <!-- ===== Stations & managers ===== -->
+  <section class="dd-section" aria-labelledby="dd-ops-heading">
+    <div class="dd-section-header">
+      <h2 id="dd-ops-heading" class="dd-section-title">Operations</h2>
+      @if (stations.statsLoadingState() === 'error') {
+        <button type="button" class="btn btn-secondary" (click)="stations.loadStats()">Retry</button>
+      }
+    </div>
+
+    <div class="stats-cards-container dd-ops-grid" [class.is-loading]="stations.statsLoadingState() === 'loading'">
+      <!-- Stations -->
+      <a class="stat-card stat-total" routerLink="/director/stations" aria-label="Stations: view all">
+        <div class="stat-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3L2 12h3v8h14v-8h3L12 3zm0 2.7l6 5.4V18h-4v-5H10v5H6v-6.9l6-5.4z"/></svg>
+        </div>
+        <div class="stat-info">
+          <div class="stat-title">Stations</div>
+          <div class="stat-value">{{ stats()?.total ?? '—' }}</div>
+        </div>
+      </a>
+
+      <div class="stat-card stat-resolved">
+        <div class="stat-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+        </div>
+        <div class="stat-info">
+          <div class="stat-title">Active</div>
+          <div class="stat-value">{{ stats()?.active ?? '—' }}</div>
+        </div>
+      </div>
+
+      <div class="stat-card stat-progress">
+        <div class="stat-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/></svg>
+        </div>
+        <div class="stat-info">
+          <div class="stat-title">Under maintenance</div>
+          <div class="stat-value">{{ stats()?.maintenance ?? '—' }}</div>
+        </div>
+      </div>
+
+      <div class="stat-card stat-closed">
+        <div class="stat-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8 0-1.85.63-3.55 1.69-4.9L16.9 18.31A7.902 7.902 0 0 1 12 20zm6.31-3.1L7.1 5.69A7.902 7.902 0 0 1 12 4c4.42 0 8 3.58 8 8 0 1.85-.63 3.55-1.69 4.9z"/></svg>
+        </div>
+        <div class="stat-info">
+          <div class="stat-title">Inactive</div>
+          <div class="stat-value">{{ stats()?.inactive ?? '—' }}</div>
+        </div>
+      </div>
+
+      <!-- Managers -->
+      <div class="stat-card stat-manager">
+        <div class="stat-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+        </div>
+        <div class="stat-info">
+          <div class="stat-title">Managers</div>
+          <div class="stat-value">{{ stats()?.managers?.total ?? '—' }}</div>
+        </div>
+      </div>
+
+      <div class="stat-card stat-open">
+        <div class="stat-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4zm6.5-8.5l-1.4-1.4-2.6 2.6 1.4 1.4 2.6-2.6z"/></svg>
+        </div>
+        <div class="stat-info">
+          <div class="stat-title">Assigned</div>
+          <div class="stat-value">{{ stats()?.managers?.assigned ?? '—' }}</div>
+        </div>
+      </div>
+
+      <div class="stat-card stat-urgent">
+        <div class="stat-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4zm7-11h2v6h-2zm0 8h2v2h-2z"/></svg>
+        </div>
+        <div class="stat-info">
+          <div class="stat-title">Unassigned</div>
+          <div class="stat-value">{{ stats()?.managers?.unassigned ?? '—' }}</div>
+        </div>
+      </div>
+    </div>
+
+    @if (stations.statsLoadingState() === 'error') {
+      <p class="dd-error-text">{{ stations.errorMessage() }}</p>
+    }
+  </section>
+
+  <!-- ===== Sales ===== -->
+  <section class="dd-section" aria-labelledby="dd-sales-heading">
+    <div class="dd-section-header">
+      <h2 id="dd-sales-heading" class="dd-section-title">Sales summary</h2>
+    </div>
+
+    <!-- Filter row: date range first, then station. Scopes everything below. -->
+    <div class="dd-filters" role="group" aria-label="Sales filters">
+      <div class="dd-filter-group">
+        <span class="dd-filter-label">Date range</span>
+        <div class="dd-chips" role="tablist" aria-label="Date range presets">
+          @for (p of presets; track p.value) {
+            <button
+              type="button"
+              role="tab"
+              class="dd-chip"
+              [class.active]="sales.preset() === p.value"
+              [attr.aria-selected]="sales.preset() === p.value"
+              (click)="setPreset(p.value)"
+              id="dd-preset-{{ p.value }}"
+            >
+              @if (sales.preset() === p.value) {
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+              }
+              {{ p.label }}
+            </button>
+          }
+        </div>
+
+        @if (sales.preset() === 'custom') {
+          <div class="dd-custom-range">
+            <label class="dd-date-field">
+              <span>From</span>
+              <input type="date" id="dd-custom-from" [value]="sales.customFrom()" [max]="sales.customTo()" (change)="onCustomFrom($event)" />
+            </label>
+            <label class="dd-date-field">
+              <span>To</span>
+              <input type="date" id="dd-custom-to" [value]="sales.customTo()" [min]="sales.customFrom()" (change)="onCustomTo($event)" />
+            </label>
+            @if (!sales.isCustomRangeValid()) {
+              <span class="dd-range-error">Start date must be on or before the end date.</span>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="dd-filter-group">
+        <label class="dd-filter-label" for="dd-station-select">Station</label>
+        <select id="dd-station-select" class="dd-select" [value]="sales.stationId()" (change)="onStationChange($event)">
+          <option [value]="allStations" [selected]="sales.stationId() === allStations">All stations</option>
+          @for (s of stations.stations(); track s.id) {
+            <option [value]="s.id" [selected]="sales.stationId() === s.id">
+              {{ s.name }}@if (s.status !== 'active') { ({{ s.status }}) }
+            </option>
+          }
+        </select>
+      </div>
+    </div>
+
+    <!-- KPI row for the selected slice -->
+    <div class="stats-cards-container dd-kpi-grid" [class.is-loading]="sales.isLoading()">
+      <div class="stat-card stat-total">
+        <div class="stat-info">
+          <div class="stat-title">Revenue</div>
+          <div class="stat-value">{{ summary() ? (summary()!.totalAmount | currency:currencyCode:'symbol':'1.0-0') : '—' }}</div>
+        </div>
+      </div>
+      <div class="stat-card stat-tickets">
+        <div class="stat-info">
+          <div class="stat-title">Litres sold</div>
+          <div class="stat-value">{{ summary() ? (summary()!.totalLitres | number:'1.0-0') : '—' }}</div>
+          @if (summary()) { <div class="stat-sub">{{ summary()!.totalTransactions }} pump readings</div> }
+        </div>
+      </div>
+      <div class="stat-card stat-resolved">
+        <div class="stat-info">
+          <div class="stat-title">Average per day</div>
+          <div class="stat-value">{{ summary() ? (summary()!.averagePerDay | currency:currencyCode:'symbol':'1.0-0') : '—' }}</div>
+        </div>
+      </div>
+      <div class="stat-card stat-progress">
+        <div class="stat-info">
+          <div class="stat-title">Best day</div>
+          <div class="stat-value">{{ peakDay() ? (peakDay()!.amount | currency:currencyCode:'symbol':'1.0-0') : '—' }}</div>
+          @if (peakDay()) {
+            <div class="stat-sub">{{ formatDay(peakDay()!.date) }}</div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Chart card -->
+    <div class="card dd-chart-card" [class.is-loading]="sales.isLoading()">
+      <div class="dd-chart-header">
+        <div>
+          <h3 class="dd-chart-title">Daily sales · {{ selectedStationName() }}</h3>
+          <p class="dd-chart-subtitle">{{ rangeLabel() }}</p>
+        </div>
+        <button type="button" class="btn btn-secondary dd-table-toggle" (click)="toggleTable()" [attr.aria-expanded]="showTable()" aria-controls="dd-sales-table">
+          {{ showTable() ? 'Hide table' : 'Show table' }}
+        </button>
+      </div>
+
+      @if (sales.loadingState() === 'error') {
+        <div class="dd-chart-state">
+          <p class="dd-error-text">{{ sales.errorMessage() }}</p>
+          <button type="button" class="btn btn-secondary" (click)="sales.loadSummary(sales.query())">Retry</button>
+        </div>
+      } @else if (summary() && !sales.hasSales()) {
+        <div class="dd-chart-state">
+          <p class="dd-state-text">No sales recorded for {{ selectedStationName() | lowercase }} in this range.</p>
+        </div>
+      } @else {
+        <div class="dd-chart-canvas-wrap" role="img" [attr.aria-label]="'Line chart of daily sales for ' + selectedStationName() + ', ' + rangeLabel()">
+          <canvas baseChart type="line" [data]="chartData()" [options]="chartOptions()" [plugins]="chartPlugins"></canvas>
+        </div>
+      }
+
+      @if (showTable() && summary()) {
+        <div class="data-table-wrap dd-table-wrap" id="dd-sales-table">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th scope="col">Date</th>
+                <th scope="col" class="num">Sales</th>
+                <th scope="col" class="num">Transactions</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (p of summary()!.points; track p.date) {
+                <tr class="data-row dd-table-row">
+                  <td>{{ formatDay(p.date) }}</td>
+                  <td class="num">{{ p.amount | currency:currencyCode:'symbol':'1.0-0' }}</td>
+                  <td class="num">{{ p.transactions }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
+  </section>
+</div>

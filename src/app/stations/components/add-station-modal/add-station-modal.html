@@ -1,0 +1,143 @@
+@if (store.isAddStationModalOpen()) {
+  <div class="um-modal-backdrop" (click)="onBackdropClick($event)" role="dialog" aria-modal="true" aria-labelledby="station-modal-title">
+    <div class="um-modal um-modal--wide">
+
+      <div class="um-modal-header">
+        <div class="um-modal-title-group">
+          <div class="um-modal-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M12 3L2 12h3v8h14v-8h3L12 3zm0 2.7l6 5.4V18h-4v-5H10v5H6v-6.9l6-5.4z"/>
+            </svg>
+          </div>
+          <div>
+            <h2 id="station-modal-title" class="um-modal-title">Add Station</h2>
+            <p class="um-modal-subtitle">Register a new station and optionally assign its manager</p>
+          </div>
+        </div>
+        <button type="button" class="um-modal-close" (click)="onClose()" title="Close" aria-label="Close" id="station-modal-close-btn">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+          </svg>
+        </button>
+      </div>
+
+      <form class="um-modal-form" (submit)="onSubmit($event)" novalidate>
+
+        @if (store.createErrorMessage()) {
+          <div class="um-form-alert alert-error" role="alert">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+            </svg>
+            {{ store.createErrorMessage() }}
+          </div>
+        }
+
+        <!-- Name -->
+        <div class="um-form-group">
+          <label class="um-form-label" for="station-name">Station name</label>
+          <div class="um-input-wrap">
+            <input id="station-name" type="text" class="um-form-input um-form-input--plain" [class.is-invalid]="nameError()"
+              placeholder="e.g. Lekki Station" [value]="name()" (input)="updateName($event)" maxlength="80" autocomplete="off" [disabled]="isSubmitting()" required />
+          </div>
+          @if (nameError()) { <span class="um-form-error">{{ nameError() }}</span> }
+        </div>
+
+        <!-- Description -->
+        <div class="um-form-group">
+          <label class="um-form-label" for="station-description">Description <span class="um-form-optional">(optional)</span></label>
+          <div class="um-input-wrap">
+            <textarea id="station-description" class="um-form-input um-form-textarea um-form-textarea--short" [class.is-invalid]="descriptionError()"
+              placeholder="What makes this station notable, opening hours, services…" [value]="description()" (input)="updateDescription($event)" maxlength="1000" [disabled]="isSubmitting()"></textarea>
+          </div>
+          @if (descriptionError()) { <span class="um-form-error">{{ descriptionError() }}</span> }
+        </div>
+
+        <!-- Address -->
+        <div class="um-form-group">
+          <label class="um-form-label" for="station-address">Address</label>
+          <div class="um-input-wrap">
+            <svg class="um-input-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/>
+            </svg>
+            <input id="station-address" type="text" class="um-form-input" [class.is-invalid]="addressError()"
+              placeholder="Street address" [value]="address()" (input)="updateAddress($event)" maxlength="160" autocomplete="street-address" [disabled]="isSubmitting()" required />
+          </div>
+          @if (addressError()) { <span class="um-form-error">{{ addressError() }}</span> }
+        </div>
+
+        <!-- State + LGA -->
+        <div class="um-form-row">
+          <div class="um-form-group">
+            <label class="um-form-label" for="station-state">State</label>
+            <div class="um-input-wrap">
+              <select id="station-state" class="um-form-input um-form-input--plain um-form-select" [value]="state()" (change)="updateState($event)" [disabled]="isSubmitting()" required>
+                <option value="" disabled [selected]="state() === ''">Select a state</option>
+                @for (s of states; track s) {
+                  <option [value]="s" [selected]="state() === s">{{ s }}</option>
+                }
+              </select>
+            </div>
+          </div>
+
+          <div class="um-form-group">
+            <label class="um-form-label" for="station-lga">LGA</label>
+            <div class="um-input-wrap">
+              <input id="station-lga" type="text" class="um-form-input um-form-input--plain" [class.is-invalid]="lgaError()"
+                placeholder="Local Government Area" [value]="lga()" (input)="updateLga($event)" maxlength="80" autocomplete="off" [disabled]="isSubmitting()" required />
+            </div>
+            @if (lgaError()) { <span class="um-form-error">{{ lgaError() }}</span> }
+          </div>
+        </div>
+
+        <!-- Status -->
+        <div class="um-form-group">
+          <span class="um-form-label">Status</span>
+          <div class="um-role-grid um-role-grid--three">
+            @for (s of statuses; track s) {
+              <label class="um-role-option" [class.selected]="status() === s" [attr.data-status]="s">
+                <input type="radio" name="station-status" [value]="s" [checked]="status() === s" (change)="updateStatus($event)" [disabled]="isSubmitting()" />
+                <div class="um-role-dot" [attr.data-status]="s"></div>
+                <div class="um-role-label-group">
+                  <span class="um-role-name">{{ statusLabel(s) }}</span>
+                  <span class="um-role-desc">{{ statusDescription(s) }}</span>
+                </div>
+              </label>
+            }
+          </div>
+        </div>
+
+        <!-- Manager -->
+        <div class="um-form-group">
+          <label class="um-form-label" for="station-manager">Assigned manager <span class="um-form-optional">(optional)</span></label>
+          <div class="um-input-wrap">
+            <select id="station-manager" class="um-form-input um-form-input--plain um-form-select" [value]="managerId()" (change)="updateManager($event)" [disabled]="isSubmitting() || managers.loadingState() === 'loading'">
+              <option [value]="noManager" [selected]="managerId() === noManager">Unassigned</option>
+              @for (m of managerOptions(); track m.id) {
+                <option [value]="m.id" [disabled]="!!m.assignedTo" [selected]="managerId() === m.id">
+                  {{ m.label }} (&#64;{{ m.username }})@if (m.assignedTo) { — runs {{ m.assignedTo }} }
+                </option>
+              }
+            </select>
+          </div>
+          @if (managers.loadingState() === 'error') {
+            <span class="um-form-error">{{ managers.errorMessage() }}</span>
+          } @else if (managers.loadingState() === 'success' && managerOptions().length === 0) {
+            <span class="um-form-hint">No active managers yet. You can assign one later.</span>
+          }
+        </div>
+
+        <div class="um-modal-actions">
+          <button type="button" class="btn btn-secondary" (click)="onClose()" [disabled]="isSubmitting()" id="cancel-add-station-btn">Cancel</button>
+          <button type="submit" class="btn btn-primary um-submit-btn" [disabled]="!isFormValid() || isSubmitting()" id="submit-add-station-btn">
+            @if (isSubmitting()) {
+              <span class="btn-spinner"></span>
+              Creating…
+            } @else {
+              Create Station
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

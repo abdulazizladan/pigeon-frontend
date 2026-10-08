@@ -1,0 +1,31 @@
+@if (open()) {
+  <div class="um-modal-backdrop" (click)="onBackdropClick($event)" (keydown)="onKeydown($event)" role="alertdialog" aria-modal="true" aria-labelledby="confirm-dialog-title" aria-describedby="confirm-dialog-message">
+    <div class="um-modal cd-modal">
+      <div class="um-modal-header cd-header">
+        <div class="um-modal-title-group">
+          <div class="um-modal-icon cd-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+          </div>
+          <div>
+            <h2 id="confirm-dialog-title" class="um-modal-title">{{ title() }}</h2>
+            <p class="um-modal-subtitle">This cannot be undone</p>
+          </div>
+        </div>
+        <button type="button" class="um-modal-close" (click)="cancel()" [disabled]="busy()" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </div>
+
+      <div class="um-modal-form">
+        <p id="confirm-dialog-message" class="cd-message"><ng-content></ng-content></p>
+
+        <div class="um-modal-actions">
+          <button #cancelBtn type="button" class="btn btn-secondary" (click)="cancel()" [disabled]="busy()" id="confirm-dialog-cancel-btn">Cancel</button>
+          <button type="button" class="btn cd-btn-danger um-submit-btn" (click)="confirm()" [disabled]="busy()" id="confirm-dialog-confirm-btn">
+            @if (busy()) { <span class="btn-spinner"></span> {{ busyLabel() }} } @else { {{ confirmLabel() }} }
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+}

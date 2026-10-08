@@ -1,0 +1,133 @@
+<div class="md-page">
+
+  <div class="md-breadcrumb">
+    <button type="button" class="md-back-btn" (click)="goBack()" id="manager-details-back-btn">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+      Back to Managers
+    </button>
+  </div>
+
+  @if (isLoading()) {
+    <div class="md-state-center">
+      <div class="spinner-ring"></div>
+      <p>Loading manager…</p>
+    </div>
+  } @else if (loadError()) {
+    <div class="md-state-center">
+      <p>{{ loadError() }}</p>
+      <button type="button" class="btn btn-secondary" (click)="store.loadManagers()">Retry</button>
+    </div>
+  } @else if (notFound()) {
+    <div class="md-state-center">
+      <p>Manager not found.</p>
+      <button type="button" class="btn btn-secondary" (click)="goBack()">Go Back</button>
+    </div>
+  } @else if (manager(); as m) {
+    <div class="md-content" [class.is-updating]="isUpdating()">
+
+      <!-- Hero -->
+      <div class="card md-hero" [attr.data-status]="m.status">
+        <div class="md-hero-bar"></div>
+        <div class="md-hero-body">
+          <div class="md-avatar" [class.is-inactive]="m.status === 'inactive'">{{ initial() }}</div>
+          <div class="md-hero-info">
+            <div class="md-hero-title-row">
+              <h1 class="md-name">{{ displayName() }}</h1>
+              <span class="status-badge" [attr.data-status]="m.status">{{ m.status }}</span>
+              <span class="role-badge role-manager">manager</span>
+            </div>
+            <p class="md-handle">&#64;{{ m.username }}</p>
+          </div>
+        </div>
+      </div>
+
+      @if (store.updateErrorMessage()) {
+        <div class="um-form-alert alert-error md-alert" role="alert">
+          <span>{{ store.updateErrorMessage() }}</span>
+          <button type="button" class="md-alert-dismiss" (click)="store.clearUpdateError()" aria-label="Dismiss">×</button>
+        </div>
+      }
+
+      <div class="md-grid">
+
+        <!-- Assigned station -->
+        <section class="card md-card" aria-labelledby="md-station-heading">
+          <h2 id="md-station-heading" class="md-card-title">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3L2 12h3v8h14v-8h3L12 3zm0 2.7l6 5.4V18h-4v-5H10v5H6v-6.9l6-5.4z"/></svg>
+            Assigned station
+          </h2>
+
+          @if (m.station; as st) {
+            <button type="button" class="md-station" (click)="viewStation(st.id)" [attr.aria-label]="'Open ' + st.name">
+              <div class="md-station-icon">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3L2 12h3v8h14v-8h3L12 3zm0 2.7l6 5.4V18h-4v-5H10v5H6v-6.9l6-5.4z"/></svg>
+              </div>
+              <div class="md-station-info">
+                <span class="md-station-name">{{ st.name }}</span>
+                <span class="md-station-code">{{ st.code }} · View station</span>
+              </div>
+              <svg class="md-station-chevron" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+            </button>
+
+            @if (canManage()) {
+              <div class="md-card-actions">
+                <button type="button" class="btn btn-secondary md-danger-text" (click)="askUnassign()" [disabled]="isUpdating()" id="unassign-station-btn">
+                  <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16" aria-hidden="true"><path d="M19 13H5v-2h14v2z"/></svg>
+                  Unassign station
+                </button>
+                <button type="button" class="btn btn-secondary" (click)="openAssign()" [disabled]="isUpdating() || m.status === 'inactive'" id="change-station-btn">
+                  Change station
+                </button>
+              </div>
+            }
+          } @else {
+            <div class="md-empty">
+              <div class="md-station-icon md-station-icon--empty">?</div>
+              <div class="md-station-info">
+                <span class="md-station-name">No station assigned</span>
+                <span class="md-station-code">
+                  @if (m.status === 'inactive') { Inactive managers cannot be assigned. } @else { This manager is not running a station yet. }
+                </span>
+              </div>
+            </div>
+
+            @if (canManage() && m.status === 'active') {
+              <div class="md-card-actions">
+                <button type="button" class="btn btn-primary" (click)="openAssign()" [disabled]="isUpdating()" id="assign-station-btn">
+                  <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16" aria-hidden="true"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                  Assign station
+                </button>
+              </div>
+            }
+          }
+        </section>
+
+        <!-- Contact -->
+        <section class="card md-card" aria-labelledby="md-contact-heading">
+          <h2 id="md-contact-heading" class="md-card-title">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            Contact
+          </h2>
+          <div class="md-row"><span class="md-label">First name</span><span class="md-value">{{ m.firstName || '—' }}</span></div>
+          <div class="md-divider"></div>
+          <div class="md-row"><span class="md-label">Last name</span><span class="md-value">{{ m.lastName || '—' }}</span></div>
+          <div class="md-divider"></div>
+          <div class="md-row">
+            <span class="md-label">Phone</span>
+            <span class="md-value">
+              @if (m.phoneNumber) { <a class="md-link" href="tel:{{ m.phoneNumber }}">{{ m.phoneNumber }}</a> } @else { — }
+            </span>
+          </div>
+          <div class="md-divider"></div>
+          <div class="md-row"><span class="md-label">User ID</span><span class="md-value mono">{{ m.id }}</span></div>
+        </section>
+      </div>
+    </div>
+  }
+</div>
+
+<app-assign-station-modal></app-assign-station-modal>
+
+<app-confirm-dialog [open]="confirmUnassign()" title="Unassign station" confirmLabel="Unassign station" busyLabel="Removing…" [busy]="isUpdating()" (confirmed)="unassign()" (cancelled)="cancelUnassign()">
+  Remove <strong>{{ displayName() }}</strong> from {{ manager()?.station?.name }}? The station will have no manager until another is assigned.
+</app-confirm-dialog>

@@ -1,0 +1,174 @@
+@if (store.isRecordModalOpen()) {
+  <div class="um-modal-backdrop" (click)="onBackdropClick($event)" role="dialog" aria-modal="true" aria-labelledby="rds-title">
+    <div class="um-modal um-modal--xl">
+
+      <div class="um-modal-header">
+        <div class="um-modal-title-group">
+          <div class="um-modal-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+          </div>
+          <div>
+            <h2 id="rds-title" class="um-modal-title">{{ isEditing() ? 'Edit daily readings' : "Record today's sales" }}</h2>
+            <p class="um-modal-subtitle">
+              @if (template(); as t) {
+                {{ t.station.name }} ({{ t.station.code }})
+                @if (!isEditing() && t.lastRecordedOn) { · openings carried from {{ t.lastRecordedOn }} }
+              } @else { Loading station setup… }
+            </p>
+          </div>
+        </div>
+        <button type="button" class="um-modal-close" (click)="onClose()" title="Close" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </div>
+
+      <form class="um-modal-form rds-form" (submit)="onSubmit($event)" novalidate>
+
+        @if (store.saveErrors().length) {
+          <div class="um-form-alert alert-error rds-errors" role="alert">
+            <ul>
+              @for (e of store.saveErrors(); track $index) { <li>{{ e }}</li> }
+            </ul>
+          </div>
+        }
+
+        @if (store.isTemplateLoading()) {
+          <p class="rds-state">Preparing the form…</p>
+        } @else if (store.templateLoadingState() === 'error') {
+          <p class="rds-state rds-state--error">{{ store.templateErrorMessage() }}</p>
+        } @else if (template(); as t) {
+
+          @if (t.pumps.length === 0 || t.reservoirs.length === 0) {
+            <p class="rds-state rds-state--error">
+              This station has no @if (t.pumps.length === 0) { active pumps } @if (t.pumps.length === 0 && t.reservoirs.length === 0) { or } @if (t.reservoirs.length === 0) { reservoirs } yet. Ask a director to set them up before recording sales.
+            </p>
+          } @else {
+            @if (missingPrices().length) {
+              <div class="um-form-alert alert-error" role="alert">
+                No price is set for @for (p of missingPrices(); track p) { {{ label(p) }}{{ $last ? '' : ', ' }} }. A director must set it before the day can be recorded.
+              </div>
+            }
+
+            <!-- Date -->
+            <div class="um-form-row rds-top-row">
+              <div class="um-form-group">
+                <label class="um-form-label" for="rds-date">Trading day</label>
+                <div class="um-input-wrap">
+                  <input id="rds-date" type="date" class="um-form-input um-form-input--plain" [value]="recordedOn()" [max]="today" (change)="setDate($event)" [disabled]="isEditing() || store.isSaving()" required />
+                </div>
+                @if (isEditing()) { <span class="um-form-hint">The day cannot be changed when editing.</span> }
+              </div>
+            </div>
+
+            <!-- Per product -->
+            @for (product of products(); track product) {
+              <fieldset class="rds-product" [attr.data-severity]="summaryFor(product) ? severity(summaryFor(product)!.varianceLitres, summaryFor(product)!.expectedLitres) : 'none'">
+                <legend class="rds-legend">
+                  <span class="um-role-dot" [attr.data-product]="product"></span>
+                  {{ label(product) }}
+                  @if (summaryFor(product)?.price; as price) { <span class="rds-price">{{ price | currency:currencyCode:'symbol':'1.0-2' }}/L</span> }
+                </legend>
+
+                <!-- Reservoir -->
+                @if (tankFor(product); as row) {
+                  <div class="rds-block">
+                    <div class="rds-block-title">Reservoir dip levels <span class="rds-cap">capacity {{ row.tank.capacityLitres | number:'1.0-0' }} L</span></div>
+                    <div class="rds-grid rds-grid--tank">
+                      <label class="rds-field">
+                        <span>Opening level (L)</span>
+                        <input type="number" inputmode="decimal" min="0" step="0.01" [max]="row.tank.capacityLitres" [value]="row.input.opening" (input)="setTank(row.tank.reservoirId, 'opening', $event)" [disabled]="store.isSaving()" required />
+                      </label>
+                      <label class="rds-field">
+                        <span>Delivered (L)</span>
+                        <input type="number" inputmode="decimal" min="0" step="0.01" [value]="row.input.delivered" (input)="setTank(row.tank.reservoirId, 'delivered', $event)" [disabled]="store.isSaving()" />
+                      </label>
+                      <label class="rds-field">
+                        <span>Closing level (L)</span>
+                        <input type="number" inputmode="decimal" min="0" step="0.01" [max]="row.tank.capacityLitres" [value]="row.input.closing" (input)="setTank(row.tank.reservoirId, 'closing', $event)" [disabled]="store.isSaving()" required />
+                      </label>
+                      <div class="rds-computed">
+                        <span>Expected sold</span>
+                        <strong>{{ row.expected !== null ? (row.expected | number:'1.0-0') + ' L' : '—' }}</strong>
+                      </div>
+                    </div>
+                    @if (row.error) { <span class="um-form-error">{{ row.error }}</span> }
+                  </div>
+                } @else {
+                  <p class="rds-missing">No reservoir for this product: expected sales cannot be computed.</p>
+                }
+
+                <!-- Pumps -->
+                <div class="rds-block">
+                  <div class="rds-block-title">Pump meter readings</div>
+                  @if (pumpsFor(product).length === 0) {
+                    <p class="rds-missing">No active pumps sell this product.</p>
+                  }
+                  @for (row of pumpsFor(product); track row.pump.pumpId) {
+                    <div class="rds-pump" [class.has-error]="row.error">
+                      <div class="rds-pump-name">{{ row.pump.name }}</div>
+                      <div class="rds-grid rds-grid--pump">
+                        <label class="rds-field">
+                          <span>Opening</span>
+                          <input type="number" inputmode="decimal" min="0" step="0.01" [value]="row.input.opening" (input)="setPump(row.pump.pumpId, 'opening', $event)" [disabled]="store.isSaving()" required />
+                        </label>
+                        <label class="rds-field">
+                          <span>Closing</span>
+                          <input type="number" inputmode="decimal" min="0" step="0.01" [value]="row.input.closing" (input)="setPump(row.pump.pumpId, 'closing', $event)" [disabled]="store.isSaving()" required />
+                        </label>
+                        <div class="rds-computed">
+                          <span>Sold</span>
+                          <strong>{{ row.litres !== null ? (row.litres | number:'1.0-0') + ' L' : '—' }}</strong>
+                        </div>
+                        <div class="rds-computed">
+                          <span>Amount</span>
+                          <strong>{{ row.amount !== null ? (row.amount | currency:currencyCode:'symbol':'1.0-0') : '—' }}</strong>
+                        </div>
+                      </div>
+                      @if (row.error) { <span class="um-form-error">{{ row.error }}</span> }
+                    </div>
+                  }
+                </div>
+
+                <!-- Product summary -->
+                @if (summaryFor(product); as s) {
+                  <div class="rds-summary">
+                    <div><span>Expected</span><strong>{{ s.expectedLitres !== null ? (s.expectedLitres | number:'1.0-0') + ' L' : '—' }}</strong></div>
+                    <div><span>Actual</span><strong>{{ s.actualLitres | number:'1.0-0' }} L</strong></div>
+                    <div>
+                      <span>Variance</span>
+                      <strong class="variance-text" [attr.data-severity]="severity(s.varianceLitres, s.expectedLitres)">
+                        {{ s.varianceLitres !== null ? sign(s.varianceLitres) + (s.varianceLitres | number:'1.0-0') + ' L' : '—' }}
+                      </strong>
+                    </div>
+                    <div><span>Actual ₦</span><strong>{{ s.actualAmount | currency:currencyCode:'symbol':'1.0-0' }}</strong></div>
+                  </div>
+                }
+              </fieldset>
+            }
+
+            <!-- Notes -->
+            <div class="um-form-group">
+              <label class="um-form-label" for="rds-notes">Notes <span class="um-form-optional">(optional)</span></label>
+              <div class="um-input-wrap">
+                <textarea id="rds-notes" class="um-form-input um-form-textarea um-form-textarea--short" placeholder="Anything unusual today: a delivery, a pump fault, a power cut…" [value]="notes()" (input)="setNotes($event)" maxlength="1000" [disabled]="store.isSaving()"></textarea>
+              </div>
+            </div>
+
+            <!-- Day totals -->
+            <div class="rds-day-totals">
+              <div><span>Day actual</span><strong>{{ totals().actualAmount | currency:currencyCode:'symbol':'1.0-0' }}</strong><small>{{ totals().actualLitres | number:'1.0-0' }} L</small></div>
+              <div><span>Day expected</span><strong>{{ totals().expectedAmount !== null ? (totals().expectedAmount | currency:currencyCode:'symbol':'1.0-0') : '—' }}</strong><small>{{ totals().expectedLitres !== null ? (totals().expectedLitres | number:'1.0-0') + ' L' : '' }}</small></div>
+            </div>
+          }
+        }
+
+        <div class="um-modal-actions">
+          <button type="button" class="btn btn-secondary" (click)="onClose()" [disabled]="store.isSaving()">Cancel</button>
+          <button type="submit" class="btn btn-primary um-submit-btn" [disabled]="!isComplete() || store.isSaving()" id="submit-daily-record-btn">
+            @if (store.isSaving()) { <span class="btn-spinner"></span> Saving… } @else { {{ isEditing() ? 'Save changes' : 'Submit day' }} }
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

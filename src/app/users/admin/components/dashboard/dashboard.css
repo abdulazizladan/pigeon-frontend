@@ -1,0 +1,74 @@
+/* =============================================
+   Admin – Dashboard
+   ============================================= */
+
+.ad-page {
+  padding: 8px 0 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.ad-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.ad-title {
+  margin: 0 0 4px;
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--text-primary);
+}
+
+.ad-subtitle {
+  margin: 0;
+  font-size: 15px;
+  color: var(--text-secondary);
+}
+
+.ad-section {
+  margin-bottom: 32px;
+}
+
+.ad-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.ad-section-title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.ad-section-link {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--brand-primary);
+  text-decoration: none;
+}
+
+.ad-section-link:hover {
+  text-decoration: underline;
+}
+
+.ad-error {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px;
+  color: var(--brand-danger);
+  font-weight: 600;
+}
+
+.stats-cards-container.is-loading .stat-value {
+  color: var(--text-secondary);
+}
