@@ -5,6 +5,7 @@ import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { pipe, switchMap, tap, catchError, EMPTY } from 'rxjs';
 import { UsersManagementService } from '../services/users-management.service';
 import { User, CreateUserPayload, fullName } from '../models/user.model';
+import { Activity } from '../models/activity.model';
 
 export type LoadingState = 'idle' | 'loading' | 'success' | 'error';
 
@@ -17,6 +18,12 @@ export interface UsersState {
   errorMessage: string | null;
   createErrorMessage: string | null;
   isAddUserModalOpen: boolean;
+  /** Activity timeline for the user currently being viewed. */
+  activitiesUserId: string | null;
+  activities: Activity[];
+  activitiesLoadingState: LoadingState;
+  activitiesErrorMessage: string | null;
+  activitiesHasMore: boolean;
 }
 
 const initialState: UsersState = {
@@ -28,7 +35,14 @@ const initialState: UsersState = {
   errorMessage: null,
   createErrorMessage: null,
   isAddUserModalOpen: false,
+  activitiesUserId: null,
+  activities: [],
+  activitiesLoadingState: 'idle',
+  activitiesErrorMessage: null,
+  activitiesHasMore: false,
 };
+
+const ACTIVITY_PAGE = 30;
 
 export const UsersStore = signalStore(
   { providedIn: 'root' },
@@ -72,6 +86,67 @@ export const UsersStore = signalStore(
     selectUser(user: User | null) {
       patchState(store, { selectedUser: user });
     },
+
+    /** Loads the first page of a user's activities, newest first. */
+    loadActivities: rxMethod<string>(
+      pipe(
+        tap((userId) =>
+          patchState(store, {
+            activitiesUserId: userId,
+            activities: [],
+            activitiesHasMore: false,
+            activitiesLoadingState: 'loading',
+            activitiesErrorMessage: null,
+          }),
+        ),
+        switchMap((userId) =>
+          service.getUserActivities(userId, ACTIVITY_PAGE).pipe(
+            tap((activities) =>
+              patchState(store, {
+                activities,
+                activitiesHasMore: activities.length === ACTIVITY_PAGE,
+                activitiesLoadingState: 'success',
+              }),
+            ),
+            catchError((err) => {
+              patchState(store, {
+                activitiesLoadingState: 'error',
+                activitiesErrorMessage: err?.error?.message ?? 'Failed to load activity.',
+              });
+              return EMPTY;
+            }),
+          ),
+        ),
+      ),
+    ),
+
+    /** Appends the next (older) page using the oldest loaded timestamp as the cursor. */
+    loadMoreActivities: rxMethod<void>(
+      pipe(
+        switchMap(() => {
+          const userId = store.activitiesUserId();
+          const oldest = store.activities().at(-1);
+          if (!userId || !oldest || store.activitiesLoadingState() === 'loading') return EMPTY;
+          patchState(store, { activitiesLoadingState: 'loading', activitiesErrorMessage: null });
+          return service.getUserActivities(userId, ACTIVITY_PAGE, oldest).pipe(
+            tap((more) =>
+              patchState(store, (state) => ({
+                activities: [...state.activities, ...more],
+                activitiesHasMore: more.length === ACTIVITY_PAGE,
+                activitiesLoadingState: 'success' as LoadingState,
+              })),
+            ),
+            catchError((err) => {
+              patchState(store, {
+                activitiesLoadingState: 'error',
+                activitiesErrorMessage: err?.error?.message ?? 'Failed to load more activity.',
+              });
+              return EMPTY;
+            }),
+          );
+        }),
+      ),
+    ),
 
     loadUsers: rxMethod<void>(
       pipe(

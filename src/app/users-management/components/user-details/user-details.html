@@ -183,6 +183,50 @@
         </div>
       </div>
 
+      <!-- Recent activity (admin only) -->
+      @if (canViewActivity()) {
+        <section class="ud-activity card" aria-labelledby="ud-activity-heading">
+          <div class="ud-activity-header">
+            <h2 id="ud-activity-heading" class="ud-card-title">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13 3a9 9 0 0 0-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42A8.954 8.954 0 0 0 13 21a9 9 0 0 0 0-18zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg>
+              Recent activity
+            </h2>
+            <button type="button" class="btn btn-secondary ud-mini-btn" (click)="reloadActivities()" [disabled]="activitiesLoading()">Refresh</button>
+          </div>
+
+          @if (activitiesLoading() && activities().length === 0) {
+            <p class="ud-activity-state">Loading activity…</p>
+          } @else if (activitiesError()) {
+            <p class="ud-activity-state ud-activity-state--error">{{ activitiesError() }}</p>
+          } @else if (activities().length === 0) {
+            <p class="ud-activity-state">No activity recorded for this user yet. Sign-ins and changes they make will appear here.</p>
+          } @else {
+            <ol class="ud-timeline">
+              @for (a of activities(); track trackActivity($index, a)) {
+                <li class="ud-timeline-item" [attr.data-group]="group(a)">
+                  <span class="ud-timeline-dot" aria-hidden="true"></span>
+                  <div class="ud-timeline-body">
+                    <p class="ud-timeline-text">
+                      {{ a.description }}
+                      @if (targetLink(a); as link) {
+                        <a class="ud-timeline-link" [routerLink]="link">{{ a.targetLabel || 'View' }} →</a>
+                      }
+                    </p>
+                    <time class="ud-timeline-time" [attr.datetime]="a.createdAt" [title]="a.createdAt | date:'medium'">{{ when(a) }}</time>
+                  </div>
+                </li>
+              }
+            </ol>
+            @if (activitiesHasMore()) {
+              <div class="ud-activity-more">
+                <button type="button" class="btn btn-secondary" (click)="loadMoreActivities()" [disabled]="activitiesLoading()">
+                  {{ activitiesLoading() ? 'Loading…' : 'Load older activity' }}
+                </button>
+              </div>
+            }
+          }
+        </section>
+      }
     </div>
   }
 </div>

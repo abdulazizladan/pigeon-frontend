@@ -416,3 +416,117 @@ html.dark .ud-inline-badge[data-role="manager"] {
   color: var(--brand-primary);
   text-decoration: underline;
 }
+
+/* ---- Activity timeline ---- */
+.ud-activity {
+  margin-top: 16px;
+  padding: 20px;
+}
+
+.ud-activity-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.ud-activity-header .ud-card-title {
+  margin: 0;
+}
+
+.ud-mini-btn {
+  height: 28px;
+  padding: 0 10px;
+  font-size: 12px;
+}
+
+.ud-activity-state {
+  margin: 8px 0 0;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.ud-activity-state--error {
+  color: var(--brand-danger);
+  font-weight: 600;
+}
+
+.ud-timeline {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0 0 0 4px;
+  position: relative;
+}
+
+.ud-timeline::before {
+  content: '';
+  position: absolute;
+  left: 9px;
+  top: 6px;
+  bottom: 6px;
+  width: 2px;
+  background-color: var(--border-divider);
+}
+
+.ud-timeline-item {
+  position: relative;
+  display: flex;
+  gap: 14px;
+  padding: 6px 0 14px;
+}
+
+.ud-timeline-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-top: 4px;
+  flex-shrink: 0;
+  background-color: var(--text-secondary);
+  box-shadow: 0 0 0 3px var(--bg-secondary);
+  z-index: 1;
+}
+
+.ud-timeline-item[data-group="auth"] .ud-timeline-dot { background-color: var(--text-secondary); }
+.ud-timeline-item[data-group="user"] .ud-timeline-dot { background-color: #7928ca; }
+.ud-timeline-item[data-group="station"] .ud-timeline-dot { background-color: #1baf7a; }
+.ud-timeline-item[data-group="equipment"] .ud-timeline-dot { background-color: var(--brand-warning); }
+.ud-timeline-item[data-group="sales"] .ud-timeline-dot { background-color: var(--brand-primary); }
+.ud-timeline-item[data-group="ticket"] .ud-timeline-dot { background-color: var(--brand-danger); }
+
+.ud-timeline-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.ud-timeline-text {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--text-primary);
+}
+
+.ud-timeline-link {
+  margin-left: 6px;
+  color: var(--brand-primary);
+  text-decoration: none;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.ud-timeline-link:hover {
+  text-decoration: underline;
+}
+
+.ud-timeline-time {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.ud-activity-more {
+  display: flex;
+  justify-content: center;
+  padding-top: 4px;
+}

@@ -4,6 +4,7 @@ import { UsersStore } from '../../store/users.store';
 import { AuthStore } from '../../../auth/store/auth.store';
 import { ThemeService } from '../../../theme.service';
 import { User, fullName } from '../../models/user.model';
+import { Activity, activityGroup, relativeTime } from '../../models/activity.model';
 
 @Component({
   selector: 'app-user-details',
@@ -28,6 +29,14 @@ export class UserDetailsComponent implements OnInit {
   protected readonly loadError = computed(() => this.store.loadingState() === 'error' ? this.store.errorMessage() : null);
 
   protected readonly currentUser = this.auth.user;
+  /** Only admins may read another user's activity log. */
+  protected readonly canViewActivity = computed(() => this.auth.role() === 'admin');
+  protected readonly activities = this.store.activities;
+  protected readonly activitiesHasMore = this.store.activitiesHasMore;
+  protected readonly activitiesLoading = computed(() => this.store.activitiesLoadingState() === 'loading');
+  protected readonly activitiesError = computed(() =>
+    this.store.activitiesLoadingState() === 'error' ? this.store.activitiesErrorMessage() : null,
+  );
 
   protected get theme() {
     return this.themeService.theme;
@@ -38,6 +47,40 @@ export class UserDetailsComponent implements OnInit {
     if (this.store.loadingState() === 'idle') {
       this.store.loadUsers();
     }
+    if (this.canViewActivity() && this.userId()) {
+      this.store.loadActivities(this.userId());
+    }
+  }
+
+  protected reloadActivities() {
+    this.store.loadActivities(this.userId());
+  }
+
+  protected loadMoreActivities() {
+    this.store.loadMoreActivities();
+  }
+
+  protected group(activity: Activity): string {
+    return activityGroup(activity.action);
+  }
+
+  protected when(activity: Activity): string {
+    return relativeTime(activity.createdAt);
+  }
+
+  /** Where a timeline entry can link to inside the current shell, if anywhere. */
+  protected targetLink(activity: Activity): string[] | null {
+    if (!activity.targetId) return null;
+    switch (activity.targetType) {
+      case 'station': return ['../..', 'stations', activity.targetId];
+      case 'user': return ['..', activity.targetId];
+      case 'ticket': return ['../..', 'tickets'];
+      default: return null;
+    }
+  }
+
+  protected trackActivity(_: number, activity: Activity): string {
+    return activity.id;
   }
 
   protected goBack() {
