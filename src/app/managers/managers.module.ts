@@ -4,10 +4,16 @@ import { ManagersRoutingModule } from './managers-routing.module';
 import { ManagersListComponent } from './components/managers-list/managers-list';
 import { ManagerDetailsComponent } from './components/manager-details/manager-details';
 import { AssignStationModalComponent } from './components/assign-station-modal/assign-station-modal';
+import { AddManagerModalComponent } from './components/add-manager-modal/add-manager-modal';
 import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog';
 
 @NgModule({
-  declarations: [ManagersListComponent, ManagerDetailsComponent, AssignStationModalComponent],
+  declarations: [
+    ManagersListComponent,
+    ManagerDetailsComponent,
+    AssignStationModalComponent,
+    AddManagerModalComponent,
+  ],
   imports: [CommonModule, ManagersRoutingModule, ConfirmDialogComponent],
 })
 export class ManagersModule {}

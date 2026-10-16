@@ -61,6 +61,17 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  flex-wrap: wrap;
+}
+
+.mg-add-btn {
+  gap: 8px;
+  height: 40px;
+  padding: 0 18px;
+  border-radius: 20px;
+  font-size: 14px;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(24, 119, 242, 0.3);
 }
 
 .mg-search-wrap {
@@ -79,6 +90,7 @@
 }
 
 .mg-search-input {
+  box-sizing: border-box;
   height: 40px;
   padding: 0 40px;
   width: 340px;
@@ -190,7 +202,12 @@
   }
 
   .mg-search-wrap,
-  .mg-search-input {
+  .mg-search-input,
+  .mg-add-btn {
     width: 100%;
+  }
+
+  .mg-add-btn {
+    justify-content: center;
   }
 }

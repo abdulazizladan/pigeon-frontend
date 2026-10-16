@@ -3,7 +3,7 @@ import { signalStore, withState, withComputed, withMethods, patchState } from '@
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { pipe, switchMap, tap, catchError, EMPTY, mergeMap } from 'rxjs';
 import { ManagersService } from '../services/managers.service';
-import { Manager } from '../models/manager.model';
+import { CreateManagerPayload, Manager } from '../models/manager.model';
 import { StationsService } from '../../stations/services/stations.service';
 import { Station } from '../../stations/models/station.model';
 import { fullName } from '../../users-management/models/user.model';
@@ -19,6 +19,9 @@ export interface ManagersState {
   assignModalManagerId: string | null;
   updatingManagerIds: string[];
   updateErrorMessage: string | null;
+  isAddManagerModalOpen: boolean;
+  createLoadingState: LoadingState;
+  createErrorMessage: string | null;
 }
 
 const initialState: ManagersState = {
@@ -29,6 +32,9 @@ const initialState: ManagersState = {
   assignModalManagerId: null,
   updatingManagerIds: [],
   updateErrorMessage: null,
+  isAddManagerModalOpen: false,
+  createLoadingState: 'idle',
+  createErrorMessage: null,
 };
 
 function apiErrorMessage(err: any, fallback: string): string {
@@ -84,6 +90,38 @@ export const ManagersStore = signalStore(
     isUpdating(id: string): boolean {
       return store.updatingManagerIds().includes(id);
     },
+
+    openAddManagerModal() {
+      patchState(store, { isAddManagerModalOpen: true, createErrorMessage: null, createLoadingState: 'idle' });
+    },
+
+    closeAddManagerModal() {
+      patchState(store, { isAddManagerModalOpen: false, createErrorMessage: null, createLoadingState: 'idle' });
+    },
+
+    createManager: rxMethod<CreateManagerPayload>(
+      pipe(
+        tap(() => patchState(store, { createLoadingState: 'loading', createErrorMessage: null })),
+        switchMap((payload) =>
+          service.createManager(payload).pipe(
+            tap((manager) =>
+              patchState(store, (state) => ({
+                managers: [...state.managers, manager].sort((a, b) => a.username.localeCompare(b.username)),
+                createLoadingState: 'success' as LoadingState,
+                isAddManagerModalOpen: false,
+              })),
+            ),
+            catchError((err) => {
+              let msg = apiErrorMessage(err, 'Could not create the manager. Please try again.');
+              if (err?.status === 409) msg = 'Username already exists.';
+              else if (err?.status === 403) msg = 'You are not allowed to create managers.';
+              patchState(store, { createLoadingState: 'error', createErrorMessage: msg });
+              return EMPTY;
+            }),
+          ),
+        ),
+      ),
+    ),
 
     openAssignStationModal(managerId: string) {
       patchState(store, { assignModalManagerId: managerId, updateErrorMessage: null });

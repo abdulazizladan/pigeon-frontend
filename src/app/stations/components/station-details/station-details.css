@@ -195,21 +195,25 @@
 .sd-row {
   display: flex;
   justify-content: space-between;
-  gap: 16px;
+  align-items: flex-start;
+  gap: 12px 16px;
   padding: 8px 0;
   font-size: 14px;
 }
 
 .sd-label {
   color: var(--text-secondary);
-  flex-shrink: 0;
+  flex: 0 0 auto;
+  min-width: 0;
 }
 
 .sd-value {
   color: var(--text-primary);
   font-weight: 600;
   text-align: right;
-  word-break: break-word;
+  overflow-wrap: anywhere;
+  min-width: 0;
+  flex: 1 1 auto;
 }
 
 .sd-value.mono {
@@ -303,6 +307,29 @@
 
   .sd-hero-body {
     flex-direction: column;
+    padding: 20px 16px;
+  }
+
+  .sd-card {
+    padding: 16px;
+  }
+
+  .sd-name {
+    font-size: 21px;
+  }
+
+  /* Plain info rows stack label over value so long addresses and ids read naturally */
+  .sd-row:not(.sd-row--equipment) {
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .sd-row:not(.sd-row--equipment) .sd-value {
+    text-align: left;
+  }
+
+  .sd-card-actions {
+    flex-wrap: wrap;
   }
 }
 
@@ -343,8 +370,21 @@
   color: var(--text-secondary);
 }
 
+/* Equipment rows: the label keeps its line; the badge/button group stays on one line and
+   drops below the label, right-aligned, when the card is too narrow for both. */
 .sd-row--equipment {
   align-items: center;
+  flex-wrap: wrap;
+}
+
+.sd-row--equipment .sd-label {
+  flex: 1 1 140px;
+}
+
+.sd-row--equipment .sd-value,
+.sd-row--equipment .sd-inline-edit {
+  flex: 0 1 auto;
+  margin-left: auto;
 }
 
 .sd-row--equipment.is-off {
@@ -376,7 +416,15 @@
 .sd-value--actions {
   display: inline-flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 8px;
+  white-space: nowrap;
+}
+
+.sd-value--actions .btn,
+.sd-value--actions .status-badge {
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .sd-row-action--danger {
@@ -394,11 +442,14 @@
 .sd-inline-edit {
   display: inline-flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 6px;
+  flex-wrap: wrap;
 }
 
 .sd-inline-input {
-  width: 120px;
+  width: 96px;
+  box-sizing: border-box;
   height: 30px;
   padding: 0 8px;
   border-radius: 6px;
@@ -413,6 +464,17 @@
   height: 28px;
   padding: 0 10px;
   font-size: 12px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Card titles with an action button next to them */
+.sd-card-title-row {
+  flex-wrap: wrap;
+}
+
+.sd-card-title-row .sd-card-title {
+  min-width: 0;
 }
 
 .sd-hint {

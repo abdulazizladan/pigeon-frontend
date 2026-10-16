@@ -1,6 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ManagersStore } from '../../store/managers.store';
+import { AuthStore } from '../../../auth/store/auth.store';
 import { Manager } from '../../models/manager.model';
 import { fullName } from '../../../users-management/models/user.model';
 
@@ -12,7 +13,11 @@ import { fullName } from '../../../users-management/models/user.model';
 })
 export class ManagersListComponent implements OnInit {
   protected readonly store = inject(ManagersStore);
+  private readonly auth = inject(AuthStore);
   private readonly router = inject(Router);
+
+  /** Admins and directors may create managers; the backend enforces the same rule. */
+  protected readonly canCreate = this.auth.canManageUsers;
   private readonly route = inject(ActivatedRoute);
 
   ngOnInit() {
@@ -21,6 +26,10 @@ export class ManagersListComponent implements OnInit {
 
   protected onSearch(event: Event) {
     this.store.setSearchQuery((event.target as HTMLInputElement).value);
+  }
+
+  protected openAddManager() {
+    this.store.openAddManagerModal();
   }
 
   protected viewManager(id: string) {

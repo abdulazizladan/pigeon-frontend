@@ -10,3 +10,12 @@ export interface ManagerStationRef {
 export interface Manager extends User {
   station: ManagerStationRef | null;
 }
+
+/** Body for POST /managers: a user without the role, which is always manager. */
+export interface CreateManagerPayload {
+  username: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber?: string;
+  password: string;
+}

@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { Manager } from '../models/manager.model';
+import { CreateManagerPayload, Manager } from '../models/manager.model';
 import { UserStatus } from '../../users-management/models/user.model';
 
 /** HTTP layer for /managers. The Authorization header is attached by authInterceptor. */
@@ -14,5 +14,9 @@ export class ManagersService {
   getManagers(status?: UserStatus): Observable<Manager[]> {
     const params = status ? new HttpParams().set('status', status) : undefined;
     return this.http.get<Manager[]>(this.baseUrl, { params });
+  }
+
+  createManager(payload: CreateManagerPayload): Observable<Manager> {
+    return this.http.post<Manager>(this.baseUrl, payload);
   }
 }

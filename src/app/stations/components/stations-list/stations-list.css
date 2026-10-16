@@ -81,6 +81,7 @@
 }
 
 .st-search-input {
+  box-sizing: border-box;
   height: 40px;
   padding: 0 40px;
   width: 320px;
@@ -160,19 +161,39 @@
   to { transform: rotate(360deg); }
 }
 
-/* Table cells */
-.st-row {
-  cursor: pointer;
+/* Table: fixed layout so long names, descriptions and addresses wrap inside their
+   column instead of stretching the table sideways and crushing the other columns. */
+.st-table {
+  table-layout: fixed;
+  width: 100%;
+  min-width: 720px; /* below this the wrapper scrolls horizontally instead of squeezing */
 }
 
-.st-cell-name {
-  min-width: 220px;
-  max-width: 360px;
+.st-col-station { width: 34%; }
+.st-col-location { width: 30%; }
+.st-col-status { width: 17%; }
+.st-col-manager { width: 19%; }
+.st-col-actions { width: 56px; }
+
+.st-table th,
+.st-table td {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  vertical-align: top;
+}
+
+.st-table thead th {
+  white-space: nowrap;
+}
+
+.st-row {
+  cursor: pointer;
 }
 
 .st-cell-name .cell-primary,
 .st-address {
   display: block;
+  line-height: 1.35;
 }
 
 .st-code {
@@ -183,19 +204,34 @@
   color: var(--text-secondary);
 }
 
+/* Two-line clamp keeps rows compact while still showing the gist of the description. */
 .st-description {
-  display: block;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
   margin-top: 4px;
   font-size: 13px;
+  line-height: 1.4;
   color: var(--text-secondary);
-  overflow: hidden;
-  text-overflow: ellipsis;
+}
+
+.st-cell-location .cell-muted {
+  display: block;
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.st-table .status-badge {
   white-space: nowrap;
 }
 
-.st-cell-location {
-  min-width: 200px;
-  max-width: 320px;
+.st-table .cell-mono {
+  word-break: break-all;
+}
+
+.st-table .data-td-actions {
+  vertical-align: middle;
 }
 
 .st-results-count {

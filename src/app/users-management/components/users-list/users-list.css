@@ -82,6 +82,7 @@
 }
 
 .um-search-input {
+  box-sizing: border-box;
   height: 40px;
   padding: 0 40px 0 40px;
   width: 280px;
