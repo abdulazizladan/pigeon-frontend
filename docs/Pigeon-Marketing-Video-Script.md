@@ -1,6 +1,6 @@
 # Pigeon Fuel Stations Management App — Marketing Video Script
 
-Production guide for a 90-second hero video, with a 30-second social cut.
+Production guide for a 100-second hero video, with a 30-second social cut. Revision 2 adds the tank-level, health-check and repair-request beats.
 
 ---
 
@@ -10,8 +10,8 @@ Production guide for a 90-second hero video, with a 30-second social cut.
 |---|---|
 | **Goal** | Convince owners and directors of Nigerian fuel marketing companies to request a demo. |
 | **Audience** | Owners, directors and operations leads of independent and mid-sized marketers running 3 to 50 stations. Secondary: their IT partners. |
-| **Core message** | Every day, your tanks and your pumps tell two stories. Pigeon shows you when they disagree, and why. |
-| **Length** | Hero: 90 seconds. Social cut: 30 seconds. Both 16:9; export a 9:16 crop of the social cut for WhatsApp status and Instagram. |
+| **Core message** | Every day, your tanks and your pumps tell two stories. Pigeon shows you when they disagree, and why. And it tells you what is left in the tanks and what is broken, before anyone has to call. |
+| **Length** | Hero: 100 seconds. Social cut: 30 seconds. Both 16:9; export a 9:16 crop of the social cut for WhatsApp status and Instagram. |
 | **Tone** | Calm, confident, practical. Speaks like an experienced operator, not a startup pitch. No hype, no made-up statistics. |
 | **Language** | English voiceover with a Nigerian voice. Optional Pidgin line in the hook (marked below). |
 | **Call to action** | "Request a demo" with the sales phone number and website on screen. |
@@ -30,6 +30,8 @@ Record all screens against a clean demo database. Do not show real customer data
 - [ ] Set prices to current street prices on the day of recording (PMS, AGO, DPK in ₦/litre).
 - [ ] Prepare one station with a deliberate variance: record a day where petrol Pump 2 sold about 4% less than the reservoir drop, so the review band shows amber on the product and red on that pump. This is the "reveal" shot.
 - [ ] Prepare a director account that has at least 30 days of records so the sales chart has a shape.
+- [ ] Record end-of-day tank levels so the gauges and the stations-list chips show all three colours: one station well stocked (green, above 75%), one moderate (amber), and one with a tank below 25% (red).
+- [ ] Record a health check at the pilot station with one pump marked Faulty ("nozzle leaks"), then raise a repair request from it with High / urgent priority, left pending for the director to decide on camera.
 - [ ] Browser: hide bookmarks bar, use a neutral profile, no extensions, cursor visible and slowed in post.
 - [ ] Phone recording: Android, screen recording at 1080p, in portrait, for the manager scenes. Clean the status bar (airplane mode off, full battery, no notifications).
 
@@ -47,6 +49,11 @@ Record all screens against a clean demo database. Do not show real customer data
 | S8 | `/admin/users` → click the director → Recent activity | Timeline showing "Set Petrol (PMS) price…", "Signed in", etc. |
 | S9 | `/director/stations` → Add Station modal | Choose a state from the dropdown, type an LGA |
 | S10 | Dark mode toggle on the manager phone | For the night-shift beat |
+| S11 | `/director/stations` (table) | Slow pan across the Reservoirs column: green, amber and red percentage chips; hover one for the litres tooltip |
+| S12 | Phone: `/manager/my-station` → Reservoir levels → "Record end-of-day levels" | Type a level; the tank fills as the number changes; save; gauge updates with "≈ N days of stock" |
+| S13 | Phone: `/manager/health` → "Record today's check" | Tap Pump 2 to Faulty, type "nozzle leaks", save; then "Request repair" on that pump, pick High / urgent, send |
+| S14 | Desktop: `/director/repairs` → Decide | The pending request with its priority badge; choose Authorize repair, type a note ("Call the Lekki technician; budget approved"), submit; status flips to Authorized |
+| S15 | Desktop: station details → Sales performance | Switch the period chips (30 days → 90 days); the line redraws |
 
 ### Live footage (B-roll)
 
@@ -59,6 +66,8 @@ Half a day with a two-person crew at a cooperating station. Get written permissi
 - Director in an office or car looking at a laptop or phone.
 - Tanker arriving, hose connected (for the "delivered litres" beat).
 - Price board being changed by hand (for the "prices move" beat).
+- A pump with an "out of order" rag tied to the nozzle, and a technician's hand on an open pump panel (for the "faults" beat).
+- Tank hatch being opened at dusk, dip stick going in (for the "what is left" beat).
 
 ### Other assets
 
@@ -70,9 +79,9 @@ Half a day with a two-person crew at a cooperating station. Get written permissi
 
 ---
 
-## 3. Hero video script (90 seconds)
+## 3. Hero video script (100 seconds)
 
-Timings are targets. Keep total under 95 seconds.
+Timings are targets. Keep total under 105 seconds.
 
 ### Scene 1 — The two stories (0:00–0:12)
 
@@ -177,7 +186,25 @@ Timings are targets. Keep total under 95 seconds.
 
 ---
 
-### Scene 8 — Built for here, built to be trusted (1:14–1:24)
+### Scene 7b — What is left, and what is broken (1:14–1:30)
+
+**Visual:** Live: tank hatch opened at dusk, dip stick going in. Cut to S12 on the phone: the manager types the level and the tank gauge fills. Cut to S11 on desktop: the stations list, a slow pan across green, amber and red chips, settling on a red one. Cut to live: the rag on the pump nozzle. Cut to S13: Pump 2 tapped to Faulty, "Request repair", High / urgent. Cut to S14: the director picks Authorize repair, types the note, the badge flips to Authorized.
+
+**On-screen text (one per cut):**
+> Every tank, every station, at a glance
+> A faulty pump becomes a request in two taps
+> Authorized. With a note. On record.
+
+**VO:**
+> And Pigeon watches more than the sales.
+> At close of day the manager dips the tanks, and head office sees every station's stock in one glance: green, amber, red, and how many days are left.
+> When a pump is faulty, the manager says so on the daily check and asks for a repair in two taps. The director authorizes it, denies it, or holds it, with a note, and the whole trail stays on record.
+
+**SFX:** soft tick as each chip colour passes; a short, warm chime when the status flips to Authorized.
+
+---
+
+### Scene 8 — Built for here, built to be trusted (1:30–1:40)
 
 **Visual:** Quick cuts: S9 state dropdown scrolling (Abia… Lagos… Zamfara), LGA typed; S8 the activity timeline ("Set Petrol (PMS) price to ₦…", "Signed in", "Assigned @amina_yusuf to Wuse Station"); S10 dark mode toggle on the phone at night.
 
@@ -193,7 +220,7 @@ Timings are targets. Keep total under 95 seconds.
 
 ---
 
-### Scene 9 — Call to action (1:24–1:32)
+### Scene 9 — Call to action (1:40–1:48)
 
 **Visual:** Live: director closes the laptop, looks up, relaxed. Cut to end card: logo, product name, one line, contact details.
 
@@ -219,8 +246,9 @@ Same footage, tighter. For WhatsApp status, Instagram and LinkedIn. Burn in capt
 | 0:00–0:05 | Totaliser ticking, dip stick reading | Your pumps say one number. Your tanks say another. | Your pumps say one number. Your tanks say another. |
 | 0:05–0:10 | Notebook, blurry WhatsApp photo | Who's checking the difference? | Most stations never check the difference. |
 | 0:10–0:17 | Manager phone: form filling, variance updating live | One form at close of day. Expected vs actual, as you type. | Pigeon turns one form at close of day into expected versus actual, per pump. |
-| 0:17–0:24 | Desktop: expanded record, push to the red Pump 2 variance | Variance, per pump, per product, per day. | So the director sees exactly which pump, which product, which day. |
-| 0:24–0:30 | End card | Pigeon · Request a demo · [phone] · [website] | Pigeon. Expected versus actual, every pump, every day. Request a demo. |
+| 0:17–0:22 | Desktop: expanded record, push to the red Pump 2 variance | Variance, per pump, per product, per day. | So the director sees exactly which pump, which product, which day. |
+| 0:22–0:26 | Stations list: pan across green, amber, red tank chips; cut to the repair decision flipping to Authorized | Every tank at a glance. Every fault answered. | And every tank's stock, and every fault, answered on record. |
+| 0:26–0:30 | End card | Pigeon · Request a demo · [phone] · [website] | Pigeon. Request a demo. |
 
 ---
 
@@ -242,11 +270,15 @@ Read at a measured pace, about 140 words per minute. Pauses marked with `/`.
 >
 > The next morning the director sees exactly where the two stories disagree. / Not "petrol is short this month". / Pump 2, yesterday, by this many litres.
 >
+> And Pigeon watches more than the sales. / At close of day the manager dips the tanks, and head office sees every station's stock in one glance: / green, amber, red, / and how many days are left.
+>
+> When a pump is faulty, the manager says so on the daily check and asks for a repair in two taps. / The director authorizes it, denies it, or holds it, with a note, / and the whole trail stays on record.
+>
 > Nigerian addresses, Nigerian products, Naira throughout. / A record of who changed what and when. / No hardware at the station, nothing to install, and it runs on the phone your manager already has.
 >
 > Pigeon. / Expected versus actual, every pump, every day. / Request a demo today, and see your network the way it really is.
 
-Word count: about 230. Fits 90 seconds with room for the pauses.
+Word count: about 300. Fits 100 seconds at a measured pace with room for the pauses.
 
 ---
 
@@ -266,7 +298,7 @@ Word count: about 230. Fits 90 seconds with room for the pauses.
 
 | File | Spec |
 |---|---|
-| `pigeon-hero-90s.mp4` | 1920×1080, H.264, 25 fps, stereo, with SRT |
+| `pigeon-hero-100s.mp4` | 1920×1080, H.264, 25 fps, stereo, with SRT |
 | `pigeon-social-30s-16x9.mp4` | 1920×1080, burned-in captions |
 | `pigeon-social-30s-9x16.mp4` | 1080×1920 crop, burned-in captions, for WhatsApp status and Instagram |
 | `pigeon-endcard.png` | 1920×1080 still for the website and proposals |
