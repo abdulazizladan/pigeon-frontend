@@ -3,6 +3,8 @@ import { signalStore, withState, withComputed, withMethods, patchState } from '@
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { pipe, switchMap, tap, catchError, EMPTY, mergeMap } from 'rxjs';
 import { StationsService } from '../services/stations.service';
+import { StationEquipmentService } from '../services/station-equipment.service';
+import { ReservoirLevelIndicator } from '../models/equipment.model';
 import {
   CreateStationPayload,
   Station,
@@ -29,6 +31,9 @@ export interface StationsState {
   assignModalStationId: string | null;
   updatingStationIds: string[];
   updateErrorMessage: string | null;
+  /** Reservoir levels per station id, for the list view. */
+  levelsByStation: Record<string, ReservoirLevelIndicator[]>;
+  levelsLoadingState: LoadingState;
   /** The logged-in manager's own station (null once loaded if unassigned). */
   myStation: Station | null;
   myStationLoadingState: LoadingState;
@@ -48,6 +53,8 @@ const initialState: StationsState = {
   assignModalStationId: null,
   updatingStationIds: [],
   updateErrorMessage: null,
+  levelsByStation: {},
+  levelsLoadingState: 'idle',
   myStation: null,
   myStationLoadingState: 'idle',
   myStationErrorMessage: null,
@@ -91,7 +98,28 @@ export const StationsStore = signalStore(
     assignedManagerIds: computed(() => new Set(stations().map((s) => s.managerId).filter((id): id is string => !!id))),
     hasStats: computed(() => stats() !== null),
   })),
-  withMethods((store, service = inject(StationsService)) => ({
+  withMethods((store, service = inject(StationsService), equipment = inject(StationEquipmentService)) => ({
+    /** Levels for every station in one call, shown as chips in the stations table. */
+    loadAllLevels: rxMethod<void>(
+      pipe(
+        tap(() => patchState(store, { levelsLoadingState: 'loading' })),
+        switchMap(() =>
+          equipment.getAllReservoirLevels().pipe(
+            tap((summaries) =>
+              patchState(store, {
+                levelsByStation: Object.fromEntries(summaries.map((s) => [s.stationId, s.reservoirs])),
+                levelsLoadingState: 'success',
+              }),
+            ),
+            catchError(() => {
+              patchState(store, { levelsLoadingState: 'error' });
+              return EMPTY;
+            }),
+          ),
+        ),
+      ),
+    ),
+
     setSearchQuery(query: string) {
       patchState(store, { searchQuery: query });
     },

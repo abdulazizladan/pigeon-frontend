@@ -92,7 +92,6 @@ Deploy with `firebase deploy` after a production build; the hosting config rewri
 ```
 src/app/
   auth/               login, AuthStore, JWT interceptor, route guards
-  dashboard/          generic post-login dashboard
   users/
     admin/            admin shell: navbar, drawer, dashboard
     director/         director shell and dashboard (sales chart)
@@ -115,7 +114,7 @@ Each feature folder follows the same shape: `models/`, `services/` (HTTP only), 
 
 - **State lives in signal stores.** Components inject a store and read its signals; async work goes through `rxMethod`. Do not put `signal()` state or `subscribe()` calls in components or services.
 - **"Add" screens are modals.** Any component that creates something opens as a modal driven by its feature store (`isAddXModalOpen`, `openAddXModal()`, `closeAddXModal()`), closes on backdrop click and on success.
-- **Auth is centralised.** `AuthStore` owns the session, `authInterceptor` adds the bearer token and logs out on 401, `authGuard` protects routes and checks `data.roles`.
+- **Auth is centralised.** `AuthStore` owns the session, `authInterceptor` adds the bearer token and logs out on 401. Each role shell (`/admin`, `/director`, `/manager`) carries `data.roles` and is protected by `authGuard` and `authChildGuard`, so every page inside it, including deep links, is checked. `/` and unknown paths go to `/login`, whose `guestGuard` forwards signed-in users to their own shell.
 - **Shared visuals are global.** Modal, data-table, status badge and stat-card styles live in `src/styles.css`; feature stylesheets only add layout.
 - **Role rules are enforced by the backend.** The UI hides what a role cannot do, but the API is the source of truth.
 

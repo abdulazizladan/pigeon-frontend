@@ -61,3 +61,56 @@ export interface CreateReservoirPayload {
 export interface UpdateReservoirPayload {
   capacityLitres?: number;
 }
+
+// ---- Reservoir levels ----
+export type LevelStatus = 'ok' | 'low' | 'critical' | 'unknown';
+
+export interface ReservoirLevelIndicator {
+  reservoirId: string;
+  product: Product;
+  capacityLitres: number;
+  level: number | null;
+  percent: number | null;
+  recordedOn: string | null;
+  source: 'level' | 'daily_record' | null;
+  recordedByUsername: string | null;
+  /** Average litres of this product sold per day over the last 14 recorded days. */
+  avgDailyLitres: number;
+  daysRemaining: number | null;
+  status: LevelStatus;
+}
+
+export interface StationLevels {
+  station: { id: string; name: string; code: string };
+  asOf: string;
+  reservoirs: ReservoirLevelIndicator[];
+}
+
+export interface StationLevelsSummary {
+  stationId: string;
+  reservoirs: ReservoirLevelIndicator[];
+}
+
+export type LevelBand = 'green' | 'amber' | 'red' | 'none';
+
+/** At-a-glance colour for a list: above 75% green, 25% to 74% amber, below 25% red. */
+export function levelBand(percent: number | null): LevelBand {
+  if (percent === null) return 'none';
+  if (percent > 75) return 'green';
+  if (percent >= 25) return 'amber';
+  return 'red';
+}
+
+export function levelBandLabel(band: LevelBand): string {
+  return { green: 'Well stocked', amber: 'Moderate', red: 'Low', none: 'No reading' }[band];
+}
+
+export interface RecordLevelsPayload {
+  stationId?: string;
+  recordedOn?: string;
+  levels: { reservoirId: string; level: number }[];
+}
+
+export function levelStatusLabel(s: LevelStatus): string {
+  return { ok: 'Stocked', low: 'Running low', critical: 'Critical', unknown: 'No reading yet' }[s];
+}

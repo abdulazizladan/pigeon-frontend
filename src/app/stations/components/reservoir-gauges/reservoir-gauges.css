@@ -1,0 +1,39 @@
+.rg-card { padding: 20px; margin: 0; }
+.rg-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
+.rg-title { margin: 0 0 2px; font-size: 17px; font-weight: 700; color: var(--text-primary); }
+.rg-subtitle { margin: 0; font-size: 13px; color: var(--text-secondary); }
+.rg-warn { color: #c0122e; font-weight: 700; }
+html.dark .rg-warn { color: #f25a72; }
+.rg-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.rg-mini-btn { height: 36px; }
+.rg-state { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 32px 16px; text-align: center; color: var(--text-secondary); }
+.rg-state p { margin: 0; }
+.rg-error { color: var(--brand-danger); font-weight: 600; }
+.rg-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; transition: opacity 0.2s; }
+.rg-grid.is-loading { opacity: 0.6; }
+.rg-gauge { display: flex; gap: 14px; align-items: stretch; padding: 14px; border-radius: 10px; border: 1px solid var(--border-divider); background: var(--bg-secondary); }
+.rg-gauge[data-status="low"] { border-color: rgba(245, 195, 59, 0.7); }
+.rg-gauge[data-status="critical"] { border-color: rgba(240, 40, 73, 0.6); }
+
+/* The tank: a rounded shell with a fill that rises with the percentage */
+.rg-tank { display: flex; flex-direction: column; align-items: center; gap: 6px; flex-shrink: 0; }
+.rg-tank-shell { position: relative; width: 56px; height: 120px; border-radius: 10px 10px 14px 14px; border: 2px solid var(--border-divider); background: var(--input-bg); overflow: hidden; }
+.rg-fill { position: absolute; left: 0; right: 0; bottom: 0; transition: height 0.5s ease; background: var(--brand-primary); }
+.rg-gauge[data-product="petrol"] .rg-fill { background: linear-gradient(180deg, #5ccb45, #2e8a1e); }
+.rg-gauge[data-product="diesel"] .rg-fill { background: linear-gradient(180deg, #f7d56a, #c98500); }
+.rg-gauge[data-product="kerosene"] .rg-fill { background: linear-gradient(180deg, #5da3ff, #0a56c8); }
+.rg-gauge[data-status="critical"] .rg-fill { background: linear-gradient(180deg, #f25a72, #c0122e); }
+.rg-fill::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: rgba(255, 255, 255, 0.45); }
+.rg-mark { position: absolute; left: 0; width: 8px; height: 1px; background: var(--border-divider); }
+.rg-percent { font-size: 15px; font-weight: 800; color: var(--text-primary); font-variant-numeric: tabular-nums; }
+
+.rg-info { display: flex; flex-direction: column; gap: 4px; min-width: 0; flex: 1; }
+.rg-product { display: flex; align-items: center; gap: 8px; font-weight: 700; color: var(--text-primary); }
+.rg-product .um-role-dot { width: 10px; height: 10px; margin: 0; }
+.rg-litres { font-size: 14px; color: var(--text-secondary); }
+.rg-litres strong { font-size: 18px; color: var(--text-primary); font-variant-numeric: tabular-nums; }
+.rg-status { align-self: flex-start; }
+.rg-days { font-size: 13px; color: var(--text-primary); }
+.rg-meta { font-size: 12px; color: var(--text-secondary); margin-top: auto; }
+
+@media (max-width: 640px) { .rg-card { padding: 16px; } .rg-grid { grid-template-columns: 1fr; } }

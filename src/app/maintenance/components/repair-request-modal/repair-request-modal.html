@@ -1,0 +1,72 @@
+@if (store.isReportModalOpen()) {
+  <div class="um-modal-backdrop" (click)="onBackdropClick($event)" role="dialog" aria-modal="true" aria-labelledby="rr-title">
+    <div class="um-modal">
+      <div class="um-modal-header">
+        <div class="um-modal-title-group">
+          <div class="um-modal-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/></svg>
+          </div>
+          <div>
+            <h2 id="rr-title" class="um-modal-title">Request repair authorization</h2>
+            <p class="um-modal-subtitle">@if (template(); as t) { {{ t.station.name }} ({{ t.station.code }}) } @else { Loading station… }</p>
+          </div>
+        </div>
+        <button type="button" class="um-modal-close" (click)="onClose()" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </div>
+
+      <form class="um-modal-form" (submit)="onSubmit($event)" novalidate>
+        @if (store.createErrorMessage()) { <div class="um-form-alert alert-error" role="alert">{{ store.createErrorMessage() }}</div> }
+
+        <div class="um-form-group">
+          <label class="um-form-label" for="rr-pump">Pump <span class="um-form-optional">(leave blank for other facilities)</span></label>
+          <div class="um-input-wrap">
+            <select id="rr-pump" class="um-form-input um-form-input--plain um-form-select" [value]="pumpId()" (change)="setPump($event)" [disabled]="isSubmitting() || store.reportTemplateLoadingState() === 'loading'">
+              <option value="" [selected]="pumpId() === ''">Not a pump</option>
+              @for (p of template()?.pumps ?? []; track p.pumpId) {
+                <option [value]="p.pumpId" [selected]="pumpId() === p.pumpId">{{ p.name }} · {{ product(p.product) }}</option>
+              }
+            </select>
+          </div>
+        </div>
+
+        <div class="um-form-group">
+          <label class="um-form-label" for="rr-facility">Faulty facility</label>
+          <div class="um-input-wrap">
+            <input id="rr-facility" type="text" class="um-form-input um-form-input--plain" [class.is-invalid]="facilityError()" placeholder="e.g. Pump 2, Canopy lights, Generator" [value]="facility()" (input)="setFacility($event)" maxlength="120" [disabled]="isSubmitting()" required />
+          </div>
+          @if (facilityError()) { <span class="um-form-error">{{ facilityError() }}</span> }
+        </div>
+
+        <div class="um-form-group">
+          <label class="um-form-label" for="rr-description">What is wrong and what repair is needed</label>
+          <div class="um-input-wrap">
+            <textarea id="rr-description" class="um-form-input um-form-textarea" [class.is-invalid]="descriptionError()" placeholder="Describe the fault, since when, and the effect on trading…" [value]="description()" (input)="setDescription($event)" maxlength="2000" [disabled]="isSubmitting()" required></textarea>
+          </div>
+          @if (descriptionError()) { <span class="um-form-error">{{ descriptionError() }}</span> }
+        </div>
+
+        <div class="um-form-group">
+          <span class="um-form-label">Priority</span>
+          <div class="um-role-grid um-role-grid--three">
+            @for (p of priorities; track p) {
+              <label class="um-role-option" [class.selected]="priority() === p" [attr.data-priority]="p">
+                <input type="radio" name="rr-priority" [value]="p" [checked]="priority() === p" (change)="setPriority($event)" [disabled]="isSubmitting()" />
+                <div class="um-role-dot" [attr.data-priority]="p"></div>
+                <div class="um-role-label-group"><span class="um-role-name">{{ label(p) }}</span><span class="um-role-desc">{{ describe(p) }}</span></div>
+              </label>
+            }
+          </div>
+        </div>
+
+        <div class="um-modal-actions">
+          <button type="button" class="btn btn-secondary" (click)="onClose()" [disabled]="isSubmitting()">Cancel</button>
+          <button type="submit" class="btn btn-primary um-submit-btn" [disabled]="!isValid() || isSubmitting()" id="submit-repair-request-btn">
+            @if (isSubmitting()) { <span class="btn-spinner"></span> Sending… } @else { Send request }
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

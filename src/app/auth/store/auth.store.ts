@@ -22,6 +22,8 @@ export interface AuthState {
   token: string | null;
   status: AuthStatus;
   errorMessage: string | null;
+  /** True while the "sign out?" confirmation is showing. */
+  isLogoutConfirmOpen: boolean;
 }
 
 const TOKEN_STORAGE_KEY = 'access_token';
@@ -31,6 +33,7 @@ const initialState: AuthState = {
   token: null,
   status: 'idle',
   errorMessage: null,
+  isLogoutConfirmOpen: false,
 };
 
 /** Landing route for each role after login or when access is denied elsewhere. */
@@ -43,7 +46,8 @@ export function homeRouteForRole(role: UserRole | null | undefined): string {
     case 'manager':
       return '/manager';
     default:
-      return '/dashboard';
+      // No role means no shell; the login page's guard decides from there.
+      return '/login';
   }
 }
 
@@ -145,11 +149,25 @@ export const AuthStore = signalStore(
         ),
       ),
 
+      /** Ends the session immediately. UI sign-out buttons should call requestLogout() instead. */
       logout(options: { redirect?: boolean; message?: string | null } = {}) {
         const { redirect = true, message = null } = options;
         clearSession();
-        patchState(store, { status: 'idle', errorMessage: message });
+        patchState(store, { status: 'idle', errorMessage: message, isLogoutConfirmOpen: false });
         if (redirect) router.navigate(['/login']);
+      },
+
+      /** Opens the sign-out confirmation shown by the root component. */
+      requestLogout() {
+        patchState(store, { isLogoutConfirmOpen: true });
+      },
+
+      cancelLogout() {
+        patchState(store, { isLogoutConfirmOpen: false });
+      },
+
+      confirmLogout() {
+        methods.logout();
       },
 
       clearError() {

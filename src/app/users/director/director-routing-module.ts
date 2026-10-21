@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { Layout } from './components/layout/layout';
 import { DirectorDashboardComponent } from './components/dashboard/dashboard';
+import { RepairRequestsPageComponent } from '../../maintenance/components/repair-requests-page/repair-requests-page';
 
 const routes: Routes = [
   {
@@ -10,6 +11,7 @@ const routes: Routes = [
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: DirectorDashboardComponent },
+      { path: 'repairs', component: RepairRequestsPageComponent },
       {
         path: 'stations',
         loadChildren: () =>
@@ -21,11 +23,9 @@ const routes: Routes = [
           import('../../managers/managers.module').then((m) => m.ManagersModule),
       },
       {
-        path: 'users',
+        path: 'tickets',
         loadChildren: () =>
-          import('../../users-management/users-management.module').then(
-            (m) => m.UsersManagementModule,
-          ),
+          import('../../tickets/tickets.module').then((m) => m.TicketsModule),
       },
     ],
   },

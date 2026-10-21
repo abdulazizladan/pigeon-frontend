@@ -269,6 +269,24 @@
         </section>
       </div>
 
+      <!-- ===== Reservoir levels ===== -->
+      <div class="sd-levels">
+        <app-reservoir-gauges [stationId]="s.id" [canRecord]="canManage()" title="Reservoir levels"></app-reservoir-gauges>
+      </div>
+
+      <!-- ===== Station health & repairs ===== -->
+      <div class="sd-health">
+        <app-station-health [stationId]="s.id" [canRecord]="canManage()" [canReport]="canManage()" title="Station health"></app-station-health>
+      </div>
+      <div class="sd-repairs">
+        <app-repair-requests-list [stationId]="s.id" [canDecide]="canManage()" [canReport]="canManage()" title="Repair requests"></app-repair-requests-list>
+      </div>
+
+      <!-- ===== Sales performance ===== -->
+      <div class="sd-sales-chart">
+        <app-station-sales-chart [stationId]="s.id" title="Sales performance"></app-station-sales-chart>
+      </div>
+
       <!-- ===== Daily sales ===== -->
       <div class="sd-records">
         <app-daily-records-list [stationId]="s.id" [canRecord]="canManage()" title="Daily sales records"></app-daily-records-list>

@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import {
@@ -8,7 +8,10 @@ import {
   Product,
   ProductPrice,
   Pump,
+  RecordLevelsPayload,
   Reservoir,
+  StationLevels,
+  StationLevelsSummary,
   UpdatePumpPayload,
   UpdateReservoirPayload,
 } from '../models/equipment.model';
@@ -54,5 +57,20 @@ export class StationEquipmentService {
 
   updateReservoir(id: string, payload: UpdateReservoirPayload): Observable<Reservoir> {
     return this.http.patch<Reservoir>(`${this.api}/reservoirs/${id}`, payload);
+  }
+
+  /** Current level of every reservoir. Pass null for the signed-in manager's own station. */
+  getReservoirLevels(stationId: string | null): Observable<StationLevels> {
+    const params = stationId ? new HttpParams().set('stationId', stationId) : undefined;
+    return this.http.get<StationLevels>(`${this.api}/reservoir-levels`, { params });
+  }
+
+  /** Every station's current levels in one call. Admin and director only. */
+  getAllReservoirLevels(): Observable<StationLevelsSummary[]> {
+    return this.http.get<StationLevelsSummary[]>(`${this.api}/reservoir-levels/summary`);
+  }
+
+  recordReservoirLevels(payload: RecordLevelsPayload): Observable<StationLevels> {
+    return this.http.post<StationLevels>(`${this.api}/reservoir-levels`, payload);
   }
 }

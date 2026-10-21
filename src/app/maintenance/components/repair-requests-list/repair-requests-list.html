@@ -1,0 +1,64 @@
+<section class="rr-section" [attr.aria-label]="title()">
+  <div class="rr-header">
+    <div>
+      <h2 class="rr-title">{{ title() }}</h2>
+      <p class="rr-subtitle">Faulty facilities reported by managers, awaiting a director's authorization</p>
+    </div>
+    <div class="rr-header-right">
+      <select class="rr-select" [value]="store.priorityFilter()" (change)="setPriority($event)" aria-label="Filter by priority">
+        @for (p of priorityFilters; track p) { <option [value]="p" [selected]="store.priorityFilter() === p">{{ priorityLabel(p) }}</option> }
+      </select>
+      @if (canReport()) {
+        <button type="button" class="btn btn-primary rr-report-btn" (click)="report()" id="report-fault-btn">Report a fault</button>
+      }
+    </div>
+  </div>
+
+  <div class="rr-chips" role="tablist" aria-label="Filter by status">
+    @for (s of statusFilters; track s) {
+      <button type="button" role="tab" class="rr-chip" [class.active]="store.statusFilter() === s" [attr.aria-selected]="store.statusFilter() === s" (click)="setStatus(s)">
+        {{ statusLabel(s) }}@if (statusCount(s) !== null) { <span class="rr-chip-count">{{ statusCount(s) }}</span> }
+      </button>
+    }
+  </div>
+
+  @if (store.loadingState() === 'loading' && !store.requests().length) {
+    <div class="card rr-state"><p>Loading repair requests…</p></div>
+  } @else if (store.loadingState() === 'error') {
+    <div class="card rr-state"><p class="rr-error">{{ store.errorMessage() }}</p><button type="button" class="btn btn-secondary" (click)="store.loadRequests(store.query())">Retry</button></div>
+  } @else if (!store.requests().length) {
+    <div class="card rr-state">
+      <p>No repair requests match these filters.</p>
+      @if (canReport()) { <button type="button" class="btn btn-primary" (click)="report()">Report a fault</button> }
+    </div>
+  } @else {
+    <div class="rr-list" [class.is-loading]="store.isLoading()">
+      @for (r of store.requests(); track trackById($index, r)) {
+        <article class="card rr-item" [attr.data-status]="r.status" [attr.data-priority]="r.priority">
+          <div class="rr-item-main">
+            <div class="rr-item-top">
+              <span class="priority-badge" [attr.data-priority]="r.priority">{{ priorityLabel(r.priority) }}</span>
+              <span class="status-badge" [attr.data-status]="r.status">{{ statusLabel(r.status) }}</span>
+              @if (showStation()) { <span class="rr-station">{{ r.stationName }}</span> }
+            </div>
+            <h3 class="rr-facility">{{ r.facility }}@if (r.pumpName && r.pumpName !== r.facility) { <span class="rr-pump">· {{ r.pumpName }}</span> }</h3>
+            <p class="rr-description">{{ r.description }}</p>
+            <p class="rr-meta">
+              Reported by &#64;{{ r.requestedByUsername }} · {{ r.createdAt | date:'MMM d, y, h:mm a' }}
+              @if (r.decidedAt) { · {{ statusLabel(r.status) }} by &#64;{{ r.decidedByUsername }} on {{ r.decidedAt | date:'MMM d, y' }} }
+            </p>
+            @if (r.decisionNote) { <p class="rr-note"><strong>Director's note:</strong> {{ r.decisionNote }}</p> }
+          </div>
+          @if (decidable(r)) {
+            <div class="rr-item-actions">
+              <button type="button" class="btn btn-primary rr-decide-btn" (click)="decide(r)">{{ r.status === 'ignored' ? 'Revisit' : 'Decide' }}</button>
+            </div>
+          }
+        </article>
+      }
+    </div>
+  }
+</section>
+
+<app-repair-request-modal></app-repair-request-modal>
+<app-repair-decision-modal></app-repair-decision-modal>

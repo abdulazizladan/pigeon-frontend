@@ -100,6 +100,14 @@
         }
       </section>
 
+      <div class="ms-levels">
+        <app-reservoir-gauges [stationId]="null" [canRecord]="s.status === 'active'" title="Reservoir levels"></app-reservoir-gauges>
+      </div>
+
+      <div class="ms-sales-chart">
+        <app-station-sales-chart [stationId]="null" title="My station's sales"></app-station-sales-chart>
+      </div>
+
       <div class="ms-grid">
         <section class="card ms-card" aria-labelledby="ms-location-heading">
           <h3 id="ms-location-heading" class="ms-card-title">

@@ -1,0 +1,55 @@
+<section class="card rg-card" [attr.aria-label]="title()">
+  <div class="rg-header">
+    <div>
+      <h2 class="rg-title">{{ title() }}</h2>
+      <p class="rg-subtitle">
+        Product remaining in each tank from the latest end-of-day reading
+        @if (store.lowCount()) { · <span class="rg-warn">{{ store.lowCount() }} running low</span> }
+      </p>
+    </div>
+    <div class="rg-actions">
+      <button type="button" class="btn btn-secondary rg-mini-btn" (click)="refresh()" [disabled]="store.isLoading()">Refresh</button>
+      @if (canRecord()) {
+        <button type="button" class="btn btn-primary" (click)="record()" id="record-levels-btn">Record end-of-day levels</button>
+      }
+    </div>
+  </div>
+
+  @if (store.loadingState() === 'error') {
+    <div class="rg-state"><p class="rg-error">{{ store.errorMessage() }}</p><button type="button" class="btn btn-secondary" (click)="refresh()">Retry</button></div>
+  } @else if (store.loadingState() === 'loading' && !store.reservoirs().length) {
+    <div class="rg-state"><p>Loading levels…</p></div>
+  } @else if (!store.reservoirs().length) {
+    <div class="rg-state"><p>This station has no reservoirs registered yet.</p></div>
+  } @else {
+    <div class="rg-grid" [class.is-loading]="store.isLoading()">
+      @for (r of store.reservoirs(); track trackById($index, r)) {
+        <div class="rg-gauge" [attr.data-product]="r.product" [attr.data-status]="r.status">
+          <div class="rg-tank" role="img" [attr.aria-label]="label(r.product) + ' reservoir ' + (r.percent !== null ? r.percent + ' percent full' : 'no reading yet')">
+            <div class="rg-tank-shell">
+              <div class="rg-fill" [style.height.%]="r.percent ?? 0"></div>
+              @for (m of [25, 50, 75]; track m) { <span class="rg-mark" [style.bottom.%]="m"></span> }
+            </div>
+            <span class="rg-percent">{{ r.percent !== null ? (r.percent | number:'1.0-0') + '%' : '—' }}</span>
+          </div>
+          <div class="rg-info">
+            <div class="rg-product"><span class="um-role-dot" [attr.data-product]="r.product"></span>{{ label(r.product) }}</div>
+            <div class="rg-litres">
+              @if (r.level !== null) { <strong>{{ r.level | number:'1.0-0' }} L</strong> <span>of {{ r.capacityLitres | number:'1.0-0' }} L</span> }
+              @else { <span>Capacity {{ r.capacityLitres | number:'1.0-0' }} L</span> }
+            </div>
+            <span class="status-badge rg-status" [attr.data-status]="r.status">{{ statusLabel(r) }}</span>
+            @if (daysText(r); as d) { <div class="rg-days">≈ {{ d }} of stock at {{ r.avgDailyLitres | number:'1.0-0' }} L/day</div> }
+            @if (r.recordedOn) {
+              <div class="rg-meta">Read {{ day(r.recordedOn) }}@if (r.source === 'daily_record') { (from the sales record) } @else if (r.recordedByUsername) { by &#64;{{ r.recordedByUsername }} }</div>
+            } @else {
+              <div class="rg-meta">No reading recorded yet.</div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+</section>
+
+<app-record-levels-modal></app-record-levels-modal>

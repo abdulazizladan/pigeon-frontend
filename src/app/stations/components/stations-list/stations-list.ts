@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { StationsStore } from '../../store/stations.store';
 import { AuthStore } from '../../../auth/store/auth.store';
 import { Station, StationStatus, stationLocation, stationStatusLabel } from '../../models/station.model';
+import { LevelBand, Product, ReservoirLevelIndicator, levelBand, levelBandLabel, productLabel } from '../../models/equipment.model';
 
 @Component({
   selector: 'app-stations-list',
@@ -20,6 +21,29 @@ export class StationsListComponent implements OnInit {
 
   ngOnInit() {
     this.store.loadStations();
+    this.store.loadAllLevels();
+  }
+
+  protected levelsFor(station: Station): ReservoirLevelIndicator[] {
+    return this.store.levelsByStation()[station.id] ?? [];
+  }
+
+  protected band(r: ReservoirLevelIndicator): LevelBand {
+    return levelBand(r.percent);
+  }
+
+  protected levelTitle(r: ReservoirLevelIndicator): string {
+    const pct = r.percent !== null ? `${Math.round(r.percent)}%` : 'no reading';
+    const litres = r.level !== null ? ` · ${Math.round(r.level).toLocaleString()} of ${Math.round(r.capacityLitres).toLocaleString()} L` : '';
+    return `${productLabel(r.product)}: ${pct} (${levelBandLabel(levelBand(r.percent))})${litres}`;
+  }
+
+  protected productLabel(p: Product): string {
+    return productLabel(p);
+  }
+
+  protected trackReservoir(_: number, r: ReservoirLevelIndicator): string {
+    return r.reservoirId;
   }
 
   protected onSearch(event: Event) {

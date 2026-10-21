@@ -1,0 +1,46 @@
+.sh-section { display: flex; flex-direction: column; gap: 14px; }
+.sh-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.sh-title { margin: 0; font-size: 17px; font-weight: 700; color: var(--text-primary); }
+.sh-subtitle { margin: 2px 0 0; font-size: 13px; color: var(--text-secondary); }
+.sh-header-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.sh-chips { display: flex; gap: 6px; }
+.sh-chip { height: 32px; padding: 0 12px; border-radius: 9999px; border: 1px solid var(--border-divider); background: var(--bg-secondary); color: var(--text-secondary); font-size: 13px; font-weight: 600; cursor: pointer; }
+.sh-chip.active { background: var(--brand-primary); border-color: var(--brand-primary); color: #fff; }
+.sh-record-btn { white-space: nowrap; }
+.sh-latest { padding: 18px 20px; margin: 0; border-left: 4px solid var(--border-divider); }
+.sh-latest[data-condition="good"] { border-left-color: var(--brand-success); }
+.sh-latest[data-condition="fair"] { border-left-color: var(--brand-warning); }
+.sh-latest[data-condition="faulty"] { border-left-color: var(--brand-danger); }
+.sh-latest-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 12px; }
+.sh-latest-kicker { display: block; font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; }
+.sh-latest-title-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.sh-big-badge { font-size: 13px; padding: 4px 12px; }
+.sh-latest-desc { font-size: 14px; color: var(--text-secondary); }
+.sh-latest-figure { display: flex; flex-direction: column; align-items: flex-end; line-height: 1.1; }
+.sh-latest-figure strong { font-size: 26px; font-weight: 800; color: var(--text-primary); }
+.sh-latest-figure strong.is-bad { color: var(--brand-danger); }
+.sh-latest-figure span { font-size: 12px; color: var(--text-secondary); }
+.sh-pumps { display: flex; flex-direction: column; gap: 6px; }
+.sh-pump { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 8px 10px; border-radius: 8px; background: var(--input-bg); font-size: 14px; }
+.sh-pump .um-role-dot { width: 10px; height: 10px; margin: 0; }
+.sh-pump-name { font-weight: 700; color: var(--text-primary); }
+.sh-pump-notes { color: var(--text-secondary); font-size: 13px; flex: 1 1 160px; min-width: 0; overflow-wrap: anywhere; }
+.sh-mini-btn { height: 28px; padding: 0 10px; font-size: 12px; margin-left: auto; white-space: nowrap; }
+.sh-notes { margin: 12px 0 0; font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+.sh-state { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 36px 20px; text-align: center; color: var(--text-secondary); margin: 0; }
+.sh-error { margin: 0; color: var(--brand-danger); font-weight: 600; }
+.sh-history-title { margin: 6px 0 0; font-size: 14px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
+.sh-list { display: flex; flex-direction: column; gap: 8px; }
+.sh-record { padding: 0; margin: 0; overflow: hidden; border-left: 4px solid var(--border-divider); }
+.sh-record[data-condition="good"] { border-left-color: var(--brand-success); }
+.sh-record[data-condition="fair"] { border-left-color: var(--brand-warning); }
+.sh-record[data-condition="faulty"] { border-left-color: var(--brand-danger); }
+.sh-record-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; width: 100%; padding: 12px 14px; background: none; border: none; cursor: pointer; text-align: left; font: inherit; color: inherit; }
+.sh-record-head:hover { background: var(--hover-overlay); }
+.sh-record-date { font-weight: 700; color: var(--text-primary); }
+.sh-record-meta { font-size: 13px; color: var(--text-secondary); flex: 1; }
+.sh-chevron { width: 20px; height: 20px; color: var(--text-secondary); transition: transform 0.2s; }
+.sh-record.is-open .sh-chevron { transform: rotate(180deg); }
+.sh-record-body { padding: 0 14px 14px; border-top: 1px solid var(--border-divider); }
+.sh-record-actions { display: flex; justify-content: flex-end; padding: 10px 0; }
+@media (max-width: 640px) { .sh-latest-figure { align-items: flex-start; } }

@@ -1,0 +1,57 @@
+@if (store.isDecisionModalOpen() && request(); as r) {
+  <div class="um-modal-backdrop" (click)="onBackdropClick($event)" role="dialog" aria-modal="true" aria-labelledby="rd-title">
+    <div class="um-modal">
+      <div class="um-modal-header">
+        <div class="um-modal-title-group">
+          <div class="um-modal-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+          </div>
+          <div>
+            <h2 id="rd-title" class="um-modal-title">Decide on repair request</h2>
+            <p class="um-modal-subtitle">{{ r.facility }} at {{ r.stationName }}</p>
+          </div>
+        </div>
+        <button type="button" class="um-modal-close" (click)="onClose()" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </div>
+
+      <form class="um-modal-form" (submit)="onSubmit($event)" novalidate>
+        @if (store.decideErrorMessage()) { <div class="um-form-alert alert-error" role="alert">{{ store.decideErrorMessage() }}</div> }
+
+        <div class="rd-summary">
+          <div class="rd-summary-row"><span class="priority-badge" [attr.data-priority]="r.priority">{{ priority(r.priority) }}</span><span class="rd-muted">requested by &#64;{{ r.requestedByUsername }} · {{ r.createdAt | date:'MMM d, y' }}</span></div>
+          <p class="rd-description">{{ r.description }}</p>
+        </div>
+
+        <div class="um-form-group">
+          <span class="um-form-label">Decision</span>
+          <div class="um-role-grid um-role-grid--three">
+            @for (d of decisions; track d) {
+              <label class="um-role-option" [class.selected]="decision() === d" [attr.data-decision]="d">
+                <input type="radio" name="rd-decision" [value]="d" [checked]="decision() === d" (change)="setDecision($event)" [disabled]="isSubmitting()" />
+                <div class="um-role-dot" [attr.data-decision]="d"></div>
+                <div class="um-role-label-group"><span class="um-role-name">{{ label(d) }}</span><span class="um-role-desc">{{ describe(d) }}</span></div>
+              </label>
+            }
+          </div>
+        </div>
+
+        <div class="um-form-group">
+          <label class="um-form-label" for="rd-note">Note for the manager @if (!needsNote()) { <span class="um-form-optional">(optional)</span> }</label>
+          <div class="um-input-wrap">
+            <textarea id="rd-note" class="um-form-input um-form-textarea um-form-textarea--short" [placeholder]="needsNote() ? 'Say why the repair is denied' : 'Instructions, budget, who to call…'" [value]="note()" (input)="setNote($event)" maxlength="1000" [disabled]="isSubmitting()"></textarea>
+          </div>
+          @if (needsNote() && !isValid()) { <span class="um-form-error">A denial needs a short reason.</span> }
+        </div>
+
+        <div class="um-modal-actions">
+          <button type="button" class="btn btn-secondary" (click)="onClose()" [disabled]="isSubmitting()">Cancel</button>
+          <button type="submit" class="btn btn-primary um-submit-btn" [disabled]="!isValid() || isSubmitting()" id="submit-repair-decision-btn">
+            @if (isSubmitting()) { <span class="btn-spinner"></span> Saving… } @else { {{ label(decision()) }} }
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

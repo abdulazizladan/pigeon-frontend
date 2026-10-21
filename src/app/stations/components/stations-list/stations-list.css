@@ -169,11 +169,52 @@
   min-width: 720px; /* below this the wrapper scrolls horizontally instead of squeezing */
 }
 
-.st-col-station { width: 34%; }
-.st-col-location { width: 30%; }
-.st-col-status { width: 17%; }
-.st-col-manager { width: 19%; }
+.st-col-station { width: 27%; }
+.st-col-location { width: 22%; }
+.st-col-levels { width: 22%; }
+.st-col-status { width: 16%; }
+.st-col-manager { width: 13%; }
 .st-col-actions { width: 56px; }
+
+/* Reservoir level chips: colour bands are backed by the percentage and a title, never colour alone */
+.st-levels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.level-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px 2px 6px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  border: 1px solid transparent;
+}
+
+.level-chip-product {
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.level-chip-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.level-chip[data-band="green"] { background: rgba(66, 183, 42, 0.12); color: #2e8a1e; border-color: rgba(66, 183, 42, 0.3); }
+.level-chip[data-band="amber"] { background: rgba(245, 195, 59, 0.18); color: #8a6508; border-color: rgba(245, 195, 59, 0.45); }
+.level-chip[data-band="red"] { background: rgba(240, 40, 73, 0.12); color: #c0122e; border-color: rgba(240, 40, 73, 0.35); }
+.level-chip[data-band="none"] { background: var(--hover-overlay); color: var(--text-secondary); }
+html.dark .level-chip[data-band="green"] { color: #6fd45a; }
+html.dark .level-chip[data-band="amber"] { color: #f5c33b; }
+html.dark .level-chip[data-band="red"] { color: #f25a72; }
 
 .st-table th,
 .st-table td {
@@ -222,8 +263,12 @@
   line-height: 1.35;
 }
 
+/* Long labels such as "Under maintenance" wrap inside the badge rather than overflowing the column */
 .st-table .status-badge {
-  white-space: nowrap;
+  white-space: normal;
+  display: inline-block;
+  text-align: center;
+  line-height: 1.3;
 }
 
 .st-table .cell-mono {

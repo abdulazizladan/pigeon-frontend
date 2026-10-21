@@ -35,6 +35,6 @@ export class AdminNavbarComponent {
   }
 
   protected onLogout() {
-    this.auth.logout();
+    this.auth.requestLogout();
   }
 }

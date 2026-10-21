@@ -1,0 +1,18 @@
+.rl-errors { margin: 0; padding-left: 18px; }
+.rl-date-group { max-width: 240px; }
+.rl-rows { display: flex; flex-direction: column; gap: 10px; margin-bottom: 8px; }
+.rl-row { padding: 12px; border-radius: 8px; border: 1px solid var(--border-divider); background: var(--bg-secondary); }
+.rl-row.has-error { border-color: rgba(240, 40, 73, 0.5); }
+.rl-row-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; color: var(--text-primary); font-size: 14px; }
+.rl-row-head .um-role-dot { width: 10px; height: 10px; margin: 0; }
+.rl-cap { color: var(--text-secondary); font-size: 12px; }
+.rl-row-body { display: grid; grid-template-columns: minmax(140px, 200px) 1fr; gap: 12px; align-items: end; }
+.rl-field { display: flex; flex-direction: column; gap: 4px; font-size: 12px; font-weight: 600; color: var(--text-secondary); }
+.rl-field input { height: 38px; padding: 0 10px; border-radius: 6px; border: 1px solid var(--border-divider); background: var(--input-bg); color: var(--text-primary); font-size: 14px; font-variant-numeric: tabular-nums; width: 100%; box-sizing: border-box; }
+.rl-preview { display: flex; align-items: center; gap: 10px; height: 38px; font-size: 13px; font-weight: 700; color: var(--text-primary); font-variant-numeric: tabular-nums; }
+.rl-bar { flex: 1; height: 10px; border-radius: 9999px; background: var(--input-bg); overflow: hidden; }
+.rl-bar-fill { height: 100%; border-radius: 9999px; background: var(--brand-primary); transition: width 0.2s; }
+.rl-bar-fill[data-product="petrol"] { background: #42b72a; }
+.rl-bar-fill[data-product="diesel"] { background: #c98500; }
+.rl-bar-fill[data-product="kerosene"] { background: #1877f2; }
+@media (max-width: 480px) { .rl-row-body { grid-template-columns: 1fr; } }

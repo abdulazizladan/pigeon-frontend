@@ -44,11 +44,21 @@ export class AddTicketModalComponent implements OnDestroy {
   );
 
   protected readonly isSubmitting = computed(() => this.store.createLoadingState() === 'loading');
+  protected readonly isEditing = computed(() => this.store.editingTicket() !== null);
 
   constructor() {
     effect(() => {
       if (this.store.createLoadingState() === 'success') {
         this.resetForm();
+      }
+    });
+    // Prefill from the ticket being edited whenever the modal opens in edit mode.
+    effect(() => {
+      const ticket = this.store.editingTicket();
+      if (this.store.isAddTicketModalOpen() && ticket) {
+        this.title.set(ticket.title);
+        this.description.set(ticket.description);
+        this.priority.set(ticket.priority);
       }
     });
   }
@@ -71,11 +81,17 @@ export class AddTicketModalComponent implements OnDestroy {
   protected onSubmit(event: Event) {
     event.preventDefault();
     if (!this.isFormValid() || this.isSubmitting()) return;
-    this.store.createTicket({
+    const payload = {
       title: this.title().trim(),
       description: this.description().trim(),
       priority: this.priority(),
-    });
+    };
+    const editing = this.store.editingTicket();
+    if (editing) {
+      this.store.editTicket({ id: editing.id, changes: payload });
+    } else {
+      this.store.createTicket(payload);
+    }
   }
 
   protected updateTitle(event: Event) {

@@ -31,6 +31,6 @@ export class Layout {
   }
 
   protected onLogout() {
-    this.auth.logout();
+    this.auth.requestLogout();
   }
 }

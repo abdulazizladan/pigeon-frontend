@@ -25,6 +25,8 @@ export interface CreateTicketPayload {
 }
 
 export interface UpdateTicketPayload {
+  title?: string;
+  description?: string;
   status?: TicketStatus;
   priority?: TicketPriority;
   assignedToId?: string | null;

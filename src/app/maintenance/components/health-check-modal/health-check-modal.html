@@ -1,0 +1,98 @@
+@if (store.isCheckModalOpen()) {
+  <div class="um-modal-backdrop" (click)="onBackdropClick($event)" role="dialog" aria-modal="true" aria-labelledby="hc-title">
+    <div class="um-modal um-modal--wide">
+      <div class="um-modal-header">
+        <div class="um-modal-title-group">
+          <div class="um-modal-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm-2 14l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+          </div>
+          <div>
+            <h2 id="hc-title" class="um-modal-title">{{ isEditing() ? 'Edit health check' : 'Record health check' }}</h2>
+            <p class="um-modal-subtitle">
+              @if (template(); as t) { {{ t.station.name }} ({{ t.station.code }}) @if (!isEditing() && t.lastRecordedOn) { · last checked {{ t.lastRecordedOn }} } } @else { Loading station… }
+            </p>
+          </div>
+        </div>
+        <button type="button" class="um-modal-close" (click)="onClose()" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </div>
+
+      <form class="um-modal-form hc-form" (submit)="onSubmit($event)" novalidate>
+        @if (store.saveErrors().length) {
+          <div class="um-form-alert alert-error" role="alert"><ul class="hc-errors">@for (e of store.saveErrors(); track $index) { <li>{{ e }}</li> }</ul></div>
+        }
+
+        @if (store.isTemplateLoading()) {
+          <p class="hc-state">Preparing the check…</p>
+        } @else if (store.templateLoadingState() === 'error') {
+          <p class="hc-state hc-state--error">{{ store.templateErrorMessage() }}</p>
+        } @else if (template(); as t) {
+          @if (t.pumps.length === 0) {
+            <p class="hc-state hc-state--error">This station has no pumps registered yet. Ask a director to add them before recording a check.</p>
+          } @else {
+            <div class="um-form-row hc-top">
+              <div class="um-form-group">
+                <label class="um-form-label" for="hc-date">Day of check</label>
+                <div class="um-input-wrap">
+                  <input id="hc-date" type="date" class="um-form-input um-form-input--plain" [value]="recordedOn()" [max]="today" (change)="setDate($event)" [disabled]="isEditing() || store.isSaving()" required />
+                </div>
+              </div>
+            </div>
+
+            <div class="um-form-group">
+              <span class="um-form-label">Station condition</span>
+              <div class="um-role-grid um-role-grid--three">
+                @for (c of stationConditions; track c) {
+                  <label class="um-role-option" [class.selected]="stationCondition() === c" [attr.data-condition]="c">
+                    <input type="radio" name="station-condition" [value]="c" [checked]="stationCondition() === c" (change)="setStationCondition($event)" [disabled]="store.isSaving()" />
+                    <div class="um-role-dot" [attr.data-condition]="c"></div>
+                    <div class="um-role-label-group"><span class="um-role-name">{{ scLabel(c) }}</span><span class="um-role-desc">{{ scDescription(c) }}</span></div>
+                  </label>
+                }
+              </div>
+            </div>
+
+            <div class="um-form-group">
+              <span class="um-form-label">Pumps <span class="um-form-optional">({{ notOkCount() }} not OK)</span></span>
+              <div class="hc-pumps">
+                @for (r of rows(); track r.pump.pumpId) {
+                  <div class="hc-pump" [attr.data-condition]="r.input.condition">
+                    <div class="hc-pump-head">
+                      <span class="um-role-dot" [attr.data-product]="r.pump.product"></span>
+                      <strong>{{ r.pump.name }}</strong>
+                      <span class="hc-pump-product">{{ product(r.pump.product) }}</span>
+                      @if (r.pump.status === 'inactive') { <span class="status-badge" data-status="inactive">Out of service</span> }
+                    </div>
+                    <div class="hc-pump-controls">
+                      <div class="hc-segmented" role="radiogroup" [attr.aria-label]="r.pump.name + ' condition'">
+                        @for (c of pumpConditions; track c) {
+                          <button type="button" class="hc-seg" [class.active]="r.input.condition === c" [attr.data-condition]="c" role="radio" [attr.aria-checked]="r.input.condition === c" (click)="setPumpCondition(r.pump.pumpId, c)" [disabled]="store.isSaving()">{{ pcLabel(c) }}</button>
+                        }
+                      </div>
+                      <input type="text" class="hc-pump-notes" placeholder="Notes (optional)" [value]="r.input.notes" (input)="setPumpNotes(r.pump.pumpId, $event)" maxlength="500" [disabled]="store.isSaving()" />
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+
+            <div class="um-form-group">
+              <label class="um-form-label" for="hc-notes">Notes <span class="um-form-optional">(optional)</span></label>
+              <div class="um-input-wrap">
+                <textarea id="hc-notes" class="um-form-input um-form-textarea um-form-textarea--short" placeholder="Generator, canopy lights, forecourt, tanks, anything else you noticed…" [value]="notes()" (input)="setNotes($event)" maxlength="1000" [disabled]="store.isSaving()"></textarea>
+              </div>
+            </div>
+          }
+        }
+
+        <div class="um-modal-actions">
+          <button type="button" class="btn btn-secondary" (click)="onClose()" [disabled]="store.isSaving()">Cancel</button>
+          <button type="submit" class="btn btn-primary um-submit-btn" [disabled]="!isComplete() || store.isSaving()" id="submit-health-check-btn">
+            @if (store.isSaving()) { <span class="btn-spinner"></span> Saving… } @else { {{ isEditing() ? 'Save changes' : 'Save check' }} }
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

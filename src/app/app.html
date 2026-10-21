@@ -1,1 +1,14 @@
 <router-outlet></router-outlet>
+
+<!-- One sign-out confirmation for the whole app; any shell's logout button opens it via AuthStore.requestLogout(). -->
+<app-confirm-dialog
+  [open]="auth.isLogoutConfirmOpen()"
+  title="Sign out?"
+  subtitle="You will need to sign in again to continue"
+  confirmLabel="Sign out"
+  busyLabel="Signing out…"
+  (confirmed)="auth.confirmLogout()"
+  (cancelled)="auth.cancelLogout()"
+>
+  Sign out of Pigeon on this device? Any form you have not submitted will be lost.
+</app-confirm-dialog>

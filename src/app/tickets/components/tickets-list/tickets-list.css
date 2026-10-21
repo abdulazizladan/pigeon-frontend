@@ -224,6 +224,28 @@
   to { transform: rotate(360deg); }
 }
 
+/* Row actions */
+.tk-actions {
+  width: 132px;
+  white-space: nowrap;
+}
+
+.tk-actions .row-action,
+.tk-actions .btn {
+  vertical-align: middle;
+}
+
+.tk-mini-btn {
+  height: 28px;
+  padding: 0 10px;
+  font-size: 12px;
+  margin-left: 4px;
+}
+
+.tk-danger-text {
+  color: var(--brand-danger);
+}
+
 /* Table tweaks */
 .tk-row {
   cursor: default;

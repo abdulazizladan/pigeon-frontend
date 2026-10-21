@@ -295,6 +295,11 @@
   }
 }
 
+.ms-levels,
+.ms-sales-chart {
+  margin-bottom: 16px;
+}
+
 /* ---- Today's sales card ---- */
 .ms-today {
   display: flex;

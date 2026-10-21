@@ -1,0 +1,60 @@
+<section class="card ssc-card" [class.is-loading]="store.isLoading()" [attr.aria-label]="title()">
+
+  <div class="ssc-header">
+    <div>
+      <h2 class="ssc-title">{{ title() }}</h2>
+      <p class="ssc-subtitle">Daily sales from pump meters · {{ rangeLabel() }}</p>
+    </div>
+
+    <!-- Period filter: presets first, custom range behind the last chip -->
+    <div class="ssc-filter" role="group" aria-label="Period">
+      <div class="ssc-chips" role="tablist" aria-label="Period presets">
+        @for (p of presets; track p.value) {
+          <button type="button" role="tab" class="ssc-chip" [class.active]="store.preset() === p.value" [attr.aria-selected]="store.preset() === p.value" (click)="setPreset(p.value)">
+            {{ p.label }}
+          </button>
+        }
+      </div>
+      @if (store.preset() === 'custom') {
+        <div class="ssc-custom">
+          <label class="ssc-date"><span>From</span><input type="date" [value]="store.customFrom()" [max]="store.customTo()" (change)="onCustomFrom($event)" /></label>
+          <label class="ssc-date"><span>To</span><input type="date" [value]="store.customTo()" [min]="store.customFrom()" [max]="today" (change)="onCustomTo($event)" /></label>
+          @if (!store.isCustomRangeValid()) {
+            <span class="ssc-range-error">Start date must be on or before the end date.</span>
+          }
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Range figures -->
+  @if (summary(); as s) {
+    <div class="ssc-kpis">
+      <div class="ssc-kpi"><span class="ssc-kpi-label">Revenue</span><strong>{{ s.totalAmount | currency:currencyCode:'symbol':'1.0-0' }}</strong></div>
+      <div class="ssc-kpi"><span class="ssc-kpi-label">Litres sold</span><strong>{{ s.totalLitres | number:'1.0-0' }} L</strong></div>
+      <div class="ssc-kpi"><span class="ssc-kpi-label">Average per day</span><strong>{{ s.averagePerDay | currency:currencyCode:'symbol':'1.0-0' }}</strong></div>
+      <div class="ssc-kpi">
+        <span class="ssc-kpi-label">Best day</span>
+        <strong>{{ peakDay() ? (peakDay()!.amount | currency:currencyCode:'symbol':'1.0-0') : '—' }}</strong>
+        @if (peakDay()) { <small>{{ day(peakDay()!.date) }}</small> }
+      </div>
+    </div>
+  }
+
+  @if (store.loadingState() === 'error') {
+    <div class="ssc-state">
+      <p class="ssc-error">{{ store.errorMessage() }}</p>
+      <button type="button" class="btn btn-secondary" (click)="retry()">Retry</button>
+    </div>
+  } @else if (summary() && !store.hasSales()) {
+    <div class="ssc-state">
+      <p class="ssc-muted">No sales recorded for this period.</p>
+    </div>
+  } @else if (summary()) {
+    <div class="ssc-canvas" role="img" [attr.aria-label]="'Line chart of daily sales, ' + rangeLabel()">
+      <canvas baseChart type="line" [data]="chartData()" [options]="chartOptions()" [plugins]="chartPlugins"></canvas>
+    </div>
+  } @else {
+    <div class="ssc-state"><p class="ssc-muted">Loading sales…</p></div>
+  }
+</section>

@@ -20,6 +20,8 @@ import { ChangeDetectionStrategy, Component, ElementRef, effect, inject, input, 
 export class ConfirmDialogComponent {
   readonly open = input.required<boolean>();
   readonly title = input('Are you sure?');
+  /** Small line under the title. */
+  readonly subtitle = input('This cannot be undone');
   /** Label on the destructive button. */
   readonly confirmLabel = input('Delete');
   /** Label shown on the destructive button while the request is in flight. */

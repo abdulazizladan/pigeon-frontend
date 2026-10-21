@@ -8,6 +8,8 @@ import { AssignManagerModalComponent } from './components/assign-manager-modal/a
 import { AddPumpModalComponent } from './components/add-pump-modal/add-pump-modal';
 import { AddReservoirModalComponent } from './components/add-reservoir-modal/add-reservoir-modal';
 import { SalesSharedModule } from '../sales/sales-shared.module';
+import { MaintenanceSharedModule } from '../maintenance/maintenance-shared.module';
+import { StationsSharedModule } from './stations-shared.module';
 import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog';
 
 @NgModule({
@@ -19,6 +21,6 @@ import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog'
     AddPumpModalComponent,
     AddReservoirModalComponent,
   ],
-  imports: [CommonModule, StationsRoutingModule, SalesSharedModule, ConfirmDialogComponent],
+  imports: [CommonModule, StationsRoutingModule, SalesSharedModule, MaintenanceSharedModule, StationsSharedModule, ConfirmDialogComponent],
 })
 export class StationsModule {}

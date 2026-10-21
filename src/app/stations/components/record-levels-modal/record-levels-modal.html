@@ -1,0 +1,64 @@
+@if (store.isRecordModalOpen()) {
+  <div class="um-modal-backdrop" (click)="onBackdropClick($event)" role="dialog" aria-modal="true" aria-labelledby="rl-title">
+    <div class="um-modal">
+      <div class="um-modal-header">
+        <div class="um-modal-title-group">
+          <div class="um-modal-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 4.24 2 7v10c0 2.76 4.48 5 10 5s10-2.24 10-5V7c0-2.76-4.48-5-10-5zm0 2c4.42 0 8 1.34 8 3s-3.58 3-8 3-8-1.34-8-3 3.58-3 8-3zm0 16c-4.42 0-8-1.34-8-3v-2.2c1.84 1.33 4.73 2.2 8 2.2s6.16-.87 8-2.2V17c0 1.66-3.58 3-8 3z"/></svg>
+          </div>
+          <div>
+            <h2 id="rl-title" class="um-modal-title">Record end-of-day levels</h2>
+            <p class="um-modal-subtitle">Dip each tank at close of business and enter the litres</p>
+          </div>
+        </div>
+        <button type="button" class="um-modal-close" (click)="onClose()" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </div>
+
+      <form class="um-modal-form" (submit)="onSubmit($event)" novalidate>
+        @if (store.saveErrors().length) {
+          <div class="um-form-alert alert-error" role="alert"><ul class="rl-errors">@for (e of store.saveErrors(); track $index) { <li>{{ e }}</li> }</ul></div>
+        }
+
+        <div class="um-form-group rl-date-group">
+          <label class="um-form-label" for="rl-date">Day</label>
+          <div class="um-input-wrap">
+            <input id="rl-date" type="date" class="um-form-input um-form-input--plain" [value]="recordedOn()" [max]="today" (change)="setDate($event)" [disabled]="store.isSaving()" required />
+          </div>
+          <span class="um-form-hint">Entering a day that already has a reading corrects it.</span>
+        </div>
+
+        <div class="rl-rows">
+          @for (x of rows(); track x.r.reservoirId) {
+            <div class="rl-row" [class.has-error]="x.error">
+              <div class="rl-row-head">
+                <span class="um-role-dot" [attr.data-product]="x.r.product"></span>
+                <strong>{{ label(x.r.product) }}</strong>
+                <span class="rl-cap">capacity {{ x.r.capacityLitres | number:'1.0-0' }} L</span>
+              </div>
+              <div class="rl-row-body">
+                <label class="rl-field">
+                  <span>Level (litres)</span>
+                  <input type="number" inputmode="decimal" min="0" step="1" [max]="x.r.capacityLitres" [value]="x.raw" (input)="setLevel(x.r.reservoirId, $event)" [disabled]="store.isSaving()" required />
+                </label>
+                <div class="rl-preview">
+                  <div class="rl-bar"><div class="rl-bar-fill" [attr.data-product]="x.r.product" [style.width.%]="x.percent ?? 0"></div></div>
+                  <span>{{ x.percent !== null ? x.percent + '%' : '—' }}</span>
+                </div>
+              </div>
+              @if (x.error) { <span class="um-form-error">{{ x.error }}</span> }
+            </div>
+          }
+        </div>
+
+        <div class="um-modal-actions">
+          <button type="button" class="btn btn-secondary" (click)="onClose()" [disabled]="store.isSaving()">Cancel</button>
+          <button type="submit" class="btn btn-primary um-submit-btn" [disabled]="!isComplete() || store.isSaving()" id="submit-levels-btn">
+            @if (store.isSaving()) { <span class="btn-spinner"></span> Saving… } @else { Save levels }
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

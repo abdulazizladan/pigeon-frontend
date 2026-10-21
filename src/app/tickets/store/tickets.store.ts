@@ -25,6 +25,8 @@ export interface TicketsState {
   createLoadingState: LoadingState;
   createErrorMessage: string | null;
   isAddTicketModalOpen: boolean;
+  /** When set, the add modal edits this ticket instead of creating one. */
+  editingTicket: Ticket | null;
   updatingTicketIds: string[];
   updateErrorMessage: string | null;
 }
@@ -38,6 +40,7 @@ const initialState: TicketsState = {
   createLoadingState: 'idle',
   createErrorMessage: null,
   isAddTicketModalOpen: false,
+  editingTicket: null,
   updatingTicketIds: [],
   updateErrorMessage: null,
 };
@@ -93,12 +96,45 @@ export const TicketsStore = signalStore(
     },
 
     openAddTicketModal() {
-      patchState(store, { isAddTicketModalOpen: true, createErrorMessage: null, createLoadingState: 'idle' });
+      patchState(store, { isAddTicketModalOpen: true, editingTicket: null, createErrorMessage: null, createLoadingState: 'idle' });
+    },
+
+    openEditTicketModal(ticket: Ticket) {
+      patchState(store, { isAddTicketModalOpen: true, editingTicket: ticket, createErrorMessage: null, createLoadingState: 'idle' });
     },
 
     closeAddTicketModal() {
-      patchState(store, { isAddTicketModalOpen: false, createErrorMessage: null, createLoadingState: 'idle' });
+      patchState(store, { isAddTicketModalOpen: false, editingTicket: null, createErrorMessage: null, createLoadingState: 'idle' });
     },
+
+    /** Saves title, description and priority of the ticket being edited, then closes the modal. */
+    editTicket: rxMethod<{ id: string; changes: Pick<UpdateTicketPayload, 'title' | 'description' | 'priority'> }>(
+      pipe(
+        tap(() => patchState(store, { createLoadingState: 'loading', createErrorMessage: null })),
+        switchMap(({ id, changes }) =>
+          service.updateTicket(id, changes).pipe(
+            tap((updated) =>
+              patchState(store, (state) => ({
+                tickets: state.tickets.map((t) => (t.id === updated.id ? updated : t)),
+                createLoadingState: 'success' as LoadingState,
+                isAddTicketModalOpen: false,
+                editingTicket: null,
+              })),
+            ),
+            catchError((err) => {
+              patchState(store, {
+                createLoadingState: 'error',
+                createErrorMessage: apiErrorMessage(
+                  err,
+                  err?.status === 403 ? 'You can only edit tickets you raised.' : 'Could not save the ticket. Please try again.',
+                ),
+              });
+              return EMPTY;
+            }),
+          ),
+        ),
+      ),
+    ),
 
     resetCreateState() {
       patchState(store, { createLoadingState: 'idle', createErrorMessage: null });

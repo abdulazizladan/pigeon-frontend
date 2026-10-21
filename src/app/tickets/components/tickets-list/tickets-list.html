@@ -9,9 +9,9 @@
         </svg>
       </div>
       <div>
-        <h1 class="tk-title">Support Tickets</h1>
+        <h1 class="tk-title">{{ pageTitle() }}</h1>
         <p class="tk-subtitle">
-          {{ store.activeCount() }} active · {{ store.totalCount() }} total
+          {{ store.activeCount() }} active · {{ store.totalCount() }} total · {{ pageHint() }}
         </p>
       </div>
     </div>
@@ -111,6 +111,7 @@
               <th scope="col">Reported by</th>
               <th scope="col">Assigned to</th>
               <th scope="col">Created</th>
+              <th scope="col" class="data-th-actions"><span class="sr-only">Actions</span></th>
             </tr>
           </thead>
           <tbody>
@@ -121,7 +122,7 @@
                   <span class="tk-description">{{ t.description }}</span>
                 </td>
                 <td>
-                  @if (canUpdate()) {
+                  @if (isAdmin()) {
                     <select
                       class="inline-select"
                       [value]="t.status"
@@ -143,6 +144,20 @@
                   @if (t.assignedToUsername) { {{ t.assignedToUsername }} } @else { <span class="cell-muted">Unassigned</span> }
                 </td>
                 <td class="cell-muted">{{ t.createdAt | date:'MMM d, y' }}</td>
+                <td class="data-td-actions tk-actions">
+                  @if (canEdit(t)) {
+                    <button type="button" class="row-action" (click)="edit(t)" [disabled]="store.isUpdating(t.id)" title="Edit ticket" [attr.aria-label]="'Edit ' + t.title">
+                      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+                    </button>
+                  }
+                  @if (!isAdmin() && isOwner(t)) {
+                    @if (t.status === 'closed') {
+                      <button type="button" class="btn btn-secondary tk-mini-btn" (click)="reopenTicket(t)" [disabled]="store.isUpdating(t.id)">Reopen</button>
+                    } @else {
+                      <button type="button" class="btn btn-secondary tk-mini-btn tk-danger-text" (click)="closeTicket(t)" [disabled]="store.isUpdating(t.id)">Close</button>
+                    }
+                  }
+                </td>
               </tr>
             }
           </tbody>

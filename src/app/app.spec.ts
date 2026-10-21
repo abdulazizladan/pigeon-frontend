@@ -3,15 +3,19 @@ import { describe, beforeEach, it, expect, vi } from 'vitest';
 import { provideRouter, RouterModule } from '@angular/router';
 import { App } from './app';
 import { ThemeService } from './theme.service';
+import { AuthStore } from './auth/store/auth.store';
+import { ConfirmDialogComponent } from './shared/confirm-dialog/confirm-dialog';
+import { signal } from '@angular/core';
 
 describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterModule],
+      imports: [RouterModule, ConfirmDialogComponent],
       declarations: [App],
       providers: [
         provideRouter([]),
         { provide: ThemeService, useValue: { initialize: vi.fn(), toggleTheme: vi.fn() } },
+        { provide: AuthStore, useValue: { isLogoutConfirmOpen: signal(false), confirmLogout: vi.fn(), cancelLogout: vi.fn() } },
       ],
     }).compileComponents();
   });

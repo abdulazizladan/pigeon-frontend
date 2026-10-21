@@ -86,6 +86,7 @@
           <colgroup>
             <col class="st-col-station" />
             <col class="st-col-location" />
+            <col class="st-col-levels" />
             <col class="st-col-status" />
             <col class="st-col-manager" />
             <col class="st-col-actions" />
@@ -94,6 +95,7 @@
             <tr>
               <th scope="col">Station</th>
               <th scope="col">Location</th>
+              <th scope="col">Reservoirs</th>
               <th scope="col">Status</th>
               <th scope="col">Manager</th>
               <th scope="col" class="data-th-actions"><span class="sr-only">Actions</span></th>
@@ -120,6 +122,23 @@
                 <td class="cell-wrap st-cell-location">
                   @if (s.address) { <span class="st-address">{{ s.address }}</span> }
                   <span class="cell-muted">{{ [s.lga, s.state].join(', ') || '—' }}</span>
+                </td>
+                <td class="st-cell-levels">
+                  @if (levelsFor(s).length) {
+                    <div class="st-levels">
+                      @for (r of levelsFor(s); track trackReservoir($index, r)) {
+                        <span class="level-chip" [attr.data-band]="band(r)" [title]="levelTitle(r)" [attr.aria-label]="levelTitle(r)">
+                          <span class="level-chip-dot" aria-hidden="true"></span>
+                          <span class="level-chip-product">{{ productLabel(r.product).split(' ')[0] }}</span>
+                          <span class="level-chip-pct">{{ r.percent !== null ? (r.percent | number:'1.0-0') + '%' : '—' }}</span>
+                        </span>
+                      }
+                    </div>
+                  } @else if (store.levelsLoadingState() === 'loading') {
+                    <span class="cell-muted">…</span>
+                  } @else {
+                    <span class="cell-muted">No reservoirs</span>
+                  }
                 </td>
                 <td>
                   <span class="status-badge" [attr.data-status]="s.status">{{ statusLabel(s.status) }}</span>

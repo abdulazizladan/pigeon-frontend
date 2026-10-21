@@ -32,7 +32,7 @@ export class UsersListComponent implements OnInit {
   }
 
   protected onLogout() {
-    this.auth.logout();
+    this.auth.requestLogout();
   }
 
   ngOnInit() {

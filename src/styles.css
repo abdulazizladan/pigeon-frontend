@@ -450,6 +450,35 @@ html.dark .priority-badge[data-priority="urgent"] { background-color: rgba(240, 
 .um-role-dot[data-priority="urgent"] { background-color: var(--brand-danger); }
 .um-role-option.selected[data-priority] { border-color: var(--brand-primary); }
 
+/* Health-check conditions, repair statuses and decisions */
+.status-badge[data-status="good"],
+.status-badge[data-status="ok"],
+.status-badge[data-status="authorized"] { background-color: rgba(66, 183, 42, 0.12); color: #2e8a1e; }
+.status-badge[data-status="fair"],
+.status-badge[data-status="pending"] { background-color: rgba(245, 195, 59, 0.18); color: #8a6508; }
+.status-badge[data-status="faulty"],
+.status-badge[data-status="denied"] { background-color: rgba(240, 40, 73, 0.12); color: #c0122e; }
+.status-badge[data-status="out_of_service"],
+.status-badge[data-status="ignored"],
+.status-badge[data-status="unknown"] { background-color: var(--hover-overlay); color: var(--text-secondary); }
+/* Reservoir stock levels */
+.status-badge[data-status="low"] { background-color: rgba(245, 195, 59, 0.18); color: #8a6508; }
+.status-badge[data-status="critical"] { background-color: rgba(240, 40, 73, 0.12); color: #c0122e; }
+html.dark .status-badge[data-status="low"] { background-color: rgba(245, 195, 59, 0.2); color: #f5c33b; }
+html.dark .status-badge[data-status="critical"] { background-color: rgba(240, 40, 73, 0.2); color: #f25a72; }
+html.dark .status-badge[data-status="good"], html.dark .status-badge[data-status="ok"], html.dark .status-badge[data-status="authorized"] { background-color: rgba(66, 183, 42, 0.2); color: #6fd45a; }
+html.dark .status-badge[data-status="fair"], html.dark .status-badge[data-status="pending"] { background-color: rgba(245, 195, 59, 0.2); color: #f5c33b; }
+html.dark .status-badge[data-status="faulty"], html.dark .status-badge[data-status="denied"] { background-color: rgba(240, 40, 73, 0.2); color: #f25a72; }
+
+.um-role-dot[data-condition="good"] { background-color: var(--brand-success); }
+.um-role-dot[data-condition="fair"] { background-color: var(--brand-warning); }
+.um-role-dot[data-condition="faulty"] { background-color: var(--brand-danger); }
+.um-role-dot[data-decision="authorize"] { background-color: var(--brand-success); }
+.um-role-dot[data-decision="deny"] { background-color: var(--brand-danger); }
+.um-role-dot[data-decision="ignore"] { background-color: var(--text-secondary); }
+.um-role-option.selected[data-condition],
+.um-role-option.selected[data-decision] { border-color: var(--brand-primary); }
+
 /* Station status dots inside the shared radio grid */
 .um-role-dot[data-status="active"] { background-color: var(--brand-success); }
 .um-role-dot[data-status="maintenance"] { background-color: var(--brand-warning); }

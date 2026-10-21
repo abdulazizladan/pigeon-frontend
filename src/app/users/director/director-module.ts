@@ -5,10 +5,11 @@ import { BaseChartDirective, provideCharts, withDefaultRegisterables } from 'ng2
 import { DirectorRoutingModule } from './director-routing-module';
 import { Layout } from './components/layout/layout';
 import { DirectorDashboardComponent } from './components/dashboard/dashboard';
+import { MaintenanceSharedModule } from '../../maintenance/maintenance-shared.module';
 
 @NgModule({
   declarations: [Layout, DirectorDashboardComponent],
-  imports: [CommonModule, DirectorRoutingModule, BaseChartDirective],
+  imports: [CommonModule, DirectorRoutingModule, BaseChartDirective, MaintenanceSharedModule],
   providers: [provideCharts(withDefaultRegisterables())],
 })
 export class DirectorModule {}

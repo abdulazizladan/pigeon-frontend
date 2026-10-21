@@ -1,0 +1,95 @@
+<section class="sh-section" [attr.aria-label]="title()">
+  <div class="sh-header">
+    <div>
+      <h2 class="sh-title">{{ title() }}</h2>
+      <p class="sh-subtitle">Condition of the station and each pump, as recorded by the manager</p>
+    </div>
+    <div class="sh-header-right">
+      <div class="sh-chips" role="tablist" aria-label="History range">
+        @for (p of presets; track p.value) {
+          <button type="button" role="tab" class="sh-chip" [class.active]="store.preset() === p.value" [attr.aria-selected]="store.preset() === p.value" (click)="setPreset(p.value)">{{ p.label }}</button>
+        }
+      </div>
+      @if (canRecord()) {
+        <button type="button" class="btn btn-primary sh-record-btn" (click)="record()" id="record-health-check-btn">{{ recordLabel() }}</button>
+      }
+    </div>
+  </div>
+
+  <!-- Latest check -->
+  @if (latest(); as c) {
+    <div class="card sh-latest" [attr.data-condition]="c.stationCondition">
+      <div class="sh-latest-head">
+        <div class="sh-latest-main">
+          <span class="sh-latest-kicker">Latest check · {{ day(c.recordedOn) }}@if (c.recordedByUsername) { · by &#64;{{ c.recordedByUsername }} }</span>
+          <div class="sh-latest-title-row">
+            <span class="status-badge sh-big-badge" [attr.data-status]="c.stationCondition">Station {{ scLabel(c.stationCondition) }}</span>
+            <span class="sh-latest-desc">{{ scDescription(c.stationCondition) }}</span>
+          </div>
+        </div>
+        <div class="sh-latest-figure">
+          <strong [class.is-bad]="c.faultyPumps > 0">{{ c.faultyPumps }}</strong>
+          <span>pump{{ c.faultyPumps === 1 ? '' : 's' }} not OK of {{ c.pumps.length }}</span>
+        </div>
+      </div>
+      <div class="sh-pumps">
+        @for (p of c.pumps; track trackPump($index, p)) {
+          <div class="sh-pump" [attr.data-condition]="p.condition">
+            <span class="um-role-dot" [attr.data-product]="p.product"></span>
+            <span class="sh-pump-name">{{ p.pumpName }}</span>
+            <span class="status-badge" [attr.data-status]="p.condition">{{ pcLabel(p.condition) }}</span>
+            @if (p.notes) { <span class="sh-pump-notes">{{ p.notes }}</span> }
+            @if (canReport() && p.condition !== 'ok') {
+              <button type="button" class="btn btn-secondary sh-mini-btn" (click)="reportPump(c, p, $event)">Request repair</button>
+            }
+          </div>
+        }
+      </div>
+      @if (c.notes) { <p class="sh-notes"><strong>Notes:</strong> {{ c.notes }}</p> }
+    </div>
+  } @else if (store.loadingState() === 'loading') {
+    <div class="card sh-state"><p>Loading health checks…</p></div>
+  } @else if (store.loadingState() === 'error') {
+    <div class="card sh-state"><p class="sh-error">{{ store.errorMessage() }}</p><button type="button" class="btn btn-secondary" (click)="store.loadChecks(store.query())">Retry</button></div>
+  } @else {
+    <div class="card sh-state">
+      <p>No health check recorded in this range.</p>
+      @if (canRecord()) { <button type="button" class="btn btn-primary" (click)="record()">Record today's check</button> }
+    </div>
+  }
+
+  <!-- History -->
+  @if (store.checks().length > 1) {
+    <h3 class="sh-history-title">Earlier checks</h3>
+    <div class="sh-list">
+      @for (c of store.checks().slice(1); track trackById($index, c)) {
+        <article class="card sh-record" [class.is-open]="isExpanded(c)" [attr.data-condition]="c.stationCondition">
+          <button type="button" class="sh-record-head" (click)="toggle(c)" [attr.aria-expanded]="isExpanded(c)">
+            <span class="sh-record-date">{{ day(c.recordedOn) }}</span>
+            <span class="status-badge" [attr.data-status]="c.stationCondition">{{ scLabel(c.stationCondition) }}</span>
+            <span class="sh-record-meta">{{ c.faultyPumps }} pump{{ c.faultyPumps === 1 ? '' : 's' }} not OK@if (c.recordedByUsername) { · &#64;{{ c.recordedByUsername }} }</span>
+            <svg class="sh-chevron" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+          </button>
+          @if (isExpanded(c)) {
+            <div class="sh-record-body">
+              @if (canRecord()) { <div class="sh-record-actions"><button type="button" class="btn btn-secondary sh-mini-btn" (click)="edit(c, $event)">Edit</button></div> }
+              <div class="sh-pumps">
+                @for (p of c.pumps; track trackPump($index, p)) {
+                  <div class="sh-pump" [attr.data-condition]="p.condition">
+                    <span class="um-role-dot" [attr.data-product]="p.product"></span>
+                    <span class="sh-pump-name">{{ p.pumpName }}</span>
+                    <span class="status-badge" [attr.data-status]="p.condition">{{ pcLabel(p.condition) }}</span>
+                    @if (p.notes) { <span class="sh-pump-notes">{{ p.notes }}</span> }
+                  </div>
+                }
+              </div>
+              @if (c.notes) { <p class="sh-notes"><strong>Notes:</strong> {{ c.notes }}</p> }
+            </div>
+          }
+        </article>
+      }
+    </div>
+  }
+</section>
+
+<app-health-check-modal></app-health-check-modal>
